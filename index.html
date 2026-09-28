@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10.2</title>
+<title>Controle de Ferramentas — Pro v10.3</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -124,9 +124,18 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .card-setor .cont b{color:var(--azul);font-size:16px}
 .card-setor .botoes{display:flex;gap:5px;margin-top:auto;flex-wrap:wrap}
 .card-setor .botoes .btn{padding:6px 10px;font-size:11.5px;flex:1}
-.chip-tipo{padding:7px 12px;background:var(--fundo);border:1px solid var(--borda);border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;transition:var(--transicao);display:inline-flex;align-items:center;gap:5px;font-family:inherit;color:var(--texto)}
-.chip-tipo:hover{background:var(--azul);color:#fff;border-color:var(--azul);transform:translateY(-2px)}
-.lista-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+
+/* ===== Chips de tipo (com edit) ===== */
+.lista-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
+.chip-wrapper{display:inline-flex;align-items:center;background:var(--fundo);border:1px solid var(--borda);border-radius:99px;overflow:hidden;transition:var(--transicao);padding:0 3px 0 0}
+.chip-wrapper:hover{border-color:var(--azul2);box-shadow:var(--sombra)}
+.chip-wrapper .chip-tipo{background:transparent;border:none;border-radius:0;padding:7px 10px 7px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--texto);font-family:inherit;transition:var(--transicao);white-space:nowrap}
+.chip-wrapper .chip-tipo:hover{background:rgba(59,130,246,.1);color:var(--azul)}
+.chip-wrapper .chip-edit{background:transparent;border:none;cursor:pointer;font-size:12px;padding:5px 7px;border-radius:50%;color:var(--cinza);transition:var(--transicao);font-family:inherit;line-height:1;display:grid;place-items:center}
+.chip-wrapper .chip-edit:hover{background:var(--azul);color:#fff;transform:scale(1.1)}
+.btn-novo-tipo{background:transparent;border:1px dashed var(--borda);color:var(--cinza);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transicao)}
+.btn-novo-tipo:hover{border-color:var(--azul2);color:var(--azul)}
+
 .titulo-secao{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--cinza);margin:14px 0 9px;display:flex;align-items:center;gap:6px}
 .titulo-secao:first-child{margin-top:0}
 .item-ferr-setor{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--borda);border-radius:9px;margin-bottom:6px;background:var(--fundo);flex-wrap:wrap}
@@ -135,7 +144,6 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .item-ferr-setor .qtd button{width:25px;height:25px;border-radius:6px;border:1px solid var(--borda);background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--texto)}
 .item-ferr-setor .qtd button:hover{background:var(--azul);color:#fff}
 .item-ferr-setor .qtd span{min-width:20px;text-align:center;font-weight:700}
-.btn-novo-tipo{background:transparent;border:1px dashed var(--borda);color:var(--cinza);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
 .graficos{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:16px}
 .grafico-card{background:var(--fundo);border:1px solid var(--borda);border-radius:var(--radius);padding:16px;position:relative}
 .grafico-card h3{font-size:12px;margin-bottom:11px;color:var(--cinza);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
@@ -315,12 +323,10 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .quota-bar > div{height:100%;background:linear-gradient(90deg,var(--verde),var(--amarelo),var(--vermelho));transition:width .4s}
 .quota-bar.warn > div{background:linear-gradient(90deg,var(--amarelo),var(--vermelho))}
 .quota-bar.danger > div{background:var(--vermelho)}
-.badge-cache{display:inline-block;background:rgba(124,58,237,.15);color:var(--roxo);font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:4px}
 .login-aviso{display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:9px;padding:10px 13px;font-size:12.5px;margin-bottom:13px;align-items:center;gap:8px}
 .login-aviso.ativo{display:flex}
 .login-aviso .ic{font-size:18px}
 .pin-info{font-size:11px;color:var(--cinza);margin-top:4px}
-.permissao-aviso{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--amarelo);margin-bottom:8px;display:flex;align-items:center;gap:6px}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
@@ -373,7 +379,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.2 • PT-BR</p>
+        <p id="subInfo">v10.3 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -538,8 +544,8 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <option value="devolucao">Devolução</option><option value="status">Status</option>
         <option value="transferencia">Transferência</option><option value="manutencao">Manutenção</option>
         <option value="inventario">Inventário</option><option value="reserva">Reserva</option>
-        <option value="setor">Setor</option><option value="webhook">Webhook</option>
-        <option value="login">Login</option>
+        <option value="setor">Setor</option><option value="tipo">Tipo</option>
+        <option value="webhook">Webhook</option><option value="login">Login</option>
       </select>
       <button class="btn btn-secundario" id="btnLimparHistorico">🗑️</button>
     </div>
@@ -678,7 +684,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
     <div class="modal-topo"><h2 id="tituloFerrSetor">Ferramentas do Setor</h2><button class="fechar" data-fechar="modalFerrSetor">&times;</button></div>
     <div class="modal-corpo">
       <input type="hidden" id="fsSetorId">
-      <div class="titulo-secao">Adicionar rápido</div>
+      <div class="titulo-secao">⚡ Adicionar rápido <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--cinza);font-size:11px">(clique no ✏️ para renomear)</span></div>
       <div class="lista-chips" id="chipsTipos"></div>
       <div class="linha-2" style="margin-top:8px">
         <input type="text" id="novaFerrNome" placeholder="Nome personalizado" autocomplete="off" style="padding:9px 12px;border:1px solid var(--borda);border-radius:8px;font-size:13px;background:var(--fundo);color:var(--texto);font-family:inherit">
@@ -692,13 +698,24 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 </div>
 
 <div class="overlay" id="modalNovoTipo" role="dialog" aria-modal="true">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-topo"><h2>Novo Tipo</h2><button class="fechar" data-fechar="modalNovoTipo">&times;</button></div>
+  <div class="modal" style="max-width:420px">
+    <div class="modal-topo"><h2 id="tituloNovoTipo">Novo Tipo</h2><button class="fechar" data-fechar="modalNovoTipo">&times;</button></div>
     <form id="formNovoTipo">
-      <div class="modal-corpo"><div class="campo"><label class="obrigatorio">Nome do tipo</label><input type="text" id="novoTipoNome" required autocomplete="off" placeholder="Ex.: Roquete"></div></div>
+      <div class="modal-corpo">
+        <input type="hidden" id="tipoOriginal">
+        <div class="campo">
+          <label class="obrigatorio">Nome do tipo</label>
+          <input type="text" id="novoTipoNome" required autocomplete="off" placeholder="Ex.: Roquete">
+        </div>
+        <div class="info-box aviso" id="avisoRenomear" style="display:none">
+          <span class="ic">⚠️</span>
+          <div>Renomear vai atualizar <strong id="qtdFerrTipo">0</strong> ferramenta(s) que usam este tipo. Se preferir, exclua o tipo — as ferramentas ficarão com "— Sem tipo —".</div>
+        </div>
+      </div>
       <div class="modal-rodape">
+        <button type="button" class="btn btn-perigo" id="btnExcluirTipo" style="display:none">🗑️ Excluir</button>
         <button type="button" class="btn btn-secundario" data-fechar="modalNovoTipo">Cancelar</button>
-        <button type="submit" class="btn btn-primario">💾</button>
+        <button type="submit" class="btn btn-primario">💾 Salvar</button>
       </div>
     </form>
   </div>
@@ -957,12 +974,12 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <div class="config-row">
           <div>
             <div class="lbl">Modo aberto (sem login)</div>
-            <div class="desc">⚠️ Se ativado, <strong>qualquer pessoa</strong> pode editar e excluir sem senha. Deixe desligado para exigir login. Apenas <strong>admin</strong> pode alterar.</div>
+            <div class="desc">⚠️ Se ativado, <strong>qualquer pessoa</strong> pode editar e excluir sem senha. Apenas <strong>admin</strong> pode alterar.</div>
           </div>
           <label class="switch"><input type="checkbox" id="cfgModoAberto"><span class="slider"></span></label>
         </div>
         <div class="config-row">
-          <div><div class="lbl">Rate limit no login</div><div class="desc">Bloqueia após 5 tentativas falhas (padrão: 30s, 60s, 120s…)</div></div>
+          <div><div class="lbl">Rate limit no login</div><div class="desc">Bloqueia após 5 tentativas falhas (30s → 5min)</div></div>
           <label class="switch"><input type="checkbox" id="cfgRateLimit" checked><span class="slider"></span></label>
         </div>
         <div class="config-row">
@@ -978,6 +995,15 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
             <option value="30">30 minutos</option>
             <option value="60">1 hora</option>
           </select>
+        </div>
+      </div>
+
+      <div class="config-secao">
+        <h3>🏷️ Tipos de Ferramenta</h3>
+        <div class="config-row" style="flex-direction:column;align-items:stretch">
+          <div><div class="lbl">Gerenciar tipos de cadastro rápido</div><div class="desc">Renomeie ou exclua os "chips" que aparecem em Ferramentas do Setor → Adicionar rápido.</div></div>
+          <div id="cfgListaTipos" style="margin-top:10px;display:flex;flex-direction:column;gap:6px"></div>
+          <button type="button" class="btn btn-primario btn-mini" id="btnGerenciarTipos" style="margin-top:10px;align-self:flex-start">✏️ Gerenciar tipos</button>
         </div>
       </div>
 
@@ -1120,16 +1146,16 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.2
-   Mudanças v10.2:
-   • [SEC] Permissões negam por padrão + config modoAberto
-   • [SEC] Rate limit no login (5 tentativas → backoff exponencial)
-   • [PWA] Service Worker via arquivo real + download dos arquivos
+   CONTROLE DE FERRAMENTAS PRO — v10.3
+   Mudanças v10.3:
+   • Editar/renomear/excluir os tipos do cadastro rápido (chips)
+   • Renomear tipo atualiza automaticamente todas as ferramentas
+   • Gerenciador de tipos em ⚙️ > Tipos de Ferramenta
    ========================================================= */
 'use strict';
 
 /* ===== [01] CONSTANTES & ESTADO ===== */
-const VERSAO='10.2';
+const VERSAO='10.3';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1150,11 +1176,9 @@ const PAPEIS={admin:'👑 Admin',supervisor:'🔑 Supervisor',operador:'👤 Ope
 const WEBHOOK_ALLOW=['hooks.slack.com','discord.com','discordapp.com','webhook.office.com','webhook.office365.com','outlook.office.com','outlook.office365.com'];
 const WEBHOOK_MAX=10, WEBHOOK_JANELA=60000;
 const RATE_LIMIT_MAX_TENT=5;
-const RATE_LIMIT_BASE_S=30;   // primeiro bloqueio: 30s
-const RATE_LIMIT_MAX_S=300;   // máximo: 5min
+const RATE_LIMIT_BASE_S=30;
+const RATE_LIMIT_MAX_S=300;
 
-/* Mapa de permissões por papel.
-   'publico' = disponível sem login (se modoAberto=true) */
 const PERMISSOES={
   ver:['publico','admin','supervisor','operador'],
   escanear:['publico','admin','supervisor','operador'],
@@ -1270,7 +1294,7 @@ async function hmacVerify(msg,sig){
   }catch(e){return false}
 }
 
-/* ===== [05] IndexedDB — mídia ===== */
+/* ===== [05] IndexedDB ===== */
 function abrirIdb(){
   return new Promise((resolve,reject)=>{
     const req=indexedDB.open(IDB_NAME,1);
@@ -1341,7 +1365,7 @@ const _listeners={};
 function on(evt,fn){if(!_listeners[evt])_listeners[evt]=[];_listeners[evt].push(fn)}
 function emit(evt,data){(_listeners[evt]||[]).forEach(fn=>{try{fn(data)}catch(e){console.warn(e)}})}
 
-/* ===== [07] STORAGE + MIGRAÇÕES ===== */
+/* ===== [07] STORAGE ===== */
 let _saveTimer=null;
 function salvar(imediato=false){
   db.atualizadoEm=new Date().toISOString();
@@ -1398,16 +1422,13 @@ function migrar(o){
     o.config=o.config||{};
     v=9;
   }
-  if(v<10){
-    v=10;
-  }
+  if(v<10){v=10}
   if(v<11){
     o.config=o.config||{};
     if(o.config.webhookDev===undefined)o.config.webhookDev=false;
     (o.ferramentas||[]).forEach(f=>{if(f.tipo===undefined)f.tipo=''});
     v=11;
   }
-  // v11 → v12: segurança (modoAberto, rateLimit, tentativasFalhas nos usuários)
   if(v<12){
     o.config=o.config||{};
     if(o.config.modoAberto===undefined)o.config.modoAberto=false;
@@ -1418,7 +1439,6 @@ function migrar(o){
     });
     v=12;
   }
-  // Normaliza config completo
   const cfgPadrao={idioma:'pt',autoBackup:true,ultimoAutoBackup:null,webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,som:true,notif:false,autoLock:true,autoLockMin:10,compacto:false,contraste:false,modoAberto:false,rateLimit:true};
   o.config=Object.assign(cfgPadrao,o.config||{});
   o.versao=11;
@@ -1660,7 +1680,7 @@ function registrar(tipo,nome,desc){
   if(db.historico.length>1000)db.historico=db.historico.slice(0,1000);
 }
 
-/* ===== [12] MODAIS + focus trap ===== */
+/* ===== [12] MODAIS ===== */
 function abrirModal(id){
   const m=$(id);
   if(!m)return;
@@ -1718,61 +1738,37 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-/* ===== [13] AUTH — PERMISSÕES + RATE LIMIT ===== */
-
-/* Permissões: nega por padrão.
-   - Modo quiosque: só ver/escanear/emprestar/devolver
-   - Sem login: só ver/escanear (e ações de 'publico' SE modoAberto=true)
-   - Com login: checa papel */
+/* ===== [13] AUTH ===== */
 function temPermissao(acao){
-  // Modo quiosque: só o básico
   if(document.body.classList.contains('modo-quiosque')){
     return ['ver','escanear','emprestar','devolver'].includes(acao);
   }
-
-  // Ações sempre liberadas (leitura pura)
   if(acao==='ver'||acao==='escanear')return true;
-
   const lista=PERMISSOES[acao];
   if(!lista)return false;
-
   const papel=db.usuarioAtual&&db.usuarioAtual.papel;
-
-  // Sem login
   if(!papel){
-    // Só permite se modoAberto=true E a ação permite 'publico'
     if(db.config.modoAberto && lista.includes('publico'))return true;
     return false;
   }
-
-  // Com login: checa papel
   return lista.includes(papel);
 }
-
-/* Verifica e, se falhar, orienta o usuário. Retorna true se OK. */
 function exigirLogin(acao){
   if(temPermissao(acao))return true;
-
-  // Está logado mas sem papel suficiente
   if(db.usuarioAtual){
     toast(`Ação "${acao}" requer permissão maior.`,'erro');
     return false;
   }
-
-  // Não está logado
   toast('Faça login para continuar.','aviso');
   setTimeout(()=>abrirLoginModal(), 250);
   return false;
 }
-
 function atualizarUsuarioUI(){
   const u=db.usuarioAtual;
   const btn=$('btnUsuario');
   $('nomeUsuario').textContent=u?u.nome.split(' ')[0]:'Entrar';
   if(u)btn.classList.add('logado');else btn.classList.remove('logado');
 }
-
-/* --- Rate limit no login --- */
 function usuarioBloqueado(u){
   if(!db.config.rateLimit)return 0;
   if(!u||!u.bloqueadoAte)return 0;
@@ -1819,44 +1815,32 @@ function aplicarBloqueioUI(u){
   }
 }
 async function tentarLogin(u,pin){
-  // Sem PIN configurado: entra direto (operador padrão)
   if(!u.pinHash){
     u.tentativasFalhas=0;u.bloqueadoAte=null;
     return {ok:true};
   }
-
-  // Verifica bloqueio
   const resta=usuarioBloqueado(u);
   if(resta>0){
     return {ok:false,msg:`Bloqueado por ${formatarSegundos(resta)}.`};
   }
-
-  // Compara PIN
   const hash=await sha256(pin);
   const correto=hash===u.pinHash;
-
   if(correto){
     u.tentativasFalhas=0;u.bloqueadoAte=null;
     return {ok:true};
   }
-
-  // Falhou
   u.tentativasFalhas=(u.tentativasFalhas||0)+1;
-
   if(db.config.rateLimit && u.tentativasFalhas>=RATE_LIMIT_MAX_TENT){
-    // Backoff exponencial: 30s, 60s, 120s, 240s, 300s (max)
     const extra=u.tentativasFalhas-RATE_LIMIT_MAX_TENT;
     const seg=Math.min(RATE_LIMIT_MAX_S, RATE_LIMIT_BASE_S*Math.pow(2,extra));
     u.bloqueadoAte=Date.now()+seg*1000;
     registrar('login',u.nome,`🔒 Bloqueado por ${seg}s após ${u.tentativasFalhas} tentativas`);
     return {ok:false,msg:`Bloqueado por ${seg}s.`,bloqueado:true};
   }
-
   const restam=RATE_LIMIT_MAX_TENT-u.tentativasFalhas;
   registrar('login',u.nome,`❌ PIN incorreto (${u.tentativasFalhas}/${RATE_LIMIT_MAX_TENT})`);
   return {ok:false,msg:`PIN incorreto. ${restam} tentativa(s) restante(s).`};
 }
-
 function abrirLoginModal(){
   $('loginUser').innerHTML=db.usuarios.map(u=>{
     const bloqueio=usuarioBloqueado(u);
@@ -1908,17 +1892,14 @@ $('formLogin').addEventListener('submit',async e=>{
   const u=db.usuarios.find(x=>x.id===$('loginUser').value);
   if(!u)return;
   const pin=$('loginPin').value;
-
   const res=await tentarLogin(u,pin);
   salvar(true);
-
   if(!res.ok){
     toast(res.msg,'erro');
     aplicarBloqueioUI(u);
     $('loginPin').value='';
     return;
   }
-
   db.usuarioAtual={id:u.id,nome:u.nome,papel:u.papel};
   ultimaAtividade=Date.now();
   salvar(true);
@@ -2184,7 +2165,7 @@ function renderHistorico(){
   let lista=db.historico;
   if(filtro)lista=lista.filter(h=>h.tipo===filtro);
   if(!lista.length){el.innerHTML='<div class="vazio">📜 Vazio.</div>';return}
-  const cores={criada:'verde',emprestimo:'roxo',devolucao:'verde',excluida:'vermelho',status:'amarelo',manutencao:'amarelo',webhook:'roxo',login:'vermelho'};
+  const cores={criada:'verde',emprestimo:'roxo',devolucao:'verde',excluida:'vermelho',status:'amarelo',manutencao:'amarelo',webhook:'roxo',login:'vermelho',tipo:'amarelo'};
   el.innerHTML=`<div class="timeline">${lista.slice(0,200).map(h=>`
     <div class="timeline-item ${cores[h.tipo]||''}">
       <div class="timeline-data">${fmtData(h.data)} • 👤 ${esc(h.usuario||'Sistema')}</div>
@@ -2579,7 +2560,7 @@ function desenharGraficos(){
   }
 }
 
-/* ===== [15] CÂMERA AO VIVO ===== */
+/* ===== [15] CÂMERA ===== */
 async function abrirCameraAoVivo(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     toast('Câmera não suportada neste navegador.','aviso');
@@ -2661,7 +2642,127 @@ function processarArquivosFotos(files){
   });
 }
 
-/* ===== [16] AÇÕES ===== */
+/* ===== [16] TIPOS — CRIAR / EDITAR / EXCLUIR ===== */
+
+/* Abre o modal em modo "editar tipo" */
+function abrirEditarTipo(nome){
+  if(!nome)return;
+  $('tipoOriginal').value=nome;
+  $('novoTipoNome').value=nome;
+  $('tituloNovoTipo').textContent='✏️ Editar Tipo';
+  const count=db.ferramentas.filter(f=>f.tipo===nome).length;
+  $('avisoRenomear').style.display=count>0?'flex':'none';
+  $('qtdFerrTipo').textContent=count;
+  $('btnExcluirTipo').style.display='inline-flex';
+  abrirModal('modalNovoTipo');
+  setTimeout(()=>{
+    const i=$('novoTipoNome');
+    i.focus();
+    i.select();
+  },150);
+}
+
+/* Abre o modal em modo "novo tipo" */
+function abrirNovoTipo(){
+  if(!exigirLogin('editar'))return;
+  $('tipoOriginal').value='';
+  $('novoTipoNome').value='';
+  $('tituloNovoTipo').textContent='Novo Tipo';
+  $('avisoRenomear').style.display='none';
+  $('btnExcluirTipo').style.display='none';
+  abrirModal('modalNovoTipo');
+  setTimeout(()=>$('novoTipoNome').focus(),150);
+}
+
+/* Salvar (novo OU renomear) */
+$('formNovoTipo').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(!exigirLogin('editar'))return;
+  const nome=$('novoTipoNome').value.trim();
+  const original=$('tipoOriginal').value.trim();
+  if(!nome){toast('Digite um nome.','aviso');return}
+
+  if(original){
+    /* RENOMEAR */
+    const igual=original.toLowerCase()===nome.toLowerCase();
+    if(!igual && db.tiposFerramentas.some(t=>t.toLowerCase()===nome.toLowerCase())){
+      toast('Já existe outro tipo com este nome!','erro');
+      return;
+    }
+    const idx=db.tiposFerramentas.indexOf(original);
+    if(idx<0){toast('Tipo original não encontrado.','erro');fecharModal('modalNovoTipo');return}
+
+    // Atualiza lista de tipos
+    db.tiposFerramentas[idx]=nome;
+
+    // Atualiza TODAS as ferramentas que usavam o tipo antigo
+    let afetadas=0;
+    db.ferramentas.forEach(f=>{
+      if(f.tipo===original){f.tipo=nome;f.atualizadoEm=new Date().toISOString();afetadas++}
+    });
+    // Atualiza kits? (não, kits não guardam tipo)
+    // Atualiza reservas? (não, reservas apontam pra ferramenta por id)
+
+    registrar('tipo',`Tipo: ${original}`,`Renomeado → "${nome}" (${afetadas} ferramenta(s) atualizada(s))`);
+    toast(igual?`Tipo salvo.`:`✅ "${original}" → "${nome}". ${afetadas} ferramenta(s) atualizada(s).`);
+  }else{
+    /* CRIAR NOVO */
+    if(db.tiposFerramentas.some(t=>t.toLowerCase()===nome.toLowerCase())){
+      toast('Este tipo já existe!','erro');
+      return;
+    }
+    db.tiposFerramentas.push(nome);
+    registrar('tipo',`Tipo: ${nome}`,'Novo tipo criado');
+    toast(`Tipo "${nome}" criado!`);
+  }
+
+  salvar();
+  fecharModal('modalNovoTipo');
+
+  // Atualiza UI
+  renderChipsTipos();
+  atualizarSelects();
+  renderTudo();
+
+  // Se o modal de ferramenta está aberto, seleciona o tipo
+  if($('modalFerramenta').classList.contains('aberto')&&$('fTipo')){
+    $('fTipo').value=nome;
+  }
+});
+
+/* Excluir tipo */
+$('btnExcluirTipo').addEventListener('click',async()=>{
+  if(!exigirLogin('editar'))return;
+  const original=$('tipoOriginal').value.trim();
+  if(!original)return;
+  const count=db.ferramentas.filter(f=>f.tipo===original).length;
+  const msg=count
+    ?`Excluir o tipo "${original}"?\n\n${count} ferramenta(s) ficará(ão) com "— Sem tipo —".`
+    :`Excluir o tipo "${original}"?`;
+  const ok=await confirmar('Excluir tipo?',msg,'🗑️');
+  if(!ok)return;
+
+  db.tiposFerramentas=db.tiposFerramentas.filter(t=>t!==original);
+
+  // Limpa o tipo das ferramentas afetadas
+  let limpas=0;
+  db.ferramentas.forEach(f=>{
+    if(f.tipo===original){f.tipo='';f.atualizadoEm=new Date().toISOString();limpas++}
+  });
+
+  registrar('tipo',`Tipo: ${original}`,`Excluído${limpas?` (${limpas} ferramenta(s) sem tipo agora)`:''}`);
+  salvar();
+  fecharModal('modalNovoTipo');
+  renderChipsTipos();
+  atualizarSelects();
+  renderTudo();
+  toast(limpas?`Tipo excluído. ${limpas} ferramenta(s) ficaram sem tipo.`:'Tipo excluído.','aviso');
+});
+
+/* Botão "＋ Novo tipo" dentro do modal de ferramenta */
+$('btnNovoTipoInline').addEventListener('click',abrirNovoTipo);
+
+/* ===== [17] AÇÕES ===== */
 document.querySelector('thead tr').addEventListener('click',e=>{
   const th=e.target.closest('th[data-ordem]');
   if(!th)return;
@@ -3143,12 +3244,45 @@ function abrirGerenciarFerramentas(sid){
   renderListaFerrSetor();
   abrirModal('modalFerrSetor');
 }
+
+/* Renderização dos chips — com botão ✏️ para renomear */
 function renderChipsTipos(){
   const el=$('chipsTipos');
   if(!el)return;
-  el.innerHTML=(db.tiposFerramentas.length?db.tiposFerramentas.map(t=>`<button class="chip-tipo" data-tipo="${esc(t)}">＋ ${esc(t)}</button>`).join(''):'')
-    +`<button class="btn-novo-tipo" id="btnAbrirNovoTipo">＋ Novo tipo</button>`;
+  let html='';
+  db.tiposFerramentas.forEach((t,i)=>{
+    html+=`<div class="chip-wrapper">
+      <button type="button" class="chip-tipo" data-tipo-idx="${i}" title="Adicionar ${esc(t)}">＋ ${esc(t)}</button>
+      <button type="button" class="chip-edit" data-edit-idx="${i}" title="Renomear ou excluir tipo">✏️</button>
+    </div>`;
+  });
+  html+=`<button type="button" class="btn-novo-tipo" id="btnAbrirNovoTipo">＋ Novo tipo</button>`;
+  el.innerHTML=html;
 }
+$('chipsTipos').addEventListener('click',e=>{
+  /* Primeiro: botão editar */
+  const ed=e.target.closest('[data-edit-idx]');
+  if(ed){
+    e.preventDefault();
+    const t=db.tiposFerramentas[+ed.dataset.editIdx];
+    if(t)abrirEditarTipo(t);
+    return;
+  }
+  /* Segundo: chip para adicionar */
+  const c=e.target.closest('[data-tipo-idx]');
+  if(c){
+    e.preventDefault();
+    const t=db.tiposFerramentas[+c.dataset.tipoIdx];
+    if(t)adicionarFerramentaRapida(t,1);
+    return;
+  }
+  /* Terceiro: novo tipo */
+  if(e.target.id==='btnAbrirNovoTipo'){
+    e.preventDefault();
+    abrirNovoTipo();
+  }
+});
+
 function renderListaFerrSetor(){
   const el=$('listaFerrSetor');
   if(!el)return;
@@ -3175,15 +3309,6 @@ function renderListaFerrSetor(){
     </div>`;
   }).join('');
 }
-$('chipsTipos').addEventListener('click',e=>{
-  const c=e.target.closest('.chip-tipo');
-  if(c){adicionarFerramentaRapida(c.dataset.tipo,1);return}
-  if(e.target.id==='btnAbrirNovoTipo'){
-    $('novoTipoNome').value='';
-    abrirModal('modalNovoTipo');
-    setTimeout(()=>$('novoTipoNome').focus(),100);
-  }
-});
 function adicionarFerramentaRapida(nome,qtd){
   if(!setorAtualId)return;
   if(!exigirLogin('editar'))return;
@@ -3257,30 +3382,69 @@ $('listaFerrSetor').addEventListener('click',async e=>{
   }
 });
 
-$('btnNovoTipoInline').addEventListener('click',()=>{
-  if(!exigirLogin('editar'))return;
-  $('novoTipoNome').value='';
-  abrirModal('modalNovoTipo');
-  setTimeout(()=>$('novoTipoNome').focus(),100);
-});
-
-$('formNovoTipo').addEventListener('submit',e=>{
-  e.preventDefault();
-  if(!exigirLogin('editar'))return;
-  const n=$('novoTipoNome').value.trim();
-  if(!n)return;
-  if(db.tiposFerramentas.some(t=>t.toLowerCase()===n.toLowerCase())){toast('Já existe!','erro');return}
-  db.tiposFerramentas.push(n);
-  salvar();
-  fecharModal('modalNovoTipo');
-  renderChipsTipos();
-  atualizarSelects();
-  if($('modalFerramenta').classList.contains('aberto')&&$('fTipo')){
-    $('fTipo').value=n;
+/* ===== Gerenciador de tipos em Config ===== */
+function renderCfgListaTipos(){
+  const el=$('cfgListaTipos');
+  if(!el)return;
+  if(!db.tiposFerramentas.length){
+    el.innerHTML='<div class="vazio" style="padding:10px">Nenhum tipo cadastrado.</div>';
+    return;
   }
-  toast(`Tipo "${n}" criado!`);
+  el.innerHTML=db.tiposFerramentas.map((t,i)=>{
+    const count=db.ferramentas.filter(f=>f.tipo===t).length;
+    return `<div class="item-ferr-setor" style="margin:0">
+      <div style="flex:1"><strong>${esc(t)}</strong>
+        <span style="font-size:11px;color:var(--cinza);margin-left:6px">${count} ferramenta(s)</span>
+      </div>
+      <button type="button" class="btn-icon" data-cfg-edit-tipo="${i}" title="Renomear">✏️</button>
+      <button type="button" class="btn-icon" data-cfg-del-tipo="${i}" title="Excluir">🗑️</button>
+    </div>`;
+  }).join('');
+}
+$('cfgListaTipos').addEventListener('click',async e=>{
+  const ed=e.target.closest('[data-cfg-edit-tipo]');
+  const dl=e.target.closest('[data-cfg-del-tipo]');
+  if(ed){
+    const t=db.tiposFerramentas[+ed.dataset.cfgEditTipo];
+    if(t){
+      fecharModal('modalConfig');
+      setTimeout(()=>abrirEditarTipo(t),250);
+    }
+    return;
+  }
+  if(dl){
+    const t=db.tiposFerramentas[+dl.dataset.cfgDelTipo];
+    if(!t)return;
+    const count=db.ferramentas.filter(f=>f.tipo===t).length;
+    const msg=count
+      ?`Excluir o tipo "${t}"?\n\n${count} ferramenta(s) ficará(ão) com "— Sem tipo —".`
+      :`Excluir o tipo "${t}"?`;
+    const ok=await confirmar('Excluir tipo?',msg,'🗑️');
+    if(!ok)return;
+    db.tiposFerramentas=db.tiposFerramentas.filter(x=>x!==t);
+    db.ferramentas.forEach(f=>{if(f.tipo===t){f.tipo='';f.atualizadoEm=new Date().toISOString()}});
+    registrar('tipo',`Tipo: ${t}`,`Excluído${count?` (${count} ferramenta(s) sem tipo agora)`:''}`);
+    salvar();
+    renderCfgListaTipos();
+    renderChipsTipos();
+    atualizarSelects();
+    renderTudo();
+    toast('Tipo excluído.','aviso');
+  }
+});
+$('btnGerenciarTipos').addEventListener('click',()=>{
+  fecharModal('modalConfig');
+  setTimeout(()=>{
+    const modal=$('modalFerrSetor');
+    if(db.setores.length){
+      abrirGerenciarFerramentas(db.setores[0].id);
+    }else{
+      toast('Cadastre um setor primeiro.','aviso');
+    }
+  },250);
 });
 
+/* Transferência */
 $('formTransferencia').addEventListener('submit',e=>{
   e.preventDefault();
   if(!exigirLogin('transferir'))return;
@@ -4293,39 +4457,20 @@ $('logoIcone').addEventListener('click',()=>{
   }
 });
 
-/* ===== PWA — Service Worker com arquivo real ===== */
-const SW_CODE=`const CACHE='ct-v10.2';
-const PRECACHE=[
-  './',
-  './index.html',
-  'https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js',
-  'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
-  'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js',
-  'https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js',
-  'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'
-];
-self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));
-  self.skipWaiting();
-});
-self.addEventListener('activate',e=>{
-  e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
-  self.clients.claim();
-});
+/* ===== PWA ===== */
+const SW_CODE=`const CACHE='ct-v10.3';
+const PRECACHE=['./','./index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));self.skipWaiting()});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
-  e.respondWith(
-    caches.match(e.request).then(cached=>{
-      const network=fetch(e.request).then(resp=>{
-        if(resp&&resp.status===200&&resp.type==='basic'){
-          const clone=resp.clone();
-          caches.open(CACHE).then(c=>c.put(e.request,clone)).catch(()=>{});
-        }
-        return resp;
-      }).catch(()=>cached);
-      return cached||network;
-    })
-  );
+  e.respondWith(caches.match(e.request).then(cached=>{
+    const network=fetch(e.request).then(resp=>{
+      if(resp&&resp.status===200&&resp.type==='basic'){const clone=resp.clone();caches.open(CACHE).then(c=>c.put(e.request,clone)).catch(()=>{})}
+      return resp;
+    }).catch(()=>cached);
+    return cached||network;
+  }));
 });`;
 
 const MANIFEST_JSON=JSON.stringify({
@@ -4346,10 +4491,7 @@ const MANIFEST_JSON=JSON.stringify({
 let swRegistro=null;
 async function registrarServiceWorker(){
   const status=$('cfgSwStatus');
-  const setStatus=(txt,cor)=>{
-    if(status){status.textContent=txt;status.style.color=cor||''}
-  };
-
+  const setStatus=(txt,cor)=>{if(status){status.textContent=txt;status.style.color=cor||''}};
   if(!('serviceWorker' in navigator)){
     setStatus('❌ Navegador não suporta Service Worker','var(--vermelho)');
     return;
@@ -4372,14 +4514,8 @@ function baixarArquivo(nome,conteudo,mime){
   a.href=u;a.download=nome;a.click();
   setTimeout(()=>URL.revokeObjectURL(u),1000);
 }
-$('btnBaixarSw').addEventListener('click',()=>{
-  baixarArquivo('sw.js',SW_CODE,'text/javascript');
-  toast('sw.js baixado. Salve na mesma pasta do index.html.','aviso');
-});
-$('btnBaixarManifest').addEventListener('click',()=>{
-  baixarArquivo('manifest.json',MANIFEST_JSON,'application/json');
-  toast('manifest.json baixado. Salve junto ao index.html.','aviso');
-});
+$('btnBaixarSw').addEventListener('click',()=>{baixarArquivo('sw.js',SW_CODE,'text/javascript');toast('sw.js baixado. Salve na mesma pasta do index.html.','aviso')});
+$('btnBaixarManifest').addEventListener('click',()=>{baixarArquivo('manifest.json',MANIFEST_JSON,'application/json');toast('manifest.json baixado. Salve junto ao index.html.','aviso')});
 $('btnVerificarSw').addEventListener('click',registrarServiceWorker);
 
 window.addEventListener('beforeinstallprompt',e=>{
@@ -4397,7 +4533,6 @@ $('btnPwa').addEventListener('click',async()=>{
 });
 $('btnInstalarPwa').addEventListener('click',()=>$('btnPwa').click());
 
-/* Usuários */
 $('btnNovoUsuario').addEventListener('click',()=>{
   if(!exigirLogin('usuarios'))return;
   $('formUsuario').reset();
@@ -4459,7 +4594,6 @@ $('gradeUsuarios').addEventListener('click',async e=>{
   }
 });
 
-/* Configurações */
 $('btnConfig').addEventListener('click',()=>{
   if(!exigirLogin('config'))return;
   abrirModal('modalConfig');
@@ -4488,6 +4622,7 @@ function carregarConfigUI(){
   $('cfgQtdBackups').textContent=`${bk.length} backup(s)`;
   recalcularTamanho();
   atualizarIdbInfo();
+  renderCfgListaTipos();
 }
 function recalcularTamanho(){
   const t=JSON.stringify(db).length;
@@ -4651,13 +4786,13 @@ function aplicarPrefs(){
   atualizarUsuarioUI();
 }
 
-/* Onboarding */
 const passosOnb=[
-  {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234). O admin pode ativar "modo aberto" se preferir.'},
-  {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, o usuário é bloqueado temporariamente (30s → 5min). Bloqueio persiste mesmo recarregando.'},
-  {i:'📲',t:'PWA offline',x:'Baixe sw.js e manifest.json em ⚙️ e salve ao lado do index.html para ativar o modo offline.'},
-  {i:'📷',t:'Fotos com câmera',x:'Cadastre com "Câmera", "Ao vivo" (preview) ou "Galeria".'},
-  {i:'🏷️',t:'Tipo de ferramenta',x:'Classifique por tipo. Crie novos direto no formulário com "＋".'}
+  {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip (Roquete, Lixadeira…) para renomear ou excluir. As ferramentas que usam o tipo antigo são atualizadas automaticamente.'},
+  {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234).'},
+  {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, bloqueio temporário (30s → 5min).'},
+  {i:'📲',t:'PWA offline',x:'Baixe sw.js e manifest.json em ⚙️ e salve ao lado do index.html.'},
+  {i:'📷',t:'Fotos com câmera',x:'Cadastre com "Câmera", "Ao vivo" ou "Galeria".'},
+  {i:'🏷️',t:'Tipos de ferramenta',x:'Crie novos tipos direto no formulário com "＋".'}
 ];
 let onbIdx=0;
 function renderOnb(){
@@ -4682,21 +4817,13 @@ $('onbPular').addEventListener('click',()=>{
 
 /* ===== [18] INIT ===== */
 (async function init(){
-  try{
-    idb=await abrirIdb();
-  }catch(e){
-    console.warn('IndexedDB indisponível, usando localStorage puro');
-    idb=null;
-  }
-  try{
-    secretKey=await gerarSecretKey();
-  }catch(e){console.warn('HMAC indisponível');}
+  try{idb=await abrirIdb()}catch(e){console.warn('IndexedDB indisponível');idb=null}
+  try{secretKey=await gerarSecretKey()}catch(e){console.warn('HMAC indisponível')}
   await inicializar();
   atualizarUsuarioUI();
   await renderTudo();
   aplicarPrefs();
 
-  // Aviso único sobre modoAberto
   if(!localStorage.getItem('avisoSeguranca10.2')){
     setTimeout(()=>{
       const st=db.config.modoAberto?'MODO ABERTO ativo (sem login).':'Ações de edição exigem login.';
@@ -4704,14 +4831,11 @@ $('onbPular').addEventListener('click',()=>{
       localStorage.setItem('avisoSeguranca10.2','1');
     },1500);
   }
-
   if(!localStorage.getItem('onbVisto10')){
     renderOnb();
     setTimeout(()=>$('onboarding').classList.add('ativo'),600);
   }
   if(Notification.permission==='default')setTimeout(()=>Notification.requestPermission().catch(()=>{}),3000);
-
-  // Tenta registrar SW real
   registrarServiceWorker();
 
   const params=new URLSearchParams(location.search);
@@ -4719,9 +4843,8 @@ $('onbPular').addEventListener('click',()=>{
   const sig=params.get('sig');
   if(ferrId){
     const valido=await hmacVerify(ferrId,sig||'');
-    if(!valido){
-      toast('Link QR inválido ou expirado.','erro');
-    }else{
+    if(!valido)toast('Link QR inválido ou expirado.','erro');
+    else{
       const f=Repo.ferramentas.obter(ferrId);
       if(f)setTimeout(()=>mostrarDetalhes(f),800);
       else toast('Ferramenta não encontrada.','erro');
@@ -4747,7 +4870,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.2: Permissões negam por padrão • Rate limit no login • PWA com sw.js real','color:#16a34a');
+console.log('%cv10.3: Tipos do cadastro rápido agora são editáveis (renomear/excluir)','color:#16a34a');
 </script>
 </body>
 </html>

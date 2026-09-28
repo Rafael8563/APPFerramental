@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10</title>
+<title>Controle de Ferramentas — Pro v10.2</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -48,6 +48,7 @@ header{background:linear-gradient(135deg,var(--azul-escuro),var(--azul),var(--az
 .btn-topo{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 10px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:var(--transicao);font-family:inherit;position:relative}
 .btn-topo:hover{background:rgba(255,255,255,.3)}
 .btn-topo .badge-alerta{position:absolute;top:-4px;right:-4px;background:var(--vermelho);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;border:2px solid #fff;animation:pulsa 1.5s infinite}
+.btn-topo.logado{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.25)}
 @keyframes pulsa{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 .abas{max-width:1500px;margin:12px auto 0;padding:0 18px;display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto}
 .abas::-webkit-scrollbar{height:6px}.abas::-webkit-scrollbar-thumb{background:var(--borda);border-radius:3px}
@@ -285,6 +286,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .config-row:last-child{border-bottom:none}
 .config-row .lbl{font-size:13.5px;font-weight:600}
 .config-row .desc{font-size:11.5px;color:var(--cinza);margin-top:2px}
+.config-row .desc code{background:rgba(124,58,237,.1);color:var(--roxo);padding:1px 5px;border-radius:4px;font-size:10.5px}
 .switch{position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0}
 .switch input{opacity:0;width:0;height:0}
 .switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--borda);transition:.3s;border-radius:24px}
@@ -314,6 +316,11 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .quota-bar.warn > div{background:linear-gradient(90deg,var(--amarelo),var(--vermelho))}
 .quota-bar.danger > div{background:var(--vermelho)}
 .badge-cache{display:inline-block;background:rgba(124,58,237,.15);color:var(--roxo);font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:4px}
+.login-aviso{display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:9px;padding:10px 13px;font-size:12.5px;margin-bottom:13px;align-items:center;gap:8px}
+.login-aviso.ativo{display:flex}
+.login-aviso .ic{font-size:18px}
+.pin-info{font-size:11px;color:var(--cinza);margin-top:4px}
+.permissao-aviso{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--amarelo);margin-bottom:8px;display:flex;align-items:center;gap:6px}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
@@ -366,7 +373,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.0 • PT-BR</p>
+        <p id="subInfo">v10.2 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -532,6 +539,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <option value="transferencia">Transferência</option><option value="manutencao">Manutenção</option>
         <option value="inventario">Inventário</option><option value="reserva">Reserva</option>
         <option value="setor">Setor</option><option value="webhook">Webhook</option>
+        <option value="login">Login</option>
       </select>
       <button class="btn btn-secundario" id="btnLimparHistorico">🗑️</button>
     </div>
@@ -839,21 +847,22 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="campo"><label class="obrigatorio">Nome</label><input type="text" id="uNome" required autocomplete="off"></div>
       <div class="campo"><label>Papel</label><select id="uPapel"><option value="admin">👑 Admin</option><option value="supervisor">🔑 Supervisor</option><option value="operador" selected>👤 Operador</option></select></div>
       <div class="campo"><label>PIN (4 dígitos)</label><input type="password" id="uPin" maxlength="4" pattern="\d{4}" placeholder="0000"></div>
-      <div class="info-box sucesso"><span class="ic">🔐</span><div>O PIN é armazenado como hash SHA-256.</div></div>
+      <div class="info-box sucesso"><span class="ic">🔐</span><div>O PIN é armazenado como hash SHA-256. Após 5 tentativas falhas, o usuário é bloqueado temporariamente.</div></div>
     </div>
     <div class="modal-rodape"><button type="button" class="btn btn-secundario" data-fechar="modalUsuario">Cancelar</button><button type="submit" class="btn btn-primario">💾</button></div></form>
   </div>
 </div>
 
 <div class="overlay" id="modalLogin" role="dialog" aria-modal="true">
-  <div class="modal" style="max-width:360px">
+  <div class="modal" style="max-width:380px">
     <div class="modal-topo"><h2>👤 Entrar</h2><button class="fechar" data-fechar="modalLogin">&times;</button></div>
     <form id="formLogin"><div class="modal-corpo">
       <div class="campo"><label>Usuário</label><select id="loginUser" required></select></div>
-      <div class="campo"><label>PIN</label><input type="password" id="loginPin" maxlength="4" placeholder="0000"></div>
+      <div class="campo"><label>PIN</label><input type="password" id="loginPin" maxlength="4" placeholder="0000" inputmode="numeric"><div class="pin-info" id="loginPinInfo"></div></div>
+      <div class="login-aviso" id="loginAviso"><span class="ic">🔒</span><div id="loginAvisoTxt">—</div></div>
       <div class="info-box"><span class="ic">🔓</span><div>Padrão: <strong>Administrador</strong> / PIN <strong>1234</strong></div></div>
     </div>
-    <div class="modal-rodape"><button type="button" class="btn btn-secundario" data-fechar="modalLogin">Cancelar</button><button type="submit" class="btn btn-primario">Entrar</button></div></form>
+    <div class="modal-rodape"><button type="button" class="btn btn-secundario" data-fechar="modalLogin">Cancelar</button><button type="submit" class="btn btn-primario" id="btnLoginSubmit">Entrar</button></div></form>
   </div>
 </div>
 
@@ -944,6 +953,35 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
     <div class="modal-corpo">
 
       <div class="config-secao">
+        <h3>🔐 Segurança</h3>
+        <div class="config-row">
+          <div>
+            <div class="lbl">Modo aberto (sem login)</div>
+            <div class="desc">⚠️ Se ativado, <strong>qualquer pessoa</strong> pode editar e excluir sem senha. Deixe desligado para exigir login. Apenas <strong>admin</strong> pode alterar.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="cfgModoAberto"><span class="slider"></span></label>
+        </div>
+        <div class="config-row">
+          <div><div class="lbl">Rate limit no login</div><div class="desc">Bloqueia após 5 tentativas falhas (padrão: 30s, 60s, 120s…)</div></div>
+          <label class="switch"><input type="checkbox" id="cfgRateLimit" checked><span class="slider"></span></label>
+        </div>
+        <div class="config-row">
+          <div><div class="lbl">Auto-bloqueio por inatividade</div><div class="desc">Desconecta após período sem uso</div></div>
+          <label class="switch"><input type="checkbox" id="cfgAutoLock" checked><span class="slider"></span></label>
+        </div>
+        <div class="config-row">
+          <div><div class="lbl">Tempo até bloquear</div><div class="desc">Minutos de inatividade</div></div>
+          <select id="cfgAutoLockMin" class="lang-select">
+            <option value="5">5 minutos</option>
+            <option value="10" selected>10 minutos</option>
+            <option value="15">15 minutos</option>
+            <option value="30">30 minutos</option>
+            <option value="60">1 hora</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="config-secao">
         <h3>🌎 Idioma e Região</h3>
         <div class="config-row">
           <div><div class="lbl">Idioma da interface</div><div class="desc">Português, English, Español</div></div>
@@ -966,7 +1004,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
           <label class="switch"><input type="checkbox" id="cfgSom" checked><span class="slider"></span></label>
         </div>
         <div class="config-row" style="flex-direction:column;align-items:stretch">
-          <div><div class="lbl">Webhook</div><div class="desc">Domínios aceitos: <code>hooks.slack.com</code>, <code>discord.com</code>, <code>*.webhook.office.com</code>, <code>*.webhook.office365.com</code>. Limite: 10 envios/min.</div></div>
+          <div><div class="lbl">Webhook</div><div class="desc">Domínios aceitos: <code>hooks.slack.com</code>, <code>discord.com</code>, <code>*.webhook.office.com</code>. Limite: 10 envios/min.</div></div>
           <input type="url" id="cfgWebhook" placeholder="https://hooks.slack.com/..." style="margin-top:8px;padding:10px 12px;border:1px solid var(--borda);border-radius:8px;font-size:13px;background:var(--fundo);color:var(--texto);font-family:inherit">
           <div style="display:flex;gap:8px;margin-top:8px">
             <select id="cfgWebhookTipo" class="lang-select" style="flex:1">
@@ -994,24 +1032,6 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       </div>
 
       <div class="config-secao">
-        <h3>🔒 Segurança e Sessão</h3>
-        <div class="config-row">
-          <div><div class="lbl">Auto-bloqueio por inatividade</div><div class="desc">Desconecta após período sem uso</div></div>
-          <label class="switch"><input type="checkbox" id="cfgAutoLock" checked><span class="slider"></span></label>
-        </div>
-        <div class="config-row">
-          <div><div class="lbl">Tempo até bloquear</div><div class="desc">Minutos de inatividade</div></div>
-          <select id="cfgAutoLockMin" class="lang-select">
-            <option value="5">5 minutos</option>
-            <option value="10" selected>10 minutos</option>
-            <option value="15">15 minutos</option>
-            <option value="30">30 minutos</option>
-            <option value="60">1 hora</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="config-secao">
         <h3>🎨 Aparência</h3>
         <div class="config-row">
           <div><div class="lbl">Modo compacto</div><div class="desc">Mais itens visíveis por tela</div></div>
@@ -1020,6 +1040,22 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <div class="config-row">
           <div><div class="lbl">Alto contraste</div><div class="desc">Acessibilidade (WCAG)</div></div>
           <label class="switch"><input type="checkbox" id="cfgContraste"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="config-secao">
+        <h3>📱 PWA / Offline</h3>
+        <div class="config-row">
+          <div><div class="lbl">Status do Service Worker</div><div class="desc" id="cfgSwStatus">Verificando…</div></div>
+          <button type="button" class="btn btn-secundario btn-mini" id="btnVerificarSw">🔄</button>
+        </div>
+        <div class="config-row" style="flex-direction:column;align-items:stretch">
+          <div><div class="lbl">Ativar modo offline</div><div class="desc">O Service Worker precisa ser um arquivo real (<code>sw.js</code>) na mesma pasta do <code>index.html</code>. Clique abaixo para baixar os arquivos prontos e salve na pasta do app.</div></div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <button type="button" class="btn btn-primario btn-mini" id="btnBaixarSw">⬇️ Baixar sw.js</button>
+            <button type="button" class="btn btn-secundario btn-mini" id="btnBaixarManifest">⬇️ Baixar manifest.json</button>
+            <button type="button" class="btn btn-verde btn-mini" id="btnInstalarPwa">📲 Instalar app</button>
+          </div>
         </div>
       </div>
 
@@ -1084,17 +1120,16 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.1
-   Novidades v10.1:
-   • Câmera ao vivo (getUserMedia) + captura para fotos
-   • Campo "Tipo" de ferramenta com criação inline
-   • CSV com coluna Tipo
-   • Fixes: renderTopResp, confirmar(), webhook em kit/devolução
+   CONTROLE DE FERRAMENTAS PRO — v10.2
+   Mudanças v10.2:
+   • [SEC] Permissões negam por padrão + config modoAberto
+   • [SEC] Rate limit no login (5 tentativas → backoff exponencial)
+   • [PWA] Service Worker via arquivo real + download dos arquivos
    ========================================================= */
 'use strict';
 
 /* ===== [01] CONSTANTES & ESTADO ===== */
-const VERSAO='10.1';
+const VERSAO='10.2';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1114,9 +1149,28 @@ const STATUS={
 const PAPEIS={admin:'👑 Admin',supervisor:'🔑 Supervisor',operador:'👤 Operador'};
 const WEBHOOK_ALLOW=['hooks.slack.com','discord.com','discordapp.com','webhook.office.com','webhook.office365.com','outlook.office.com','outlook.office365.com'];
 const WEBHOOK_MAX=10, WEBHOOK_JANELA=60000;
+const RATE_LIMIT_MAX_TENT=5;
+const RATE_LIMIT_BASE_S=30;   // primeiro bloqueio: 30s
+const RATE_LIMIT_MAX_S=300;   // máximo: 5min
+
+/* Mapa de permissões por papel.
+   'publico' = disponível sem login (se modoAberto=true) */
+const PERMISSOES={
+  ver:['publico','admin','supervisor','operador'],
+  escanear:['publico','admin','supervisor','operador'],
+  emprestar:['admin','supervisor','operador'],
+  devolver:['admin','supervisor','operador'],
+  reservar:['admin','supervisor','operador'],
+  editar:['admin','supervisor'],
+  transferir:['admin','supervisor'],
+  inventario:['admin','supervisor'],
+  excluir:['admin'],
+  usuarios:['admin'],
+  config:['admin']
+};
 
 let db={
-  versao:10,
+  versao:11,
   usuarios:[],
   usuarioAtual:null,
   setores:[],
@@ -1129,7 +1183,15 @@ let db={
   reservas:[],
   locais:[],
   empresa:{nome:'',cnpj:'',logo:''},
-  config:{idioma:'pt',autoBackup:true,ultimoAutoBackup:null,webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,som:true,notif:false,autoLock:true,autoLockMin:10,compacto:false,contraste:false},
+  config:{
+    idioma:'pt',autoBackup:true,ultimoAutoBackup:null,
+    webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,
+    som:true,notif:false,
+    autoLock:true,autoLockMin:10,
+    compacto:false,contraste:false,
+    modoAberto:false,
+    rateLimit:true
+  },
   atualizadoEm:null
 };
 let ordem={campo:'nome',crescente:true};
@@ -1144,15 +1206,14 @@ let ratingDevolucao=0;
 let deferredPrompt=null;
 let ultimaAtividade=Date.now();
 let agendaFiltroAtivo='todos';
-let fotosTemp=[];       // {idbKey} ou {preview, temp:true}
+let fotosTemp=[];
 let idb=null;
 let secretKey=null;
 let webhookBucket=[];
 let modalAnteriorFoco=null;
-
-/* Câmera ao vivo */
 let cameraStream=null;
 let cameraFacing='environment';
+let loginCountdownTimer=null;
 
 /* ===== [02] UTILS ===== */
 const $=id=>document.getElementById(id);
@@ -1334,7 +1395,7 @@ function migrar(o){
     o.reservas=Array.isArray(o.reservas)?o.reservas:[];
     o.locais=Array.isArray(o.locais)?o.locais:[];
     o.empresa=o.empresa||{nome:'',cnpj:'',logo:''};
-    o.config=Object.assign({idioma:'pt',autoBackup:true,ultimoAutoBackup:null,webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,som:true,notif:false,autoLock:true,autoLockMin:10,compacto:false,contraste:false},o.config||{});
+    o.config=o.config||{};
     v=9;
   }
   if(v<10){
@@ -1343,11 +1404,24 @@ function migrar(o){
   if(v<11){
     o.config=o.config||{};
     if(o.config.webhookDev===undefined)o.config.webhookDev=false;
-    // Garante tipo vazio em ferramentas antigas
     (o.ferramentas||[]).forEach(f=>{if(f.tipo===undefined)f.tipo=''});
     v=11;
   }
-  o.versao=10;
+  // v11 → v12: segurança (modoAberto, rateLimit, tentativasFalhas nos usuários)
+  if(v<12){
+    o.config=o.config||{};
+    if(o.config.modoAberto===undefined)o.config.modoAberto=false;
+    if(o.config.rateLimit===undefined)o.config.rateLimit=true;
+    (o.usuarios||[]).forEach(u=>{
+      if(u.tentativasFalhas===undefined)u.tentativasFalhas=0;
+      if(u.bloqueadoAte===undefined)u.bloqueadoAte=null;
+    });
+    v=12;
+  }
+  // Normaliza config completo
+  const cfgPadrao={idioma:'pt',autoBackup:true,ultimoAutoBackup:null,webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,som:true,notif:false,autoLock:true,autoLockMin:10,compacto:false,contraste:false,modoAberto:false,rateLimit:true};
+  o.config=Object.assign(cfgPadrao,o.config||{});
+  o.versao=11;
   return o;
 }
 async function migrarMidia(){
@@ -1393,6 +1467,8 @@ async function migrarPins(){
       delete u.pin;
       mudou=true;
     }
+    if(u.tentativasFalhas===undefined){u.tentativasFalhas=0;mudou=true}
+    if(u.bloqueadoAte===undefined){u.bloqueadoAte=null;mudou=true}
   }
   if(mudou)salvar(true);
 }
@@ -1417,19 +1493,19 @@ async function inicializar(){
     const adminPinHash=await sha256('1234');
     const supPinHash=await sha256('0000');
     db.usuarios=[
-      {id:uid(),nome:'Administrador',papel:'admin',pinHash:adminPinHash},
-      {id:uid(),nome:'Supervisor',papel:'supervisor',pinHash:supPinHash},
-      {id:uid(),nome:'Operador',papel:'operador',pinHash:''}
+      {id:uid(),nome:'Administrador',papel:'admin',pinHash:adminPinHash,tentativasFalhas:0,bloqueadoAte:null},
+      {id:uid(),nome:'Supervisor',papel:'supervisor',pinHash:supPinHash,tentativasFalhas:0,bloqueadoAte:null},
+      {id:uid(),nome:'Operador',papel:'operador',pinHash:'',tentativasFalhas:0,bloqueadoAte:null}
     ];
     db.setores=SETORES_PADRAO.map(nome=>({id:uid(),nome}));
-    db.versao=10;
+    db.versao=11;
     salvar(true);
   }else{
     await migrarPins();
     await migrarMidia();
   }
   if(!db.usuarios.length){
-    db.usuarios=[{id:uid(),nome:'Administrador',papel:'admin',pinHash:await sha256('1234')}];
+    db.usuarios=[{id:uid(),nome:'Administrador',papel:'admin',pinHash:await sha256('1234'),tentativasFalhas:0,bloqueadoAte:null}];
   }
 }
 
@@ -1567,7 +1643,6 @@ function feedback(tipo){
     o.start();o.stop(ctx.currentTime+.15);
   }catch(e){}
 }
-/* Confirm — agora usa .onclick para não acumular listeners */
 function confirmar(titulo,texto,icone='⚠️'){
   return new Promise(r=>{
     $('confTitulo').textContent=titulo;
@@ -1602,6 +1677,7 @@ function fecharModal(id){
   if(!m)return;
   m.classList.remove('aberto');
   if(id==='modalFerramenta')fecharCameraAoVivo();
+  if(id==='modalLogin'&&loginCountdownTimer){clearInterval(loginCountdownTimer);loginCountdownTimer=null}
   if(modalAnteriorFoco&&modalAnteriorFoco.focus){try{modalAnteriorFoco.focus()}catch(e){}}
   modalAnteriorFoco=null;
 }
@@ -1642,18 +1718,161 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-/* ===== [13] AUTH ===== */
+/* ===== [13] AUTH — PERMISSÕES + RATE LIMIT ===== */
+
+/* Permissões: nega por padrão.
+   - Modo quiosque: só ver/escanear/emprestar/devolver
+   - Sem login: só ver/escanear (e ações de 'publico' SE modoAberto=true)
+   - Com login: checa papel */
+function temPermissao(acao){
+  // Modo quiosque: só o básico
+  if(document.body.classList.contains('modo-quiosque')){
+    return ['ver','escanear','emprestar','devolver'].includes(acao);
+  }
+
+  // Ações sempre liberadas (leitura pura)
+  if(acao==='ver'||acao==='escanear')return true;
+
+  const lista=PERMISSOES[acao];
+  if(!lista)return false;
+
+  const papel=db.usuarioAtual&&db.usuarioAtual.papel;
+
+  // Sem login
+  if(!papel){
+    // Só permite se modoAberto=true E a ação permite 'publico'
+    if(db.config.modoAberto && lista.includes('publico'))return true;
+    return false;
+  }
+
+  // Com login: checa papel
+  return lista.includes(papel);
+}
+
+/* Verifica e, se falhar, orienta o usuário. Retorna true se OK. */
+function exigirLogin(acao){
+  if(temPermissao(acao))return true;
+
+  // Está logado mas sem papel suficiente
+  if(db.usuarioAtual){
+    toast(`Ação "${acao}" requer permissão maior.`,'erro');
+    return false;
+  }
+
+  // Não está logado
+  toast('Faça login para continuar.','aviso');
+  setTimeout(()=>abrirLoginModal(), 250);
+  return false;
+}
+
 function atualizarUsuarioUI(){
   const u=db.usuarioAtual;
+  const btn=$('btnUsuario');
   $('nomeUsuario').textContent=u?u.nome.split(' ')[0]:'Entrar';
+  if(u)btn.classList.add('logado');else btn.classList.remove('logado');
 }
-function temPermissao(a){
-  const p=db.usuarioAtual&&db.usuarioAtual.papel;
-  if(!p)return true;
-  if(a==='editar')return p==='admin'||p==='supervisor';
-  if(a==='excluir'||a==='usuarios')return p==='admin';
-  return true;
+
+/* --- Rate limit no login --- */
+function usuarioBloqueado(u){
+  if(!db.config.rateLimit)return 0;
+  if(!u||!u.bloqueadoAte)return 0;
+  const resta=u.bloqueadoAte-Date.now();
+  return resta>0?resta:0;
 }
+function formatarSegundos(ms){
+  const s=Math.ceil(ms/1000);
+  if(s<60)return s+'s';
+  const m=Math.floor(s/60);
+  const r=s%60;
+  return m+'min'+(r?` ${r}s`:'');
+}
+function aplicarBloqueioUI(u){
+  const aviso=$('loginAviso');
+  const btn=$('btnLoginSubmit');
+  const info=$('loginPinInfo');
+  if(!u){aviso.classList.remove('ativo');btn.disabled=false;info.textContent='';return}
+  const resta=usuarioBloqueado(u);
+  if(resta>0){
+    aviso.classList.add('ativo');
+    $('loginAvisoTxt').innerHTML=`Conta bloqueada por tentativas excessivas. Tente novamente em <strong id="loginCountdown">${formatarSegundos(resta)}</strong>.`;
+    btn.disabled=true;
+    info.textContent='';
+    if(loginCountdownTimer)clearInterval(loginCountdownTimer);
+    loginCountdownTimer=setInterval(()=>{
+      const r2=usuarioBloqueado(u);
+      const el=$('loginCountdown');
+      if(r2<=0){
+        clearInterval(loginCountdownTimer);
+        loginCountdownTimer=null;
+        aviso.classList.remove('ativo');
+        btn.disabled=false;
+        return;
+      }
+      if(el)el.textContent=formatarSegundos(r2);
+    },1000);
+  }else{
+    aviso.classList.remove('ativo');
+    btn.disabled=false;
+    const tent=(u.tentativasFalhas||0);
+    if(tent>0)info.textContent=`${RATE_LIMIT_MAX_TENT-tent} tentativa(s) restante(s) antes do bloqueio.`;
+    else info.textContent='';
+  }
+}
+async function tentarLogin(u,pin){
+  // Sem PIN configurado: entra direto (operador padrão)
+  if(!u.pinHash){
+    u.tentativasFalhas=0;u.bloqueadoAte=null;
+    return {ok:true};
+  }
+
+  // Verifica bloqueio
+  const resta=usuarioBloqueado(u);
+  if(resta>0){
+    return {ok:false,msg:`Bloqueado por ${formatarSegundos(resta)}.`};
+  }
+
+  // Compara PIN
+  const hash=await sha256(pin);
+  const correto=hash===u.pinHash;
+
+  if(correto){
+    u.tentativasFalhas=0;u.bloqueadoAte=null;
+    return {ok:true};
+  }
+
+  // Falhou
+  u.tentativasFalhas=(u.tentativasFalhas||0)+1;
+
+  if(db.config.rateLimit && u.tentativasFalhas>=RATE_LIMIT_MAX_TENT){
+    // Backoff exponencial: 30s, 60s, 120s, 240s, 300s (max)
+    const extra=u.tentativasFalhas-RATE_LIMIT_MAX_TENT;
+    const seg=Math.min(RATE_LIMIT_MAX_S, RATE_LIMIT_BASE_S*Math.pow(2,extra));
+    u.bloqueadoAte=Date.now()+seg*1000;
+    registrar('login',u.nome,`🔒 Bloqueado por ${seg}s após ${u.tentativasFalhas} tentativas`);
+    return {ok:false,msg:`Bloqueado por ${seg}s.`,bloqueado:true};
+  }
+
+  const restam=RATE_LIMIT_MAX_TENT-u.tentativasFalhas;
+  registrar('login',u.nome,`❌ PIN incorreto (${u.tentativasFalhas}/${RATE_LIMIT_MAX_TENT})`);
+  return {ok:false,msg:`PIN incorreto. ${restam} tentativa(s) restante(s).`};
+}
+
+function abrirLoginModal(){
+  $('loginUser').innerHTML=db.usuarios.map(u=>{
+    const bloqueio=usuarioBloqueado(u);
+    const sufixo=bloqueio>0?' 🔒':'';
+    return `<option value="${u.id}">${esc(u.nome)} (${PAPEIS[u.papel]||''})${sufixo}</option>`;
+  }).join('');
+  $('loginPin').value='';
+  const u=db.usuarios.find(x=>x.id===$('loginUser').value);
+  aplicarBloqueioUI(u);
+  abrirModal('modalLogin');
+  setTimeout(()=>{
+    const b=usuarioBloqueado(u);
+    if(b<=0)$('loginPin').focus();
+  },150);
+}
+
 ['click','keydown','touchstart','mousemove','scroll'].forEach(ev=>{
   document.addEventListener(ev,()=>{ultimaAtividade=Date.now()},{passive:true});
 });
@@ -1677,25 +1896,38 @@ $('btnUsuario').addEventListener('click',()=>{
       if(ok){db.usuarioAtual=null;salvar(true);atualizarUsuarioUI();toast('Saiu.','aviso')}
     });
   }else{
-    $('loginUser').innerHTML=db.usuarios.map(u=>`<option value="${u.id}">${esc(u.nome)} (${PAPEIS[u.papel]||''})</option>`).join('');
-    abrirModal('modalLogin');
+    abrirLoginModal();
   }
+});
+$('loginUser').addEventListener('change',()=>{
+  const u=db.usuarios.find(x=>x.id===$('loginUser').value);
+  aplicarBloqueioUI(u);
 });
 $('formLogin').addEventListener('submit',async e=>{
   e.preventDefault();
   const u=db.usuarios.find(x=>x.id===$('loginUser').value);
   if(!u)return;
   const pin=$('loginPin').value;
-  if(u.pinHash){
-    const hash=await sha256(pin);
-    if(hash!==u.pinHash){toast('PIN incorreto!','erro');return}
+
+  const res=await tentarLogin(u,pin);
+  salvar(true);
+
+  if(!res.ok){
+    toast(res.msg,'erro');
+    aplicarBloqueioUI(u);
+    $('loginPin').value='';
+    return;
   }
+
   db.usuarioAtual={id:u.id,nome:u.nome,papel:u.papel};
   ultimaAtividade=Date.now();
   salvar(true);
   fecharModal('modalLogin');
   $('loginPin').value='';
+  $('loginPinInfo').textContent='';
   atualizarUsuarioUI();
+  registrar('login',u.nome,'✅ Login efetuado');
+  salvar();
   toast(`Bem-vindo, ${u.nome}!`);
 });
 
@@ -1730,7 +1962,6 @@ async function atualizarSelects(){
     el.innerHTML=vazio+ops;
     el.value=v;
   });
-  // Tipos
   const tiposOps=db.tiposFerramentas.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
   const ft=$('fTipo');
   if(ft){
@@ -1953,7 +2184,7 @@ function renderHistorico(){
   let lista=db.historico;
   if(filtro)lista=lista.filter(h=>h.tipo===filtro);
   if(!lista.length){el.innerHTML='<div class="vazio">📜 Vazio.</div>';return}
-  const cores={criada:'verde',emprestimo:'roxo',devolucao:'verde',excluida:'vermelho',status:'amarelo',manutencao:'amarelo',webhook:'roxo'};
+  const cores={criada:'verde',emprestimo:'roxo',devolucao:'verde',excluida:'vermelho',status:'amarelo',manutencao:'amarelo',webhook:'roxo',login:'vermelho'};
   el.innerHTML=`<div class="timeline">${lista.slice(0,200).map(h=>`
     <div class="timeline-item ${cores[h.tipo]||''}">
       <div class="timeline-data">${fmtData(h.data)} • 👤 ${esc(h.usuario||'Sistema')}</div>
@@ -1967,11 +2198,16 @@ function renderUsuarios(){
   g.innerHTML=db.usuarios.map(u=>{
     const atual=db.usuarioAtual&&db.usuarioAtual.id===u.id;
     const papelTxt=PAPEIS[u.papel]||u.papel;
+    const bloq=usuarioBloqueado(u);
+    const extra=[];
+    if(bloq>0)extra.push(`<span class="badge badge-perdida">🔒 ${formatarSegundos(bloq)}</span>`);
+    if(u.tentativasFalhas>0&&bloq<=0)extra.push(`<span class="badge badge-manutencao">${u.tentativasFalhas} falha(s)</span>`);
     return `<div class="card-setor" style="${atual?'border-color:var(--verde)':''}">
       <div class="nome">${papelTxt.split(' ')[0]} ${esc(u.nome)} ${atual?'<span class="badge badge-disponivel">VOCÊ</span>':''}</div>
-      <div class="cont">${papelTxt}</div>
+      <div class="cont">${papelTxt} ${extra.join(' ')}</div>
       <div class="botoes">
         <button class="btn btn-secundario" data-user="editar" data-id="${u.id}">✏️</button>
+        ${u.bloqueadoAte?`<button class="btn btn-amarelo" data-user="desbloquear" data-id="${u.id}">🔓</button>`:''}
         ${db.usuarios.length>1?`<button class="btn btn-perigo" data-user="excluir" data-id="${u.id}">🗑️</button>`:''}
       </div></div>`;
   }).join('');
@@ -1999,6 +2235,7 @@ function renderKPIs(){
   if(cb)ins.push(`🔩 ${cb} consumível(is) em falta`);
   const cv=f.filter(x=>x.calibracao&&x.calibracao.intervaloDias&&x.calibracao.ultimaCalibracao).filter(x=>new Date(new Date(x.calibracao.ultimaCalibracao).getTime()+x.calibracao.intervaloDias*86400000)<new Date()).length;
   if(cv)ins.push(`🎯 ${cv} calibração(ões) vencida(s)`);
+  if(!db.config.modoAberto&&!db.usuarioAtual)ins.push('🔐 Faça login para editar dados');
   if(!ins.length)ins.push('✨ Tudo em ordem!');
   if($('insights'))$('insights').innerHTML=ins.map(i=>`<div>${i}</div>`).join('');
 }
@@ -2182,6 +2419,7 @@ document.addEventListener('click',e=>{
   if(!b)return;
   const f=db.ferramentas.find(x=>x.id===b.dataset.abrirManut);
   if(!f)return;
+  if(!exigirLogin('editar'))return;
   $('manFerrId').value=f.id;
   $('manFerrNome').textContent=f.nome;
   $('manTipo').value='preventiva';
@@ -2237,7 +2475,6 @@ function renderRanking(){
     return `<div class="rank-item"><div class="rank-pos ${cls}">${i+1}º</div><div style="flex:1"><div style="font-weight:700">${esc(nome)}</div><div style="font-size:11.5px;color:var(--cinza)">${d.total} ações • ${d.emp} empr. • ${d.dev} dev.</div></div></div>`;
   }).join('');
 }
-/* renderTopResp — FIX: não destrói o canvas; usa overlay .vazio */
 function renderTopResp(){
   const ctx=$('grafTopResp');
   if(!ctx)return;
@@ -2246,7 +2483,6 @@ function renderTopResp(){
     map[h.usuario]=(map[h.usuario]||0)+1;
   });
   const top=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  // Remove overlay antigo se existir
   const wrap=ctx.parentElement;
   const old=wrap.querySelector('.vazio');
   if(old)old.remove();
@@ -2461,6 +2697,7 @@ $('barraMassa').addEventListener('click',async e=>{
   if(a==='limpar'){selecionadas.clear();renderTabela();$('checkTodos').checked=false;return}
   if(!selecionadas.size)return;
   if(a==='status'){
+    if(!exigirLogin('editar'))return;
     const n=btn.dataset.valor;
     const backup=db.ferramentas.filter(f=>selecionadas.has(f.id)).map(f=>({id:f.id,status:f.status}));
     db.ferramentas.forEach(f=>{if(selecionadas.has(f.id)){f.status=n;f.atualizadoEm=new Date().toISOString()}});
@@ -2468,13 +2705,14 @@ $('barraMassa').addEventListener('click',async e=>{
     toast('Atualizado!',undefined,()=>{backup.forEach(b=>{const f=Repo.ferramentas.obter(b.id);if(f)f.status=b.status});renderTudo()});
   }
   if(a==='transferir'){
+    if(!exigirLogin('transferir'))return;
     $('transFerrIds').value=JSON.stringify([...selecionadas]);
     $('transInfo').textContent=`Transferir ${selecionadas.size} item(ns)`;
     abrirModal('modalTransferencia');
     return;
   }
   if(a==='excluir'){
-    if(!temPermissao('excluir')){toast('Sem permissão.','erro');return}
+    if(!exigirLogin('excluir'))return;
     const ok=await confirmar('Excluir?',`Excluir ${selecionadas.size} item(ns)?`,'🗑️');
     if(!ok)return;
     const excluidas=db.ferramentas.filter(f=>selecionadas.has(f.id));
@@ -2504,7 +2742,6 @@ document.addEventListener('click',e=>{
   renderGaleria();
 });
 
-/* Botões de foto */
 $('btnFotoNativa').addEventListener('click',()=>$('fCameraInput').click());
 $('btnFotoGaleria').addEventListener('click',()=>$('fFotoInput').click());
 $('btnFotoAoVivo').addEventListener('click',()=>{
@@ -2517,9 +2754,8 @@ $('btnFecharCamera').addEventListener('click',fecharCameraAoVivo);
 $('fFotoInput').addEventListener('change',e=>{processarArquivosFotos(e.target.files);e.target.value=''});
 $('fCameraInput').addEventListener('change',e=>{processarArquivosFotos(e.target.files);e.target.value=''});
 
-/* CRUD Ferramenta */
 $('btnNovaFerramenta').addEventListener('click',()=>{
-  if(!temPermissao('editar')){toast('Sem permissão.','erro');return}
+  if(!exigirLogin('editar'))return;
   if(!db.setores.length){toast('Cadastre um setor primeiro.','aviso');return}
   fecharCameraAoVivo();
   $('formFerramenta').reset();
@@ -2535,6 +2771,7 @@ $('btnNovaFerramenta').addEventListener('click',()=>{
 });
 $('formFerramenta').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const id=$('fId').value;
   const d={
     nome:$('fNome').value.trim(),
@@ -2598,7 +2835,7 @@ $('corpoTabela').addEventListener('click',async e=>{
   if(!f)return;
   const a=btn.dataset.acao;
   if(a==='editar'){
-    if(!temPermissao('editar')){toast('Sem permissão.','erro');return}
+    if(!exigirLogin('editar'))return;
     fecharCameraAoVivo();
     $('fId').value=f.id;
     $('fNome').value=f.nome;
@@ -2634,7 +2871,7 @@ $('corpoTabela').addEventListener('click',async e=>{
     abrirModal('modalFerramenta');
   }
   if(a==='excluir'){
-    if(!temPermissao('excluir')){toast('Sem permissão.','erro');return}
+    if(!exigirLogin('excluir'))return;
     const ok=await confirmar('Excluir?',`Excluir "${f.nome}"?`,'🗑️');
     if(!ok)return;
     const idx=db.ferramentas.indexOf(f);
@@ -2646,6 +2883,7 @@ $('corpoTabela').addEventListener('click',async e=>{
     toast('Excluída.','aviso',()=>{db.ferramentas.splice(idx,0,f);renderTudo()});
   }
   if(a==='emprestar'){
+    if(!exigirLogin('emprestar'))return;
     $('empFerramentaId').value=f.id;
     $('empKitId').value='';
     $('empFerramentaNome').textContent=f.nome+(f.tipo?` • ${f.tipo}`:'');
@@ -2659,6 +2897,7 @@ $('corpoTabela').addEventListener('click',async e=>{
     setTimeout(()=>{$('empResponsavel').focus();iniciarAssinatura()},200);
   }
   if(a==='devolver'){
+    if(!exigirLogin('devolver'))return;
     const emp=f.emprestimoAtivo;
     if(!emp)return;
     $('devFerrId').value=f.id;
@@ -2675,6 +2914,7 @@ $('corpoTabela').addEventListener('click',async e=>{
   if(a==='detalhes')mostrarDetalhes(f);
   if(a==='qr')mostrarQR(f);
   if(a==='calibrar'){
+    if(!exigirLogin('editar'))return;
     $('manFerrId').value=f.id;
     $('manFerrNome').textContent=f.nome;
     $('manTipo').value='calibracao';
@@ -2691,9 +2931,9 @@ $('corpoTabela').addEventListener('click',async e=>{
   }
 });
 
-/* Empréstimo */
 $('formEmprestimo').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!exigirLogin('emprestar'))return;
   const kitId=$('empKitId').value;
   if(kitId)return processarEmprestimoKit(kitId);
   return processarEmprestimoIndividual();
@@ -2746,7 +2986,6 @@ async function processarEmprestimoKit(kitId){
     f.atualizadoEm=new Date().toISOString();
   });
   registrar('emprestimo',`Kit ${k.nome}`,`${fs.length} itens para ${resp}`);
-  /* FIX: webhook em empréstimo de kit */
   if(db.config.webhookEmp)enviarWebhook('📤 Kit Emprestado',`Kit "${k.nome}" (${fs.length} itens) → ${resp}${prazoEm?`\nPrazo: ${new Date(prazoEm).toLocaleString('pt-BR')}`:''}`);
   salvar();
   fecharModal('modalEmprestimo');
@@ -2755,6 +2994,7 @@ async function processarEmprestimoKit(kitId){
 }
 $('formDevolucao').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!exigirLogin('devolver'))return;
   const id=$('devFerrId').value;
   const f=Repo.ferramentas.obter(id);
   if(!f||!f.emprestimoAtivo)return;
@@ -2787,7 +3027,6 @@ $('formDevolucao').addEventListener('submit',async e=>{
     registrar('devolucao',f.nome,texto);
   }
   f.atualizadoEm=new Date().toISOString();
-  /* FIX: webhook em devolução */
   if(db.config.webhookDev)enviarWebhook('📥 Devolução',`${f.nome} por ${resp} — ${texto}`);
   salvar();
   fecharModal('modalDevolucao');
@@ -2799,7 +3038,6 @@ document.querySelectorAll('.rating-btn').forEach(b=>b.addEventListener('click',(
   document.querySelectorAll('.rating-btn').forEach(x=>x.classList.toggle('on',+x.dataset.star<=ratingDevolucao));
 }));
 
-/* Assinatura */
 function iniciarAssinatura(){
   const c=$('canvasAssinatura');
   if(!c)return;
@@ -2831,9 +3069,8 @@ function canvasAssinaturaVazio(){
 }
 $('btnLimparAssinatura').addEventListener('click',limparAssinatura);
 
-/* Setores */
 $('btnNovoSetor').addEventListener('click',()=>{
-  if(!temPermissao('editar')){toast('Sem permissão.','erro');return}
+  if(!exigirLogin('editar'))return;
   $('formSetor').reset();
   $('sId').value='';
   $('tituloSetor').textContent='Novo Setor';
@@ -2841,6 +3078,7 @@ $('btnNovoSetor').addEventListener('click',()=>{
 });
 $('formSetor').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const id=$('sId').value;
   const n=$('sNome').value.trim();
   if(!n)return;
@@ -2864,16 +3102,20 @@ $('gradeSetores').addEventListener('click',async e=>{
   const id=b.dataset.id;
   const s=db.setores.find(x=>x.id===id);
   if(!s)return;
-  if(b.dataset.setor==='ferramentas'){abrirGerenciarFerramentas(id);return}
+  if(b.dataset.setor==='ferramentas'){
+    if(!exigirLogin('editar'))return;
+    abrirGerenciarFerramentas(id);
+    return;
+  }
   if(b.dataset.setor==='editar'){
-    if(!temPermissao('editar')){toast('Sem permissão.','erro');return}
+    if(!exigirLogin('editar'))return;
     $('sId').value=s.id;
     $('sNome').value=s.nome;
     $('tituloSetor').textContent='Editar';
     abrirModal('modalSetor');
   }
   if(b.dataset.setor==='excluir'){
-    if(!temPermissao('excluir')){toast('Sem permissão.','erro');return}
+    if(!exigirLogin('excluir'))return;
     const v=db.ferramentas.filter(f=>f.setorId===id).length;
     const t=v?`Setor "${s.nome}" tem ${v} ferramenta(s). Serão excluídas.`:`Excluir "${s.nome}"?`;
     const ok=await confirmar('Excluir?',t,'🏭');
@@ -2889,7 +3131,6 @@ $('gradeSetores').addEventListener('click',async e=>{
   }
 });
 
-/* Gerenciar ferramentas do setor */
 function abrirGerenciarFerramentas(sid){
   const s=db.setores.find(x=>x.id===sid);
   if(!s){toast('Setor não encontrado.','erro');return}
@@ -2945,6 +3186,7 @@ $('chipsTipos').addEventListener('click',e=>{
 });
 function adicionarFerramentaRapida(nome,qtd){
   if(!setorAtualId)return;
+  if(!exigirLogin('editar'))return;
   const ex=db.ferramentas.find(f=>f.setorId===setorAtualId&&f.nome.toLowerCase()===nome.toLowerCase());
   if(ex){
     ex.quantidade=(ex.quantidade||1)+qtd;
@@ -2979,6 +3221,7 @@ $('listaFerrSetor').addEventListener('click',async e=>{
   const ed=e.target.closest('[data-edit-f]');
   const dl=e.target.closest('[data-del-f]');
   if(q){
+    if(!exigirLogin('editar'))return;
     const f=Repo.ferramentas.obter(q.dataset.id);
     if(!f)return;
     if(q.dataset.qtd==='mais')f.quantidade=(f.quantidade||1)+1;
@@ -2999,6 +3242,7 @@ $('listaFerrSetor').addEventListener('click',async e=>{
     return;
   }
   if(dl){
+    if(!exigirLogin('excluir'))return;
     const f=Repo.ferramentas.obter(dl.dataset.delF);
     if(!f)return;
     const ok=await confirmar('Remover?',`Remover "${f.nome}"?`,'🗑️');
@@ -3013,8 +3257,8 @@ $('listaFerrSetor').addEventListener('click',async e=>{
   }
 });
 
-/* Botão "＋" inline no modal de ferramenta */
 $('btnNovoTipoInline').addEventListener('click',()=>{
+  if(!exigirLogin('editar'))return;
   $('novoTipoNome').value='';
   abrirModal('modalNovoTipo');
   setTimeout(()=>$('novoTipoNome').focus(),100);
@@ -3022,6 +3266,7 @@ $('btnNovoTipoInline').addEventListener('click',()=>{
 
 $('formNovoTipo').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const n=$('novoTipoNome').value.trim();
   if(!n)return;
   if(db.tiposFerramentas.some(t=>t.toLowerCase()===n.toLowerCase())){toast('Já existe!','erro');return}
@@ -3030,16 +3275,15 @@ $('formNovoTipo').addEventListener('submit',e=>{
   fecharModal('modalNovoTipo');
   renderChipsTipos();
   atualizarSelects();
-  /* Se o modal de ferramenta está aberto, seleciona o tipo criado */
   if($('modalFerramenta').classList.contains('aberto')&&$('fTipo')){
     $('fTipo').value=n;
   }
   toast(`Tipo "${n}" criado!`);
 });
 
-/* Transferência */
 $('formTransferencia').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('transferir'))return;
   const ids=JSON.parse($('transFerrIds').value||'[]');
   const sid=$('transSetor').value;
   const s=db.setores.find(x=>x.id===sid);
@@ -3056,9 +3300,9 @@ $('formTransferencia').addEventListener('submit',e=>{
   toast(`${n} transferida(s)!`);
 });
 
-/* Manutenção */
 $('formManutencao').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const id=$('manFerrId').value;
   const f=Repo.ferramentas.obter(id);
   if(!f)return;
@@ -3080,7 +3324,6 @@ $('formManutencao').addEventListener('submit',e=>{
   toast('Registrada!');
 });
 
-/* Detalhes */
 async function mostrarDetalhes(f){
   const setor=db.setores.find(s=>s.id===f.setorId);
   const st=STATUS[f.status]||STATUS.disponivel;
@@ -3139,6 +3382,7 @@ async function mostrarDetalhes(f){
 document.addEventListener('click',e=>{
   const m=e.target.closest('[data-det-manut]');
   if(m){
+    if(!exigirLogin('editar'))return;
     const f=Repo.ferramentas.obter(m.dataset.detManut);
     if(!f)return;
     $('manFerrId').value=f.id;
@@ -3169,7 +3413,6 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* QR com HMAC */
 let qrAtual=null;
 async function mostrarQR(f){
   $('qrNome').textContent=f.nome;
@@ -3205,9 +3448,11 @@ $('btnCopiarQR').addEventListener('click',()=>{
   navigator.clipboard.writeText(qrAtual.link).then(()=>toast('Copiado!'));
 });
 
-/* Scanner */
 $('btnScanTopo').addEventListener('click',()=>iniciarScanner());
-$('btnScanInventario').addEventListener('click',()=>iniciarScanner(true));
+$('btnScanInventario').addEventListener('click',()=>{
+  if(!exigirLogin('inventario'))return;
+  iniciarScanner(true);
+});
 function iniciarScanner(inv=false){
   abrirModal('modalScanner');
   setTimeout(()=>{
@@ -3262,7 +3507,6 @@ function pararScanner(){
   }
 }
 
-/* Voz */
 $('btnVoz').addEventListener('click',()=>{
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){toast('Não suportado neste navegador.','aviso');return}
@@ -3279,8 +3523,8 @@ $('btnVoz').addEventListener('click',()=>{
   r.start();
 });
 
-/* Kits */
 $('btnNovoKit').addEventListener('click',()=>{
+  if(!exigirLogin('editar'))return;
   $('formKit').reset();
   $('kitId').value='';
   kitFerramentasIds=[];
@@ -3314,6 +3558,7 @@ document.addEventListener('click',e=>{
 });
 $('formKit').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const id=$('kitId').value;
   const n=$('kitNome').value.trim();
   if(!n)return;
@@ -3337,6 +3582,7 @@ $('gradeKits').addEventListener('click',async e=>{
   if(!k)return;
   const a=b.dataset.kit;
   if(a==='editar'){
+    if(!exigirLogin('editar'))return;
     $('kitId').value=k.id;
     $('kitNome').value=k.nome;
     $('kitObs').value=k.obs||'';
@@ -3347,6 +3593,7 @@ $('gradeKits').addEventListener('click',async e=>{
     abrirModal('modalKit');
   }
   if(a==='excluir'){
+    if(!exigirLogin('excluir'))return;
     const ok=await confirmar('Excluir?',`Excluir "${k.nome}"?`,'🧰');
     if(!ok)return;
     db.kits=db.kits.filter(x=>x.id!==k.id);
@@ -3354,6 +3601,7 @@ $('gradeKits').addEventListener('click',async e=>{
     renderKits();
   }
   if(a==='emprestar'){
+    if(!exigirLogin('emprestar'))return;
     const fs=db.ferramentas.filter(f=>k.ferramentasIds.includes(f.id));
     const ind=fs.filter(f=>f.status!=='disponivel');
     if(ind.length){toast(`${ind.length} indisponível(is).`,'aviso');return}
@@ -3371,8 +3619,8 @@ $('gradeKits').addEventListener('click',async e=>{
   }
 });
 
-/* Consumíveis */
 $('btnNovoConsumivel').addEventListener('click',()=>{
+  if(!exigirLogin('editar'))return;
   $('formConsumivel').reset();
   $('cId').value='';
   $('tituloConsumivel').textContent='Novo';
@@ -3381,6 +3629,7 @@ $('btnNovoConsumivel').addEventListener('click',()=>{
 });
 $('formConsumivel').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const id=$('cId').value;
   const d={
     nome:$('cNome').value.trim(),
@@ -3410,24 +3659,20 @@ $('listaConsumiveis').addEventListener('click',async e=>{
   const c=db.consumiveis.find(x=>x.id===b.dataset.id);
   if(!c)return;
   const a=b.dataset.consum;
-  if(a==='add'){
-    const q=prompt('Quantidade a adicionar:',1);
+  if(a==='add'||a==='usar'){
+    if(!exigirLogin('editar'))return;
+    const q=prompt(a==='add'?'Quantidade a adicionar:':'Quantidade a usar:',1);
     if(q){
-      c.quantidade+=parseInt(q,10)||0;
-      salvar();
-      renderConsumiveis();
-    }
-  }
-  if(a==='usar'){
-    const q=prompt('Quantidade a usar:',1);
-    if(q){
-      c.quantidade=Math.max(0,c.quantidade-(parseInt(q,10)||0));
+      const n=parseInt(q,10)||0;
+      if(a==='add')c.quantidade+=n;
+      else c.quantidade=Math.max(0,c.quantidade-n);
       salvar();
       renderConsumiveis();
       atualizarAlertas();
     }
   }
   if(a==='editar'){
+    if(!exigirLogin('editar'))return;
     $('cId').value=c.id;
     $('cNome').value=c.nome;
     $('cQtd').value=c.quantidade;
@@ -3440,6 +3685,7 @@ $('listaConsumiveis').addEventListener('click',async e=>{
     abrirModal('modalConsumivel');
   }
   if(a==='excluir'){
+    if(!exigirLogin('excluir'))return;
     const ok=await confirmar('Excluir?',`Excluir "${c.nome}"?`,'🗑️');
     if(!ok)return;
     db.consumiveis=db.consumiveis.filter(x=>x.id!==c.id);
@@ -3448,8 +3694,8 @@ $('listaConsumiveis').addEventListener('click',async e=>{
   }
 });
 
-/* Inventário */
 $('btnIniciarInventario').addEventListener('click',async()=>{
+  if(!exigirLogin('inventario'))return;
   const ok=await confirmar('Iniciar inventário?','O atual será substituído.','📋');
   if(!ok)return;
   inventarioAtual={
@@ -3462,6 +3708,7 @@ $('btnIniciarInventario').addEventListener('click',async()=>{
   toast('Iniciado!');
 });
 $('btnAddManualInv').addEventListener('click',()=>{
+  if(!exigirLogin('inventario'))return;
   const q=$('invBusca').value.trim().toLowerCase();
   if(!q)return;
   if(!inventarioAtual){toast('Inicie primeiro.','aviso');return}
@@ -3479,6 +3726,7 @@ $('invBusca').addEventListener('keydown',e=>{
   if(e.key==='Enter'){e.preventDefault();$('btnAddManualInv').click()}
 });
 $('btnFinalizarInv').addEventListener('click',()=>{
+  if(!exigirLogin('inventario'))return;
   if(!inventarioAtual){toast('Nada para finalizar.','aviso');return}
   const t=db.ferramentas.filter(f=>!inventarioAtual.setorFiltro||f.setorId===inventarioAtual.setorFiltro).length;
   const enc=inventarioAtual.encontrados.length;
@@ -3524,7 +3772,6 @@ function renderInventario(){
   }).join('');
 }
 
-/* Reservas */
 function renderReservas(){
   const el=$('listaReservas');
   if(!el)return;
@@ -3554,6 +3801,7 @@ function renderReservas(){
   }).join('');
 }
 $('btnNovaReserva').addEventListener('click',()=>{
+  if(!exigirLogin('reservar'))return;
   $('formReserva').reset();
   $('resId').value='';
   const agora=new Date();
@@ -3565,6 +3813,7 @@ $('btnNovaReserva').addEventListener('click',()=>{
 });
 $('formReserva').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!exigirLogin('reservar'))return;
   const id=$('resFerr').value;
   const de=$('resDe').value,ate=$('resAte').value;
   if(new Date(de)>=new Date(ate)){toast('Data final deve ser depois da inicial.','erro');return}
@@ -3588,6 +3837,7 @@ $('listaReservas').addEventListener('click',async e=>{
   const b=e.target.closest('[data-res]');
   if(!b)return;
   if(b.dataset.res==='excluir'){
+    if(!exigirLogin('reservar'))return;
     const ok=await confirmar('Excluir reserva?','','🗑️');
     if(!ok)return;
     db.reservas=db.reservas.filter(x=>x.id!==b.dataset.id);
@@ -3597,7 +3847,6 @@ $('listaReservas').addEventListener('click',async e=>{
   }
 });
 
-/* Mapa */
 function renderMapa(){
   const g=$('mapaGrid');
   if(!g)return;
@@ -3616,6 +3865,7 @@ function renderMapa(){
   }).join('');
 }
 $('btnNovoSlot').addEventListener('click',()=>{
+  if(!exigirLogin('editar'))return;
   $('formSlot').reset();
   $('slotId').value='';
   $('tituloSlot').textContent='Novo Local';
@@ -3625,6 +3875,7 @@ $('btnNovoSlot').addEventListener('click',()=>{
 });
 $('formSlot').addEventListener('submit',e=>{
   e.preventDefault();
+  if(!exigirLogin('editar'))return;
   const id=$('slotId').value;
   const d={codigo:$('slotCodigo').value.trim().toUpperCase(),setorId:$('slotSetor').value,ferramentaId:$('slotFerr').value};
   if(!d.codigo||!d.setorId)return;
@@ -3640,6 +3891,7 @@ $('formSlot').addEventListener('submit',e=>{
   toast('Salvo!');
 });
 $('btnDelSlot').addEventListener('click',async()=>{
+  if(!exigirLogin('editar'))return;
   const id=$('slotId').value;
   if(!id)return;
   const ok=await confirmar('Excluir local?','','🗑️');
@@ -3653,6 +3905,7 @@ $('btnDelSlot').addEventListener('click',async()=>{
 $('mapaGrid').addEventListener('click',e=>{
   const s=e.target.closest('[data-slot]');
   if(!s)return;
+  if(!exigirLogin('editar'))return;
   const l=db.locais.find(x=>x.id===s.dataset.slot);
   if(!l)return;
   $('slotId').value=l.id;
@@ -3665,7 +3918,6 @@ $('mapaGrid').addEventListener('click',e=>{
 });
 $('mapaFiltroSetor').addEventListener('change',renderMapa);
 
-/* Abas */
 document.querySelectorAll('.aba').forEach(a=>{
   a.addEventListener('click',()=>{
     document.querySelectorAll('.aba').forEach(x=>x.classList.remove('ativa'));
@@ -3682,8 +3934,8 @@ document.querySelectorAll('.aba').forEach(a=>{
   });
 });
 
-/* Export/Import */
 $('btnExportar').addEventListener('click',()=>{
+  if(!exigirLogin('config'))return;
   const b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
   const u=URL.createObjectURL(b);
   const a=document.createElement('a');
@@ -3693,7 +3945,10 @@ $('btnExportar').addEventListener('click',()=>{
   URL.revokeObjectURL(u);
   toast('Backup exportado (sem fotos - salvas em IndexedDB)');
 });
-$('btnImportar').addEventListener('click',()=>$('inputImportar').click());
+$('btnImportar').addEventListener('click',()=>{
+  if(!exigirLogin('config'))return;
+  $('inputImportar').click();
+});
 $('inputImportar').addEventListener('change',e=>{
   const file=e.target.files[0];
   if(!file)return;
@@ -3719,9 +3974,9 @@ $('inputImportar').addEventListener('change',e=>{
   r.readAsText(file);
 });
 
-/* CSV */
 $('btnCSV').addEventListener('click',()=>abrirModal('modalCSV'));
 $('btnExpCSV').addEventListener('click',()=>{
+  if(!exigirLogin('config'))return;
   const setMap=Object.fromEntries(db.setores.map(s=>[s.id,s.nome]));
   const linhas=['Nome;Tipo;Codigo;Setor;Quantidade;Status;Responsavel;Observacoes'];
   db.ferramentas.forEach(f=>{
@@ -3737,6 +3992,7 @@ $('btnExpCSV').addEventListener('click',()=>{
   toast('CSV baixado!');
 });
 $('csvInput').addEventListener('change',async e=>{
+  if(!exigirLogin('editar')){e.target.value='';return}
   const file=e.target.files[0];
   if(!file)return;
   const txt=await file.text();
@@ -3769,7 +4025,6 @@ $('csvInput').addEventListener('change',async e=>{
       setMap[setorNome.toLowerCase()]=sid;
     }
     const tipo=idx.tipo>=0?(c[idx.tipo]||''):'';
-    /* Se o tipo não existe na lista, adiciona */
     if(tipo&&!db.tiposFerramentas.some(t=>t.toLowerCase()===tipo.toLowerCase())){
       db.tiposFerramentas.push(tipo);
     }
@@ -3790,8 +4045,8 @@ $('csvInput').addEventListener('change',async e=>{
   e.target.value='';
 });
 
-/* Histórico */
 $('btnLimparHistorico').addEventListener('click',async()=>{
+  if(!exigirLogin('config'))return;
   const ok=await confirmar('Limpar?','Histórico apagado.','🗑️');
   if(!ok)return;
   db.historico=[];
@@ -3801,7 +4056,6 @@ $('btnLimparHistorico').addEventListener('click',async()=>{
 });
 $('filtroHistTipo').addEventListener('change',renderHistorico);
 
-/* Etiquetas */
 $('btnEtiquetas').addEventListener('click',()=>{
   atualizarSelects();
   renderEtiquetas();
@@ -3846,7 +4100,6 @@ $('btnImprimirEtq').addEventListener('click',()=>{
   w.document.write(`<!DOCTYPE html><html><head><title>Etiquetas</title><style>body{font-family:sans-serif;margin:0}.etiquetas-grid{display:grid;grid-template-columns:repeat(3,1fr)}.etiqueta{border:1px dashed #999;padding:8px;text-align:center}.nome-et{font-size:11px;font-weight:700}.cod-et{font-size:10px;color:#666}.setor-et{font-size:9px;color:#666}</style></head><body>${c}<script>window.onload=()=>setTimeout(()=>window.print(),500)<\/script></body></html>`);
 });
 
-/* ===== [17] PDF/EXCEL ===== */
 $('btnPDF').addEventListener('click',()=>{
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'landscape'});
@@ -3916,7 +4169,6 @@ $('btnExcel').addEventListener('click',()=>{
   toast('Excel gerado!');
 });
 
-/* Termo */
 $('btnTermo').addEventListener('click',async()=>{
   $('termoEmpresa').value=db.empresa.nome||'';
   $('termoCNPJ').value=db.empresa.cnpj||'';
@@ -3992,7 +4244,6 @@ $('formTermo').addEventListener('submit',async e=>{
   fecharModal('modalTermo');
 });
 
-/* Modo TV */
 $('btnModoTv').addEventListener('click',()=>{
   document.getElementById('modoTv').classList.add('ativo');
   renderTv();
@@ -4018,12 +4269,12 @@ function renderTv(){
 }
 setInterval(()=>{if(document.getElementById('modoTv').classList.contains('ativo'))renderTv()},30000);
 
-/* Quiosque */
 $('btnQuiosque').addEventListener('click',async()=>{
   if(document.body.classList.contains('modo-quiosque')){
     document.body.classList.remove('modo-quiosque');
     toast('Quiosque desativado.','aviso');
   }else{
+    if(!exigirLogin('editar'))return;
     const ok=await confirmar('Modo Quiosque?','Só empréstimos visíveis. Toque 5x no logo para sair.','🔒');
     if(!ok)return;
     document.body.classList.add('modo-quiosque');
@@ -4042,20 +4293,95 @@ $('logoIcone').addEventListener('click',()=>{
   }
 });
 
-/* PWA */
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    try{
-      const sw=`self.addEventListener('install',e=>self.skipWaiting());
-self.addEventListener('activate',e=>self.clients.claim());
+/* ===== PWA — Service Worker com arquivo real ===== */
+const SW_CODE=`const CACHE='ct-v10.2';
+const PRECACHE=[
+  './',
+  './index.html',
+  'https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js',
+  'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js',
+  'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js',
+  'https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js',
+  'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'
+];
+self.addEventListener('install',e=>{
+  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));
+  self.skipWaiting();
+});
+self.addEventListener('activate',e=>{
+  e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+  self.clients.claim();
+});
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
-  e.respondWith(caches.open('ct-v10').then(cache=>cache.match(e.request).then(r=>r||fetch(e.request).then(resp=>{try{cache.put(e.request,resp.clone())}catch(err){}return resp}).catch(()=>cache.match(e.request)))));
+  e.respondWith(
+    caches.match(e.request).then(cached=>{
+      const network=fetch(e.request).then(resp=>{
+        if(resp&&resp.status===200&&resp.type==='basic'){
+          const clone=resp.clone();
+          caches.open(CACHE).then(c=>c.put(e.request,clone)).catch(()=>{});
+        }
+        return resp;
+      }).catch(()=>cached);
+      return cached||network;
+    })
+  );
 });`;
-      navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
-    }catch(e){}
-  });
+
+const MANIFEST_JSON=JSON.stringify({
+  name:'Controle de Ferramentas Pro',
+  short_name:'Ferramentas',
+  start_url:'./index.html',
+  scope:'./',
+  display:'standalone',
+  background_color:'#1e40af',
+  theme_color:'#1e40af',
+  icons:[{
+    src:'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=',
+    sizes:'192x192',
+    type:'image/svg+xml'
+  }]
+},null,2);
+
+let swRegistro=null;
+async function registrarServiceWorker(){
+  const status=$('cfgSwStatus');
+  const setStatus=(txt,cor)=>{
+    if(status){status.textContent=txt;status.style.color=cor||''}
+  };
+
+  if(!('serviceWorker' in navigator)){
+    setStatus('❌ Navegador não suporta Service Worker','var(--vermelho)');
+    return;
+  }
+  if(location.protocol==='file:'){
+    setStatus('❌ Em file:// não funciona. Sirva via http(s) ou instale como PWA.','var(--vermelho)');
+    return;
+  }
+  try{
+    swRegistro=await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+    setStatus('✅ Ativo — modo offline disponível','var(--verde)');
+  }catch(e){
+    setStatus('⚠️ sw.js não encontrado. Clique em "Baixar sw.js" e salve na pasta do app.','var(--amarelo)');
+  }
 }
+function baixarArquivo(nome,conteudo,mime){
+  const b=new Blob([conteudo],{type:mime||'text/plain;charset=utf-8'});
+  const u=URL.createObjectURL(b);
+  const a=document.createElement('a');
+  a.href=u;a.download=nome;a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
+}
+$('btnBaixarSw').addEventListener('click',()=>{
+  baixarArquivo('sw.js',SW_CODE,'text/javascript');
+  toast('sw.js baixado. Salve na mesma pasta do index.html.','aviso');
+});
+$('btnBaixarManifest').addEventListener('click',()=>{
+  baixarArquivo('manifest.json',MANIFEST_JSON,'application/json');
+  toast('manifest.json baixado. Salve junto ao index.html.','aviso');
+});
+$('btnVerificarSw').addEventListener('click',registrarServiceWorker);
+
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
   deferredPrompt=e;
@@ -4069,10 +4395,11 @@ $('btnPwa').addEventListener('click',async()=>{
     deferredPrompt=null;
   }else toast('Use o menu do navegador → "Instalar app"','aviso');
 });
+$('btnInstalarPwa').addEventListener('click',()=>$('btnPwa').click());
 
 /* Usuários */
 $('btnNovoUsuario').addEventListener('click',()=>{
-  if(!temPermissao('usuarios')){toast('Sem permissão.','erro');return}
+  if(!exigirLogin('usuarios'))return;
   $('formUsuario').reset();
   $('uId').value='';
   $('tituloUsuario').textContent='Novo';
@@ -4080,6 +4407,7 @@ $('btnNovoUsuario').addEventListener('click',()=>{
 });
 $('formUsuario').addEventListener('submit',async e=>{
   e.preventDefault();
+  if(!exigirLogin('usuarios'))return;
   const id=$('uId').value;
   const nome=$('uNome').value.trim();
   const papel=$('uPapel').value;
@@ -4091,7 +4419,7 @@ $('formUsuario').addEventListener('submit',async e=>{
     const u=db.usuarios.find(x=>x.id===id);
     if(u)Object.assign(u,d);
   }else{
-    db.usuarios.push(Object.assign({id:uid()},d));
+    db.usuarios.push(Object.assign({id:uid(),tentativasFalhas:0,bloqueadoAte:null},d));
   }
   salvar();
   fecharModal('modalUsuario');
@@ -4103,8 +4431,9 @@ $('gradeUsuarios').addEventListener('click',async e=>{
   if(!b)return;
   const u=db.usuarios.find(x=>x.id===b.dataset.id);
   if(!u)return;
-  if(b.dataset.user==='editar'){
-    if(!temPermissao('usuarios')){toast('Sem permissão.','erro');return}
+  const a=b.dataset.user;
+  if(a==='editar'){
+    if(!exigirLogin('usuarios'))return;
     $('uId').value=u.id;
     $('uNome').value=u.nome;
     $('uPapel').value=u.papel;
@@ -4112,7 +4441,16 @@ $('gradeUsuarios').addEventListener('click',async e=>{
     $('tituloUsuario').textContent='Editar';
     abrirModal('modalUsuario');
   }
-  if(b.dataset.user==='excluir'){
+  if(a==='desbloquear'){
+    if(!exigirLogin('usuarios'))return;
+    u.tentativasFalhas=0;u.bloqueadoAte=null;
+    registrar('login',u.nome,'🔓 Desbloqueado manualmente');
+    salvar(true);
+    renderUsuarios();
+    toast(`"${u.nome}" desbloqueado.`);
+  }
+  if(a==='excluir'){
+    if(!exigirLogin('usuarios'))return;
     const ok=await confirmar('Excluir?',`Excluir "${u.nome}"?`,'🗑️');
     if(!ok)return;
     db.usuarios=db.usuarios.filter(x=>x.id!==u.id);
@@ -4123,11 +4461,15 @@ $('gradeUsuarios').addEventListener('click',async e=>{
 
 /* Configurações */
 $('btnConfig').addEventListener('click',()=>{
+  if(!exigirLogin('config'))return;
   abrirModal('modalConfig');
   carregarConfigUI();
+  registrarServiceWorker();
 });
 function carregarConfigUI(){
   const c=db.config;
+  $('cfgModoAberto').checked=!!c.modoAberto;
+  $('cfgRateLimit').checked=c.rateLimit!==false;
   $('cfgIdioma').value=c.idioma||'pt';
   $('cfgNotif').checked=Notification.permission==='granted';
   $('cfgSom').checked=c.som!==false;
@@ -4165,6 +4507,17 @@ async function atualizarIdbInfo(){
     $('cfgIdbInfo').textContent=`${keys.length} mídia(s) armazenada(s)`;
   }catch(e){$('cfgIdbInfo').textContent='Erro ao ler'}
 }
+$('cfgModoAberto').addEventListener('change',async e=>{
+  if(e.target.checked){
+    const ok=await confirmar('⚠️ Ativar modo aberto?','Qualquer pessoa poderá editar e excluir SEM SENHA. Use apenas em ambiente controlado.','⚠️');
+    if(!ok){e.target.checked=false;return}
+  }
+  db.config.modoAberto=e.target.checked;
+  registrar('login','Config',`Modo aberto: ${e.target.checked?'ATIVADO':'desativado'}`);
+  salvar(true);
+  toast(`Modo aberto ${e.target.checked?'ativado':'desativado'}.`,e.target.checked?'aviso':'sucesso');
+});
+$('cfgRateLimit').addEventListener('change',e=>{db.config.rateLimit=e.target.checked;salvar()});
 $('cfgIdioma').addEventListener('change',e=>{db.config.idioma=e.target.value;salvar();aplicarPrefs()});
 $('cfgNotif').addEventListener('change',async e=>{
   if(e.target.checked){
@@ -4243,7 +4596,6 @@ $('btnResetTudo').addEventListener('click',async()=>{
   location.reload();
 });
 
-/* Alertas */
 $('btnAlertasTopo').addEventListener('click',()=>{
   if(Notification.permission==='default')Notification.requestPermission();
   const a=db.ferramentas.filter(x=>x.emprestimoAtivo&&x.emprestimoAtivo.prazoEm&&new Date(x.emprestimoAtivo.prazoEm)<new Date());
@@ -4258,7 +4610,6 @@ $('btnAlertasTopo').addEventListener('click',()=>{
   alert(m.length?m.join('\n'):'✅ Tudo em ordem!');
 });
 
-/* Atalhos */
 document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key==='n'&&!$('view-ferramentas').classList.contains('escondido')){
     e.preventDefault();
@@ -4270,7 +4621,6 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-/* Filtros */
 let deb=null;
 $('busca').addEventListener('input',()=>{
   clearTimeout(deb);
@@ -4281,7 +4631,6 @@ $('filtroTipo').addEventListener('change',renderTabela);
 $('filtroStatus').addEventListener('change',renderTabela);
 $('filtroInvSetor').addEventListener('change',renderInventario);
 
-/* Tema */
 $('btnTema').addEventListener('click',()=>{
   const e=!document.body.classList.contains('tema-escuro');
   document.body.classList.toggle('tema-escuro',e);
@@ -4299,15 +4648,16 @@ function aplicarPrefs(){
   idiomaAtual=db.config.idioma||'pt';
   aplicarIdioma();
   $('subInfo').textContent=`v${VERSAO} • ${idiomaAtual.toUpperCase()}`;
+  atualizarUsuarioUI();
 }
 
 /* Onboarding */
 const passosOnb=[
-  {i:'📷',t:'Fotos com câmera',x:'Ao cadastrar uma ferramenta, use "Câmera" (nativa), "Ao vivo" (preview no app) ou "Galeria".'},
-  {i:'🏷️',t:'Tipo de ferramenta',x:'Classifique por tipo (Roquete, Lixadeira, etc). Crie novos tipos direto no formulário com "＋".'},
-  {i:'🔧',t:'Bem-vindo ao v10!',x:'IndexedDB para fotos/assinaturas, sync entre abas, PIN com hash SHA-256, webhook com whitelist e QR assinado.'},
-  {i:'🔐',t:'Segurança',x:'PINs são armazenados como hash SHA-256. Webhooks só aceitam domínios conhecidos.'},
-  {i:'↩️',t:'Undo',x:'Exclusões têm botão "Desfazer" por 6 segundos.'}
+  {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234). O admin pode ativar "modo aberto" se preferir.'},
+  {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, o usuário é bloqueado temporariamente (30s → 5min). Bloqueio persiste mesmo recarregando.'},
+  {i:'📲',t:'PWA offline',x:'Baixe sw.js e manifest.json em ⚙️ e salve ao lado do index.html para ativar o modo offline.'},
+  {i:'📷',t:'Fotos com câmera',x:'Cadastre com "Câmera", "Ao vivo" (preview) ou "Galeria".'},
+  {i:'🏷️',t:'Tipo de ferramenta',x:'Classifique por tipo. Crie novos direto no formulário com "＋".'}
 ];
 let onbIdx=0;
 function renderOnb(){
@@ -4345,11 +4695,25 @@ $('onbPular').addEventListener('click',()=>{
   atualizarUsuarioUI();
   await renderTudo();
   aplicarPrefs();
+
+  // Aviso único sobre modoAberto
+  if(!localStorage.getItem('avisoSeguranca10.2')){
+    setTimeout(()=>{
+      const st=db.config.modoAberto?'MODO ABERTO ativo (sem login).':'Ações de edição exigem login.';
+      toast(`🔐 ${st} Configure em ⚙️ > Segurança.`,'aviso');
+      localStorage.setItem('avisoSeguranca10.2','1');
+    },1500);
+  }
+
   if(!localStorage.getItem('onbVisto10')){
     renderOnb();
     setTimeout(()=>$('onboarding').classList.add('ativo'),600);
   }
   if(Notification.permission==='default')setTimeout(()=>Notification.requestPermission().catch(()=>{}),3000);
+
+  // Tenta registrar SW real
+  registrarServiceWorker();
+
   const params=new URLSearchParams(location.search);
   const ferrId=params.get('ferr');
   const sig=params.get('sig');
@@ -4383,7 +4747,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.1: Câmera ao vivo + Tipo de ferramenta + fixes','color:#16a34a');
+console.log('%cv10.2: Permissões negam por padrão • Rate limit no login • PWA com sw.js real','color:#16a34a');
 </script>
 </body>
 </html>

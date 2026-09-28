@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10.3</title>
+<title>Controle de Ferramentas — Pro v10.4</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -125,14 +125,14 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .card-setor .botoes{display:flex;gap:5px;margin-top:auto;flex-wrap:wrap}
 .card-setor .botoes .btn{padding:6px 10px;font-size:11.5px;flex:1}
 
-/* ===== Chips de tipo (com edit) ===== */
+/* ===== Chips de tipo (com edit) — v10.4: sem padding morto ===== */
 .lista-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
-.chip-wrapper{display:inline-flex;align-items:center;background:var(--fundo);border:1px solid var(--borda);border-radius:99px;overflow:hidden;transition:var(--transicao);padding:0 3px 0 0}
+.chip-wrapper{display:inline-flex;align-items:center;background:var(--fundo);border:1px solid var(--borda);border-radius:99px;overflow:hidden;transition:var(--transicao)}
 .chip-wrapper:hover{border-color:var(--azul2);box-shadow:var(--sombra)}
-.chip-wrapper .chip-tipo{background:transparent;border:none;border-radius:0;padding:7px 10px 7px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--texto);font-family:inherit;transition:var(--transicao);white-space:nowrap}
+.chip-wrapper .chip-tipo{background:transparent;border:none;border-radius:0;padding:7px 8px 7px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--texto);font-family:inherit;transition:var(--transicao);white-space:nowrap}
 .chip-wrapper .chip-tipo:hover{background:rgba(59,130,246,.1);color:var(--azul)}
-.chip-wrapper .chip-edit{background:transparent;border:none;cursor:pointer;font-size:12px;padding:5px 7px;border-radius:50%;color:var(--cinza);transition:var(--transicao);font-family:inherit;line-height:1;display:grid;place-items:center}
-.chip-wrapper .chip-edit:hover{background:var(--azul);color:#fff;transform:scale(1.1)}
+.chip-wrapper .chip-edit{background:transparent;border:none;cursor:pointer;font-size:12px;padding:5px 9px 5px 6px;border-radius:0;color:var(--cinza);transition:var(--transicao);font-family:inherit;line-height:1;display:grid;place-items:center}
+.chip-wrapper .chip-edit:hover{background:var(--azul);color:#fff}
 .btn-novo-tipo{background:transparent;border:1px dashed var(--borda);color:var(--cinza);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transicao)}
 .btn-novo-tipo:hover{border-color:var(--azul2);color:var(--azul)}
 
@@ -379,7 +379,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.3 • PT-BR</p>
+        <p id="subInfo">v10.4 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -1001,9 +1001,8 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="config-secao">
         <h3>🏷️ Tipos de Ferramenta</h3>
         <div class="config-row" style="flex-direction:column;align-items:stretch">
-          <div><div class="lbl">Gerenciar tipos de cadastro rápido</div><div class="desc">Renomeie ou exclua os "chips" que aparecem em Ferramentas do Setor → Adicionar rápido.</div></div>
+          <div><div class="lbl">Gerenciar tipos de cadastro rápido</div><div class="desc">Renomeie ou exclua os "chips" que aparecem em Ferramentas do Setor → Adicionar rápido. Ao renomear, todas as ferramentas que usam aquele tipo são atualizadas automaticamente.</div></div>
           <div id="cfgListaTipos" style="margin-top:10px;display:flex;flex-direction:column;gap:6px"></div>
-          <button type="button" class="btn btn-primario btn-mini" id="btnGerenciarTipos" style="margin-top:10px;align-self:flex-start">✏️ Gerenciar tipos</button>
         </div>
       </div>
 
@@ -1146,16 +1145,20 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.3
-   Mudanças v10.3:
-   • Editar/renomear/excluir os tipos do cadastro rápido (chips)
-   • Renomear tipo atualiza automaticamente todas as ferramentas
-   • Gerenciador de tipos em ⚙️ > Tipos de Ferramenta
+   CONTROLE DE FERRAMENTAS PRO — v10.4
+   Correções v10.4:
+   • [FIX] Badge de tipo atualiza na lista do setor ao renomear/excluir
+   • [FIX] Botão "Gerenciar tipos" (que abria setor aleatório) removido
+   • [FIX] Escape fecha apenas o modal do topo, não todos
+   • [FIX] Foco fantasma ao fechar modal empilhado
+   • [FIX] Renomear pro mesmo nome não dispara nada
+   • [FIX] abrirEditarTipo agora checa permissão na abertura
+   • [UX]  Área morta de 3px removida do chip-wrapper
    ========================================================= */
 'use strict';
 
 /* ===== [01] CONSTANTES & ESTADO ===== */
-const VERSAO='10.3';
+const VERSAO='10.4';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1698,7 +1701,11 @@ function fecharModal(id){
   m.classList.remove('aberto');
   if(id==='modalFerramenta')fecharCameraAoVivo();
   if(id==='modalLogin'&&loginCountdownTimer){clearInterval(loginCountdownTimer);loginCountdownTimer=null}
-  if(modalAnteriorFoco&&modalAnteriorFoco.focus){try{modalAnteriorFoco.focus()}catch(e){}}
+  // FIX v10.4: só devolve foco se o elemento ainda estiver visível.
+  // Evita "foco fantasma" em modais empilhados (ex: Config → Editar Tipo).
+  if(modalAnteriorFoco&&modalAnteriorFoco.focus&&modalAnteriorFoco.offsetParent!==null){
+    try{modalAnteriorFoco.focus()}catch(e){}
+  }
   modalAnteriorFoco=null;
 }
 function trapFocus(container){
@@ -1726,16 +1733,15 @@ document.addEventListener('click',e=>{
     e.target.classList.remove('aberto');
   }
 });
+/* FIX v10.4: Escape fecha apenas o modal do topo (não todos) */
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){
-    document.querySelectorAll('.overlay.aberto').forEach(o=>{
-      if(o.id!=='modalConfirmacao'){
-        if(o.id==='modalScanner')pararScanner();
-        if(o.id==='modalFerramenta')fecharCameraAoVivo();
-        o.classList.remove('aberto');
-      }
-    });
-  }
+  if(e.key!=='Escape')return;
+  const abertos=[...document.querySelectorAll('.overlay.aberto')].filter(o=>o.id!=='modalConfirmacao');
+  if(!abertos.length)return;
+  const topo=abertos[abertos.length-1];
+  if(topo.id==='modalScanner')pararScanner();
+  if(topo.id==='modalFerramenta')fecharCameraAoVivo();
+  topo.classList.remove('aberto');
 });
 
 /* ===== [13] AUTH ===== */
@@ -2644,9 +2650,15 @@ function processarArquivosFotos(files){
 
 /* ===== [16] TIPOS — CRIAR / EDITAR / EXCLUIR ===== */
 
-/* Abre o modal em modo "editar tipo" */
+/* Atualiza a lista de "Já cadastradas" se o modal de setor estiver aberto */
+function sincronizarListaSetorSeAberto(){
+  if($('modalFerrSetor').classList.contains('aberto')) renderListaFerrSetor();
+}
+
+/* Abre o modal em modo "editar tipo" — v10.4: checa permissão na abertura */
 function abrirEditarTipo(nome){
   if(!nome)return;
+  if(!exigirLogin('editar'))return;
   $('tipoOriginal').value=nome;
   $('novoTipoNome').value=nome;
   $('tituloNovoTipo').textContent='✏️ Editar Tipo';
@@ -2674,7 +2686,7 @@ function abrirNovoTipo(){
   setTimeout(()=>$('novoTipoNome').focus(),150);
 }
 
-/* Salvar (novo OU renomear) */
+/* Salvar (novo OU renomear) — v10.4: pula se nada mudou, sincroniza lista do setor */
 $('formNovoTipo').addEventListener('submit',e=>{
   e.preventDefault();
   if(!exigirLogin('editar'))return;
@@ -2692,19 +2704,21 @@ $('formNovoTipo').addEventListener('submit',e=>{
     const idx=db.tiposFerramentas.indexOf(original);
     if(idx<0){toast('Tipo original não encontrado.','erro');fecharModal('modalNovoTipo');return}
 
-    // Atualiza lista de tipos
+    /* FIX v10.4: se nada mudou, apenas fecha sem mexer nos dados */
+    if(igual){
+      fecharModal('modalNovoTipo');
+      return;
+    }
+
     db.tiposFerramentas[idx]=nome;
 
-    // Atualiza TODAS as ferramentas que usavam o tipo antigo
     let afetadas=0;
     db.ferramentas.forEach(f=>{
       if(f.tipo===original){f.tipo=nome;f.atualizadoEm=new Date().toISOString();afetadas++}
     });
-    // Atualiza kits? (não, kits não guardam tipo)
-    // Atualiza reservas? (não, reservas apontam pra ferramenta por id)
 
     registrar('tipo',`Tipo: ${original}`,`Renomeado → "${nome}" (${afetadas} ferramenta(s) atualizada(s))`);
-    toast(igual?`Tipo salvo.`:`✅ "${original}" → "${nome}". ${afetadas} ferramenta(s) atualizada(s).`);
+    toast(`✅ "${original}" → "${nome}". ${afetadas} ferramenta(s) atualizada(s).`);
   }else{
     /* CRIAR NOVO */
     if(db.tiposFerramentas.some(t=>t.toLowerCase()===nome.toLowerCase())){
@@ -2719,18 +2733,20 @@ $('formNovoTipo').addEventListener('submit',e=>{
   salvar();
   fecharModal('modalNovoTipo');
 
-  // Atualiza UI
   renderChipsTipos();
   atualizarSelects();
   renderTudo();
+  /* FIX v10.4: atualiza a lista de "Já cadastradas" se o modal do setor estiver aberto */
+  sincronizarListaSetorSeAberto();
+  /* Sincroniza gerenciador em Config, se aberto */
+  if($('modalConfig').classList.contains('aberto')) renderCfgListaTipos();
 
-  // Se o modal de ferramenta está aberto, seleciona o tipo
   if($('modalFerramenta').classList.contains('aberto')&&$('fTipo')){
     $('fTipo').value=nome;
   }
 });
 
-/* Excluir tipo */
+/* Excluir tipo — v10.4: sincroniza lista do setor e gerenciador em Config */
 $('btnExcluirTipo').addEventListener('click',async()=>{
   if(!exigirLogin('editar'))return;
   const original=$('tipoOriginal').value.trim();
@@ -2744,7 +2760,6 @@ $('btnExcluirTipo').addEventListener('click',async()=>{
 
   db.tiposFerramentas=db.tiposFerramentas.filter(t=>t!==original);
 
-  // Limpa o tipo das ferramentas afetadas
   let limpas=0;
   db.ferramentas.forEach(f=>{
     if(f.tipo===original){f.tipo='';f.atualizadoEm=new Date().toISOString();limpas++}
@@ -2756,6 +2771,9 @@ $('btnExcluirTipo').addEventListener('click',async()=>{
   renderChipsTipos();
   atualizarSelects();
   renderTudo();
+  /* FIX v10.4 */
+  sincronizarListaSetorSeAberto();
+  if($('modalConfig').classList.contains('aberto')) renderCfgListaTipos();
   toast(limpas?`Tipo excluído. ${limpas} ferramenta(s) ficaram sem tipo.`:'Tipo excluído.','aviso');
 });
 
@@ -3260,7 +3278,6 @@ function renderChipsTipos(){
   el.innerHTML=html;
 }
 $('chipsTipos').addEventListener('click',e=>{
-  /* Primeiro: botão editar */
   const ed=e.target.closest('[data-edit-idx]');
   if(ed){
     e.preventDefault();
@@ -3268,7 +3285,6 @@ $('chipsTipos').addEventListener('click',e=>{
     if(t)abrirEditarTipo(t);
     return;
   }
-  /* Segundo: chip para adicionar */
   const c=e.target.closest('[data-tipo-idx]');
   if(c){
     e.preventDefault();
@@ -3276,7 +3292,6 @@ $('chipsTipos').addEventListener('click',e=>{
     if(t)adicionarFerramentaRapida(t,1);
     return;
   }
-  /* Terceiro: novo tipo */
   if(e.target.id==='btnAbrirNovoTipo'){
     e.preventDefault();
     abrirNovoTipo();
@@ -3407,8 +3422,13 @@ $('cfgListaTipos').addEventListener('click',async e=>{
   if(ed){
     const t=db.tiposFerramentas[+ed.dataset.cfgEditTipo];
     if(t){
+      /* FIX v10.4: guarda referência explícita do foco (botão ⚙️) para devolver depois */
       fecharModal('modalConfig');
-      setTimeout(()=>abrirEditarTipo(t),250);
+      setTimeout(()=>{
+        abrirEditarTipo(t);
+        /* Após abrir, sobrescreve o "modalAnteriorFoco" para o ⚙️ (que continua visível) */
+        modalAnteriorFoco=$('btnConfig');
+      },250);
     }
     return;
   }
@@ -3429,19 +3449,9 @@ $('cfgListaTipos').addEventListener('click',async e=>{
     renderChipsTipos();
     atualizarSelects();
     renderTudo();
+    sincronizarListaSetorSeAberto();
     toast('Tipo excluído.','aviso');
   }
-});
-$('btnGerenciarTipos').addEventListener('click',()=>{
-  fecharModal('modalConfig');
-  setTimeout(()=>{
-    const modal=$('modalFerrSetor');
-    if(db.setores.length){
-      abrirGerenciarFerramentas(db.setores[0].id);
-    }else{
-      toast('Cadastre um setor primeiro.','aviso');
-    }
-  },250);
 });
 
 /* Transferência */
@@ -4458,7 +4468,7 @@ $('logoIcone').addEventListener('click',()=>{
 });
 
 /* ===== PWA ===== */
-const SW_CODE=`const CACHE='ct-v10.3';
+const SW_CODE=`const CACHE='ct-v10.4';
 const PRECACHE=['./','./index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
@@ -4787,7 +4797,7 @@ function aplicarPrefs(){
 }
 
 const passosOnb=[
-  {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip (Roquete, Lixadeira…) para renomear ou excluir. As ferramentas que usam o tipo antigo são atualizadas automaticamente.'},
+  {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip para renomear ou excluir. As ferramentas que usam o tipo antigo são atualizadas na hora.'},
   {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234).'},
   {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, bloqueio temporário (30s → 5min).'},
   {i:'📲',t:'PWA offline',x:'Baixe sw.js e manifest.json em ⚙️ e salve ao lado do index.html.'},
@@ -4870,7 +4880,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.3: Tipos do cadastro rápido agora são editáveis (renomear/excluir)','color:#16a34a');
+console.log('%cv10.4: Tipos editáveis com sincronização • fixes de Escape/foco/UX','color:#16a34a');
 </script>
 </body>
 </html>

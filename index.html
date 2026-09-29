@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10.4</title>
+<title>Controle de Ferramentas — Pro v10.5</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -67,6 +67,7 @@ main{max-width:1500px;margin:0 auto;padding:0 18px}
 .cr-total{border-left-color:var(--azul)}.cr-disp{border-left-color:var(--verde)}.cr-uso{border-left-color:var(--azul2)}
 .cr-manu{border-left-color:var(--amarelo)}.cr-perd{border-left-color:var(--vermelho)}.cr-emp{border-left-color:var(--roxo)}
 .cr-atra{border-left-color:var(--vermelho);animation:pulsa-borda 1.5s infinite}
+.cr-assist{border-left-color:#f59e0b;background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(217,119,6,.03))}
 @keyframes pulsa-borda{0%,100%{border-left-color:var(--vermelho)}50%{border-left-color:#fbbf24}}
 .barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
 .barra input[type=text],.barra select,.barra input[type=search],.barra input[type=url]{padding:9px 12px;border:1px solid var(--borda);border-radius:8px;font-size:13px;font-family:inherit;background:var(--fundo);color:var(--texto);outline:none;transition:var(--transicao)}
@@ -96,6 +97,28 @@ tbody tr:hover{background:rgba(59,130,246,.03)}
 tbody tr.selecionada{background:rgba(59,130,246,.08)}
 tbody tr.atrasada{background:rgba(220,38,38,.08);animation:pulsa-bg 2s infinite}
 @keyframes pulsa-bg{0%,100%{background:rgba(220,38,38,.05)}50%{background:rgba(220,38,38,.15)}}
+
+/* ===== Linha amarela: ferramenta na Assistência Técnica (aparece "fantasma" no setor de origem) ===== */
+tbody tr.em-assistencia{
+  background:linear-gradient(90deg,rgba(245,158,11,.16),rgba(217,119,6,.04));
+  animation:none;
+  border-left:4px solid #f59e0b;
+}
+tbody tr.em-assistencia:hover{background:rgba(245,158,11,.22)}
+tbody tr.em-assistencia td:first-child{border-left:4px solid #f59e0b;padding-left:8px}
+
+.badge-assistencia{
+  display:inline-block;
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:99px;
+  white-space:nowrap;
+  box-shadow:0 1px 3px rgba(217,119,6,.35);
+}
+
 .obs{font-size:11px;color:var(--cinza);margin-top:3px;line-height:1.4;max-width:250px}
 .badge{display:inline-block;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
 .badge-disponivel{background:var(--verde-claro);color:var(--verde)}
@@ -124,6 +147,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .card-setor .cont b{color:var(--azul);font-size:16px}
 .card-setor .botoes{display:flex;gap:5px;margin-top:auto;flex-wrap:wrap}
 .card-setor .botoes .btn{padding:6px 10px;font-size:11.5px;flex:1}
+.card-setor.setor-assistencia{border-left:4px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(217,119,6,.02))}
 
 /* ===== Chips de tipo (com edit) — v10.4: sem padding morto ===== */
 .lista-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
@@ -379,7 +403,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.4 • PT-BR</p>
+        <p id="subInfo">v10.5 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -439,6 +463,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <strong id="txtSelecionadas">0</strong><div style="flex:1"></div>
       <button class="btn" data-massa="status" data-valor="disponivel">✅ Disp.</button>
       <button class="btn" data-massa="status" data-valor="manutencao">🔧 Manut.</button>
+      <button class="btn" data-massa="assistencia">🔧 Assist.</button>
       <button class="btn" data-massa="transferir">🔄 Transferir</button>
       <button class="btn" data-massa="excluir">🗑️ Excluir</button>
       <button class="btn" data-massa="limpar">✖</button>
@@ -807,6 +832,10 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
     <form id="formTransferencia"><div class="modal-corpo">
       <input type="hidden" id="transFerrIds">
       <div class="info-box"><span class="ic">📦</span><div id="transInfo">—</div></div>
+      <div class="info-box aviso" id="transAvisoAssist" style="display:none">
+        <span class="ic">🔧</span>
+        <div>Você está enviando para a <strong>Assistência Técnica</strong>. A ferramenta ficará marcada como <strong>Em manutenção</strong> e aparecerá em amarelo no setor de origem.</div>
+      </div>
       <div class="campo"><label class="obrigatorio">Novo setor</label><select id="transSetor" required></select></div>
     </div>
     <div class="modal-rodape"><button type="button" class="btn btn-secundario" data-fechar="modalTransferencia">Cancelar</button><button type="submit" class="btn btn-primario">🔄</button></div></form>
@@ -1145,20 +1174,27 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.4
-   Correções v10.4:
-   • [FIX] Badge de tipo atualiza na lista do setor ao renomear/excluir
-   • [FIX] Botão "Gerenciar tipos" (que abria setor aleatório) removido
-   • [FIX] Escape fecha apenas o modal do topo, não todos
-   • [FIX] Foco fantasma ao fechar modal empilhado
-   • [FIX] Renomear pro mesmo nome não dispara nada
-   • [FIX] abrirEditarTipo agora checa permissão na abertura
-   • [UX]  Área morta de 3px removida do chip-wrapper
+   CONTROLE DE FERRAMENTAS PRO — v10.5
+   Novidades v10.5:
+   • Setor "Assistência Técnica" criado automaticamente
+   • Ferramentas nesse setor ficam em "manutencao" e mostram
+     linha AMARELA no setor de origem (ghost entry)
+   • Botão "🔧 Assist." na barra de ações em massa
+   • Badge "🔧 Na Assistência Técnica" na tabela
+   • Contador dedicado no resumo
+   • Aviso no modal de transferência ao escolher assistência
+   Correções herdadas da v10.4:
+   • Badge de tipo atualiza na lista do setor ao renomear/excluir
+   • Escape fecha apenas o modal do topo, não todos
+   • Foco fantasma ao fechar modal empilhado
+   • Renomear pro mesmo nome não dispara nada
+   • abrirEditarTipo checa permissão na abertura
+   • Área morta de 3px removida do chip-wrapper
    ========================================================= */
 'use strict';
 
 /* ===== [01] CONSTANTES & ESTADO ===== */
-const VERSAO='10.4';
+const VERSAO='10.5';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1166,7 +1202,8 @@ const CHAVE_SECRET='controleFerramentas.v10.secret';
 const IDB_NAME='controleFerramentas.media';
 const IDB_STORE='midia';
 const TAB_ID=Math.random().toString(36).slice(2,10);
-const SETORES_PADRAO=['Manutenção','Acabamento 01','Acabamento 02','Laminação 01','Laminação 02','Marcenaria','Tecelagem'];
+const SETOR_ASSISTENCIA_NOME='Assistência Técnica';
+const SETORES_PADRAO=['Manutenção','Acabamento 01','Acabamento 02','Laminação 01','Laminação 02','Marcenaria','Tecelagem',SETOR_ASSISTENCIA_NOME];
 const TIPOS_PADRAO=['Roquete','Lixadeira politriz','Lixadeira','Parafusadeira','Serra tricolor'];
 const STATUS={
   disponivel:{rotulo:'Disponível',classe:'badge-disponivel',icone:'✅'},
@@ -1530,6 +1567,50 @@ async function inicializar(){
   if(!db.usuarios.length){
     db.usuarios=[{id:uid(),nome:'Administrador',papel:'admin',pinHash:await sha256('1234'),tentativasFalhas:0,bloqueadoAte:null}];
   }
+  garantirSetorAssistencia();
+}
+
+/* ===== [07.5] ASSISTÊNCIA TÉCNICA ===== */
+function getSetorAssistenciaId(){
+  const s=db.setores.find(x=>x.nome.toLowerCase().replace(/\s+/g,' ').trim()==='assistência técnica');
+  return s?s.id:null;
+}
+function garantirSetorAssistencia(){
+  if(getSetorAssistenciaId())return;
+  const novo={id:uid(),nome:SETOR_ASSISTENCIA_NOME};
+  db.setores.push(novo);
+  salvar(true);
+  registrar('setor',SETOR_ASSISTENCIA_NOME,'Setor criado automaticamente');
+}
+/* Detecta se o movimento entra/sai da assistência e ajusta origem + status */
+function aplicarMovimentoAssistencia(ferramenta,novoSetorId){
+  const assistId=getSetorAssistenciaId();
+  if(!assistId)return;
+  const estaEmAssist = ferramenta.setorId === assistId;
+  const vaiParaAssist = novoSetorId === assistId;
+
+  if(vaiParaAssist && !estaEmAssist){
+    // ENTRANDO: guarda origem e marca como manutenção
+    if(!ferramenta.setorOrigem) ferramenta.setorOrigem = ferramenta.setorId;
+    ferramenta.setorId = assistId;
+    if(ferramenta.status!=='perdida') ferramenta.status='manutencao';
+    if(ferramenta.emprestimoAtivo){
+      // Se estava emprestada, cancela o empréstimo ativo
+      ferramenta.emprestimos=ferramenta.emprestimos||[];
+      const h=(ferramenta.emprestimos||[]).find(x=>x.retiradoEm===ferramenta.emprestimoAtivo.retiradoEm);
+      if(h){h.devolvidoEm=new Date().toISOString();h.obsDevolucao='Enviada para assistência técnica';}
+      ferramenta.emprestimoAtivo=null;
+      ferramenta.responsavel='';
+    }
+  } else if(!vaiParaAssist && estaEmAssist){
+    // SAINDO: restaura origem e libera
+    ferramenta.setorId = novoSetorId;
+    if(ferramenta.setorOrigem) delete ferramenta.setorOrigem;
+    if(ferramenta.status==='manutencao') ferramenta.status='disponivel';
+  } else {
+    ferramenta.setorId = novoSetorId;
+  }
+  ferramenta.atualizadoEm = new Date().toISOString();
 }
 
 /* ===== [08] BroadcastChannel ===== */
@@ -1701,8 +1782,6 @@ function fecharModal(id){
   m.classList.remove('aberto');
   if(id==='modalFerramenta')fecharCameraAoVivo();
   if(id==='modalLogin'&&loginCountdownTimer){clearInterval(loginCountdownTimer);loginCountdownTimer=null}
-  // FIX v10.4: só devolve foco se o elemento ainda estiver visível.
-  // Evita "foco fantasma" em modais empilhados (ex: Config → Editar Tipo).
   if(modalAnteriorFoco&&modalAnteriorFoco.focus&&modalAnteriorFoco.offsetParent!==null){
     try{modalAnteriorFoco.focus()}catch(e){}
   }
@@ -1733,7 +1812,7 @@ document.addEventListener('click',e=>{
     e.target.classList.remove('aberto');
   }
 });
-/* FIX v10.4: Escape fecha apenas o modal do topo (não todos) */
+/* Escape fecha apenas o modal do topo */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
   const abertos=[...document.querySelectorAll('.overlay.aberto')].filter(o=>o.id!=='modalConfirmacao');
@@ -1985,8 +2064,12 @@ async function renderTabela(){
   const fs=$('filtroSetor').value;
   const ft=$('filtroTipo')?$('filtroTipo').value:'';
   const fst=$('filtroStatus').value;
+  const assistId=getSetorAssistenciaId();
   let lista=db.ferramentas.filter(f=>{
-    if(fs&&f.setorId!==fs)return false;
+    const emAssist = assistId && f.setorId===assistId;
+    // Ghost = está na assistência mas veio do setor que está sendo filtrado
+    const ghost   = emAssist && f.setorOrigem && f.setorOrigem===fs;
+    if(fs && f.setorId!==fs && !ghost)return false;
     if(ft&&(f.tipo||'')!==ft)return false;
     if(fst&&f.status!==fst)return false;
     if(busca){
@@ -2018,15 +2101,21 @@ async function renderTabela(){
     const sel=selecionadas.has(f.id);
     const foto=await fotoPrincipalHtml(f);
     const tipoBadge=f.tipo?`<span class="badge badge-tipo">${esc(f.tipo)}</span>`:'';
-    return `<tr class="${sel?'selecionada':''} ${atras?'atrasada':''}">
+    const emAssist = assistId && f.setorId===assistId;
+    const ghost    = emAssist && f.setorOrigem && f.setorOrigem===fs;
+    return `<tr class="${sel?'selecionada':''} ${atras?'atrasada':''} ${ghost?'em-assistencia':''}">
       <td class="cel-check"><input type="checkbox" data-check="${f.id}" ${sel?'checked':''}></td>
       <td data-label="Foto">${foto}</td>
       <td data-label="Ferramenta"><strong>${esc(f.nome)}</strong>${tipoBadge}${f.obs?`<div class="obs">${esc(f.obs)}</div>`:''}</td>
       <td data-label="Código">${esc(f.codigo||'—')}</td>
-      <td data-label="Setor">${esc(f.setorNome||'—')}</td>
+      <td data-label="Setor">${ghost
+        ? `<span class="badge badge-assistencia">🔧 Na Assistência Técnica</span>`
+        : esc(f.setorNome||'—')}</td>
       <td data-label="Qtd">${f.quantidade||1}</td>
       <td data-label="Responsável">${emp?esc(emp.responsavel):esc(f.responsavel||'—')}</td>
-      <td data-label="Status"><span class="badge ${atras?'badge-atrasada':st.classe}">${atras?'⏰ ATRASADA':st.icone+' '+st.rotulo}</span></td>
+      <td data-label="Status">${ghost
+        ? `<span class="badge badge-assistencia">🔧 Em manutenção externa</span>`
+        : `<span class="badge ${atras?'badge-atrasada':st.classe}">${atras?'⏰ ATRASADA':st.icone+' '+st.rotulo}</span>`}</td>
       <td data-label="Ações" class="acoes">
         <button class="btn-icon" data-acao="detalhes" data-id="${f.id}" title="Detalhes">👁️</button>
         <button class="btn-icon" data-acao="qr" data-id="${f.id}" title="QR">📱</button>
@@ -2048,12 +2137,15 @@ function renderResumo(){
   const c=s=>f.filter(x=>x.status===s).length;
   const emp=f.filter(x=>x.emprestimoAtivo).length;
   const atras=f.filter(x=>x.emprestimoAtivo&&x.emprestimoAtivo.prazoEm&&new Date(x.emprestimoAtivo.prazoEm)<new Date()).length;
+  const assistId=getSetorAssistenciaId();
+  const naAssist=assistId?f.filter(x=>x.setorId===assistId).length:0;
   $('resumo').innerHTML=`
     <div class="card-resumo cr-total"><div class="num">${f.length}</div><div class="rot">Total</div></div>
     <div class="card-resumo cr-disp"><div class="num">${c('disponivel')}</div><div class="rot">Disponíveis</div></div>
     <div class="card-resumo cr-uso"><div class="num">${c('em_uso')}</div><div class="rot">Em uso</div></div>
     <div class="card-resumo cr-emp"><div class="num">${emp}</div><div class="rot">Emprestadas</div></div>
     ${atras?`<div class="card-resumo cr-atra"><div class="num">${atras}</div><div class="rot">⏰ Atrasadas</div></div>`:''}
+    ${naAssist?`<div class="card-resumo cr-assist"><div class="num" style="color:#d97706">${naAssist}</div><div class="rot">🔧 Na Assistência</div></div>`:''}
     <div class="card-resumo cr-manu"><div class="num">${c('manutencao')}</div><div class="rot">Manutenção</div></div>
     <div class="card-resumo cr-perd"><div class="num">${c('perdida')}</div><div class="rot">Perdidas</div></div>`;
   $('badgeEmp').textContent=emp;
@@ -2062,15 +2154,17 @@ function renderResumo(){
 function renderSetores(){
   const g=$('gradeSetores');
   if(!db.setores.length){g.innerHTML='<div class="vazio">Nenhum setor.</div>';return}
+  const assistId=getSetorAssistenciaId();
   g.innerHTML=db.setores.map(s=>{
     const q=db.ferramentas.filter(f=>f.setorId===s.id).length;
-    return `<div class="card-setor">
-      <div class="nome">🏭 ${esc(s.nome)}</div>
-      <div class="cont"><b>${q}</b> ferramenta(s)</div>
+    const isAssist = s.id===assistId;
+    return `<div class="card-setor ${isAssist?'setor-assistencia':''}">
+      <div class="nome">${isAssist?'🔧':'🏭'} ${esc(s.nome)}</div>
+      <div class="cont"><b>${q}</b> ferramenta(s)${isAssist?' em manutenção':''}</div>
       <div class="botoes">
         <button class="btn btn-primario" data-setor="ferramentas" data-id="${s.id}">🧰 Ferramentas</button>
         <button class="btn btn-secundario" data-setor="editar" data-id="${s.id}">✏️</button>
-        <button class="btn btn-perigo" data-setor="excluir" data-id="${s.id}">🗑️</button>
+        ${isAssist?'':`<button class="btn btn-perigo" data-setor="excluir" data-id="${s.id}">🗑️</button>`}
       </div></div>`;
   }).join('');
 }
@@ -2222,6 +2316,9 @@ function renderKPIs(){
   if(cb)ins.push(`🔩 ${cb} consumível(is) em falta`);
   const cv=f.filter(x=>x.calibracao&&x.calibracao.intervaloDias&&x.calibracao.ultimaCalibracao).filter(x=>new Date(new Date(x.calibracao.ultimaCalibracao).getTime()+x.calibracao.intervaloDias*86400000)<new Date()).length;
   if(cv)ins.push(`🎯 ${cv} calibração(ões) vencida(s)`);
+  const assistId=getSetorAssistenciaId();
+  const naAssist=assistId?f.filter(x=>x.setorId===assistId).length:0;
+  if(naAssist)ins.push(`🔧 ${naAssist} na Assistência Técnica`);
   if(!db.config.modoAberto&&!db.usuarioAtual)ins.push('🔐 Faça login para editar dados');
   if(!ins.length)ins.push('✨ Tudo em ordem!');
   if($('insights'))$('insights').innerHTML=ins.map(i=>`<div>${i}</div>`).join('');
@@ -2649,13 +2746,9 @@ function processarArquivosFotos(files){
 }
 
 /* ===== [16] TIPOS — CRIAR / EDITAR / EXCLUIR ===== */
-
-/* Atualiza a lista de "Já cadastradas" se o modal de setor estiver aberto */
 function sincronizarListaSetorSeAberto(){
   if($('modalFerrSetor').classList.contains('aberto')) renderListaFerrSetor();
 }
-
-/* Abre o modal em modo "editar tipo" — v10.4: checa permissão na abertura */
 function abrirEditarTipo(nome){
   if(!nome)return;
   if(!exigirLogin('editar'))return;
@@ -2673,8 +2766,6 @@ function abrirEditarTipo(nome){
     i.select();
   },150);
 }
-
-/* Abre o modal em modo "novo tipo" */
 function abrirNovoTipo(){
   if(!exigirLogin('editar'))return;
   $('tipoOriginal').value='';
@@ -2685,8 +2776,6 @@ function abrirNovoTipo(){
   abrirModal('modalNovoTipo');
   setTimeout(()=>$('novoTipoNome').focus(),150);
 }
-
-/* Salvar (novo OU renomear) — v10.4: pula se nada mudou, sincroniza lista do setor */
 $('formNovoTipo').addEventListener('submit',e=>{
   e.preventDefault();
   if(!exigirLogin('editar'))return;
@@ -2695,7 +2784,6 @@ $('formNovoTipo').addEventListener('submit',e=>{
   if(!nome){toast('Digite um nome.','aviso');return}
 
   if(original){
-    /* RENOMEAR */
     const igual=original.toLowerCase()===nome.toLowerCase();
     if(!igual && db.tiposFerramentas.some(t=>t.toLowerCase()===nome.toLowerCase())){
       toast('Já existe outro tipo com este nome!','erro');
@@ -2703,24 +2791,18 @@ $('formNovoTipo').addEventListener('submit',e=>{
     }
     const idx=db.tiposFerramentas.indexOf(original);
     if(idx<0){toast('Tipo original não encontrado.','erro');fecharModal('modalNovoTipo');return}
-
-    /* FIX v10.4: se nada mudou, apenas fecha sem mexer nos dados */
     if(igual){
       fecharModal('modalNovoTipo');
       return;
     }
-
     db.tiposFerramentas[idx]=nome;
-
     let afetadas=0;
     db.ferramentas.forEach(f=>{
       if(f.tipo===original){f.tipo=nome;f.atualizadoEm=new Date().toISOString();afetadas++}
     });
-
     registrar('tipo',`Tipo: ${original}`,`Renomeado → "${nome}" (${afetadas} ferramenta(s) atualizada(s))`);
     toast(`✅ "${original}" → "${nome}". ${afetadas} ferramenta(s) atualizada(s).`);
   }else{
-    /* CRIAR NOVO */
     if(db.tiposFerramentas.some(t=>t.toLowerCase()===nome.toLowerCase())){
       toast('Este tipo já existe!','erro');
       return;
@@ -2732,21 +2814,15 @@ $('formNovoTipo').addEventListener('submit',e=>{
 
   salvar();
   fecharModal('modalNovoTipo');
-
   renderChipsTipos();
   atualizarSelects();
   renderTudo();
-  /* FIX v10.4: atualiza a lista de "Já cadastradas" se o modal do setor estiver aberto */
   sincronizarListaSetorSeAberto();
-  /* Sincroniza gerenciador em Config, se aberto */
   if($('modalConfig').classList.contains('aberto')) renderCfgListaTipos();
-
   if($('modalFerramenta').classList.contains('aberto')&&$('fTipo')){
     $('fTipo').value=nome;
   }
 });
-
-/* Excluir tipo — v10.4: sincroniza lista do setor e gerenciador em Config */
 $('btnExcluirTipo').addEventListener('click',async()=>{
   if(!exigirLogin('editar'))return;
   const original=$('tipoOriginal').value.trim();
@@ -2757,27 +2833,21 @@ $('btnExcluirTipo').addEventListener('click',async()=>{
     :`Excluir o tipo "${original}"?`;
   const ok=await confirmar('Excluir tipo?',msg,'🗑️');
   if(!ok)return;
-
   db.tiposFerramentas=db.tiposFerramentas.filter(t=>t!==original);
-
   let limpas=0;
   db.ferramentas.forEach(f=>{
     if(f.tipo===original){f.tipo='';f.atualizadoEm=new Date().toISOString();limpas++}
   });
-
   registrar('tipo',`Tipo: ${original}`,`Excluído${limpas?` (${limpas} ferramenta(s) sem tipo agora)`:''}`);
   salvar();
   fecharModal('modalNovoTipo');
   renderChipsTipos();
   atualizarSelects();
   renderTudo();
-  /* FIX v10.4 */
   sincronizarListaSetorSeAberto();
   if($('modalConfig').classList.contains('aberto')) renderCfgListaTipos();
   toast(limpas?`Tipo excluído. ${limpas} ferramenta(s) ficaram sem tipo.`:'Tipo excluído.','aviso');
 });
-
-/* Botão "＋ Novo tipo" dentro do modal de ferramenta */
 $('btnNovoTipoInline').addEventListener('click',abrirNovoTipo);
 
 /* ===== [17] AÇÕES ===== */
@@ -2823,10 +2893,33 @@ $('barraMassa').addEventListener('click',async e=>{
     registrar('status',`${selecionadas.size} itens`,`→ ${STATUS[n].rotulo}`);
     toast('Atualizado!',undefined,()=>{backup.forEach(b=>{const f=Repo.ferramentas.obter(b.id);if(f)f.status=b.status});renderTudo()});
   }
+  if(a==='assistencia'){
+    if(!exigirLogin('transferir'))return;
+    const assistId=getSetorAssistenciaId();
+    if(!assistId){toast('Assistência Técnica não encontrada.','erro');return}
+    const ok=await confirmar('Enviar para Assistência Técnica?',`${selecionadas.size} ferramenta(s) serão marcadas como "Em manutenção" e aparecerão em amarelo no setor de origem.`,'🔧');
+    if(!ok)return;
+    let n=0;
+    selecionadas.forEach(id=>{
+      const f=Repo.ferramentas.obter(id);
+      if(!f)return;
+      const origem=Repo.setores.nome(f.setorId)||'—';
+      aplicarMovimentoAssistencia(f,assistId);
+      registrar('manutencao',f.nome,`→ Assistência Técnica (origem: ${origem})`);
+      n++;
+    });
+    salvar();
+    selecionadas.clear();
+    $('checkTodos').checked=false;
+    renderTudo();
+    toast(`${n} enviada(s) para assistência!`);
+    return;
+  }
   if(a==='transferir'){
     if(!exigirLogin('transferir'))return;
     $('transFerrIds').value=JSON.stringify([...selecionadas]);
     $('transInfo').textContent=`Transferir ${selecionadas.size} item(ns)`;
+    atualizarAvisoTransAssist();
     abrirModal('modalTransferencia');
     return;
   }
@@ -2848,6 +2941,15 @@ $('barraMassa').addEventListener('click',async e=>{
   salvar();
   renderTudo();
 });
+
+function atualizarAvisoTransAssist(){
+  const av=$('transAvisoAssist');
+  if(!av)return;
+  const assistId=getSetorAssistenciaId();
+  const val=$('transSetor').value;
+  av.style.display=(assistId && val===assistId)?'flex':'none';
+}
+$('transSetor').addEventListener('change',atualizarAvisoTransAssist);
 
 function renderGaleria(){
   const g=$('galeriaFotos');
@@ -2924,6 +3026,7 @@ $('formFerramenta').addEventListener('submit',async e=>{
     }
   }
   d.fotos=fotosFinais;
+  const assistId=getSetorAssistenciaId();
   if(id){
     const a=Repo.ferramentas.obter(id);
     if(a){
@@ -2932,11 +3035,24 @@ $('formFerramenta').addEventListener('submit',async e=>{
       d.emprestimos=a.emprestimos||[];
       d.emprestimoAtivo=a.emprestimoAtivo||null;
       d.criadoEm=a.criadoEm;
+
+      const novoSetor=d.setorId;
+      const temp=Object.assign({},a,d);
+      aplicarMovimentoAssistencia(temp,novoSetor);
+      d.setorId=temp.setorId;
+      d.status=temp.status;
+      if(temp.setorOrigem)d.setorOrigem=temp.setorOrigem;
+      else delete d.setorOrigem;
+      if(temp.emprestimoAtivo===null)d.emprestimoAtivo=null;
+
       Repo.ferramentas.atualizar(id,d);
-      registrar('editada',d.nome,'Atualizada');
+      registrar('editada',d.nome,`Atualizada${novoSetor===assistId?' • enviada p/ assistência':''}`);
     }
     toast('Atualizada!');
   }else{
+    if(assistId && d.setorId===assistId){
+      d.status='manutencao';
+    }
     Repo.ferramentas.criar(d);
     registrar('criada',d.nome,`Nova (${d.quantidade} un.)${d.tipo?` • ${d.tipo}`:''}`);
     toast('Cadastrada!');
@@ -3235,6 +3351,7 @@ $('gradeSetores').addEventListener('click',async e=>{
   }
   if(b.dataset.setor==='excluir'){
     if(!exigirLogin('excluir'))return;
+    if(id===getSetorAssistenciaId()){toast('O setor Assistência Técnica não pode ser excluído.','aviso');return}
     const v=db.ferramentas.filter(f=>f.setorId===id).length;
     const t=v?`Setor "${s.nome}" tem ${v} ferramenta(s). Serão excluídas.`:`Excluir "${s.nome}"?`;
     const ok=await confirmar('Excluir?',t,'🏭');
@@ -3263,7 +3380,6 @@ function abrirGerenciarFerramentas(sid){
   abrirModal('modalFerrSetor');
 }
 
-/* Renderização dos chips — com botão ✏️ para renomear */
 function renderChipsTipos(){
   const el=$('chipsTipos');
   if(!el)return;
@@ -3327,6 +3443,7 @@ function renderListaFerrSetor(){
 function adicionarFerramentaRapida(nome,qtd){
   if(!setorAtualId)return;
   if(!exigirLogin('editar'))return;
+  const assistId=getSetorAssistenciaId();
   const ex=db.ferramentas.find(f=>f.setorId===setorAtualId&&f.nome.toLowerCase()===nome.toLowerCase());
   if(ex){
     ex.quantidade=(ex.quantidade||1)+qtd;
@@ -3334,8 +3451,10 @@ function adicionarFerramentaRapida(nome,qtd){
     registrar('editada',ex.nome,`Qtd → ${ex.quantidade}`);
     toast(`+${qtd} ${nome}`);
   }else{
-    Repo.ferramentas.criar({nome,tipo:nome,codigo:'',setorId:setorAtualId,status:'disponivel',responsavel:'',quantidade:qtd,obs:'',fotos:[],valorCompra:0,dataCompra:'',vidaUtilMeses:0,centroCusto:'',garantiaAte:''});
-    registrar('criada',nome,'Adicionada');
+    const dados={nome,tipo:nome,codigo:'',setorId:setorAtualId,status:'disponivel',responsavel:'',quantidade:qtd,obs:'',fotos:[],valorCompra:0,dataCompra:'',vidaUtilMeses:0,centroCusto:'',garantiaAte:''};
+    if(assistId && setorAtualId===assistId) dados.status='manutencao';
+    Repo.ferramentas.criar(dados);
+    registrar('criada',nome,`Adicionada${assistId&&setorAtualId===assistId?' (assistência)':''}`);
     toast(`"${nome}" adicionada!`);
   }
   salvar();
@@ -3422,11 +3541,9 @@ $('cfgListaTipos').addEventListener('click',async e=>{
   if(ed){
     const t=db.tiposFerramentas[+ed.dataset.cfgEditTipo];
     if(t){
-      /* FIX v10.4: guarda referência explícita do foco (botão ⚙️) para devolver depois */
       fecharModal('modalConfig');
       setTimeout(()=>{
         abrirEditarTipo(t);
-        /* Após abrir, sobrescreve o "modalAnteriorFoco" para o ⚙️ (que continua visível) */
         modalAnteriorFoco=$('btnConfig');
       },250);
     }
@@ -3463,13 +3580,26 @@ $('formTransferencia').addEventListener('submit',e=>{
   const s=db.setores.find(x=>x.id===sid);
   if(!s)return;
   let n=0;
+  const assistId=getSetorAssistenciaId();
   ids.forEach(id=>{
     const f=Repo.ferramentas.obter(id);
-    if(f){f.setorId=sid;f.atualizadoEm=new Date().toISOString();n++;registrar('transferencia',f.nome,`→ "${s.nome}"`)}
+    if(!f)return;
+    const antes=f.setorId;
+    const origemNome=Repo.setores.nome(f.setorId)||'—';
+    aplicarMovimentoAssistencia(f,sid);
+    n++;
+    if(sid===assistId && antes!==assistId){
+      registrar('manutencao',f.nome,`→ "${s.nome}" (origem: ${origemNome})`);
+    }else if(antes===assistId && sid!==assistId){
+      registrar('transferencia',f.nome,`Retornou da assistência → "${s.nome}"`);
+    }else{
+      registrar('transferencia',f.nome,`→ "${s.nome}"`);
+    }
   });
   salvar();
   fecharModal('modalTransferencia');
   selecionadas.clear();
+  $('checkTodos').checked=false;
   renderTudo();
   toast(`${n} transferida(s)!`);
 });
@@ -3521,6 +3651,9 @@ async function mostrarDetalhes(f){
   if(f.emprestimoAtivo&&f.emprestimoAtivo.assinaturaKey){
     assinaturaUrl=await carregarMidiaUrl(f.emprestimoAtivo.assinaturaKey);
   }
+  const assistId=getSetorAssistenciaId();
+  const emAssist=assistId && f.setorId===assistId;
+  const origemNome=f.setorOrigem?Repo.setores.nome(f.setorOrigem):'';
   $('detTitulo').textContent=f.nome;
   $('detConteudo').innerHTML=`
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px">
@@ -3529,9 +3662,9 @@ async function mostrarDetalhes(f){
         ${fotosUrls.length>1?`<div style="display:flex;gap:4px;flex-wrap:wrap">${fotosUrls.slice(1).map(fo=>`<img src="${fo}" style="width:54px;height:54px;object-fit:cover;border-radius:6px;cursor:pointer" data-foto-open="${fo}" alt="">`).join('')}</div>`:''}
       </div>
       <div style="flex:1;min-width:240px">
-        <div style="margin-bottom:10px"><span class="badge ${st.classe}">${st.icone} ${st.rotulo}</span>${f.tipo?` <span class="badge badge-tipo">${esc(f.tipo)}</span>`:''}</div>
+        <div style="margin-bottom:10px"><span class="badge ${st.classe}">${st.icone} ${st.rotulo}</span>${f.tipo?` <span class="badge badge-tipo">${esc(f.tipo)}</span>`:''}${emAssist?' <span class="badge badge-assistencia">🔧 Na Assistência Técnica</span>':''}</div>
         <p style="margin-bottom:6px"><strong>Código:</strong> ${esc(f.codigo||'—')}</p>
-        <p style="margin-bottom:6px"><strong>Setor:</strong> ${esc(setor?setor.nome:'—')}</p>
+        <p style="margin-bottom:6px"><strong>Setor:</strong> ${esc(setor?setor.nome:'—')}${emAssist&&origemNome?` <span style="color:var(--cinza);font-size:12px">(origem: ${esc(origemNome)})</span>`:''}</p>
         <p style="margin-bottom:6px"><strong>Quantidade:</strong> ${f.quantidade||1}</p>
         <p style="margin-bottom:6px"><strong>Responsável:</strong> ${esc(f.responsavel||'—')}</p>
         <p style="margin-bottom:6px"><strong>Criada em:</strong> ${fmtData(f.criadoEm)}</p>
@@ -3542,6 +3675,7 @@ async function mostrarDetalhes(f){
         ${f.obs?`<p style="margin-top:10px;padding:10px;background:var(--fundo);border-radius:8px;font-size:12.5px;color:var(--cinza)"><strong>Obs:</strong> ${esc(f.obs)}</p>`:''}
       </div>
     </div>
+    ${emAssist?`<div class="info-box aviso"><span class="ic">🔧</span><div><strong>Em manutenção externa</strong><br>Esta ferramenta está na Assistência Técnica${origemNome?` e pertence originalmente ao setor <strong>${esc(origemNome)}</strong>`:''}. Ao transferi-la de volta, ela retorna ao status "Disponível".</div></div>`:''}
     ${f.emprestimoAtivo?`<div class="info-box"><span class="ic">📤</span><div><strong>Empréstimo ativo</strong><br>Responsável: <strong>${esc(f.emprestimoAtivo.responsavel)}</strong><br>Retirado: ${fmtData(f.emprestimoAtivo.retiradoEm)} (${tempoDecorrido(f.emprestimoAtivo.retiradoEm)})${f.emprestimoAtivo.prazoEm?`<br>Prazo: ${fmtData(f.emprestimoAtivo.prazoEm)}`:''}${assinaturaUrl?`<br><img src="${assinaturaUrl}" style="max-width:200px;background:#fff;border-radius:6px;margin-top:6px" alt="">`:''}</div></div>`:''}
     ${(proxM||proxC)?`<div class="info-box aviso"><span class="ic">🔔</span><div>${proxM?`<strong>Manutenção:</strong> ${proxM.toLocaleDateString('pt-BR')} ${diffDias(new Date(),proxM)<0?'<span style="color:var(--vermelho)">(VENCIDA)</span>':''}<br>`:''}${proxC?`<strong>Calibração:</strong> ${proxC.toLocaleDateString('pt-BR')} ${diffDias(new Date(),proxC)<0?'<span style="color:var(--vermelho)">(VENCIDA)</span>':''}`:''}</div></div>`:''}
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
@@ -4137,6 +4271,7 @@ $('inputImportar').addEventListener('change',e=>{
       db=Object.assign({},db,migrado);
       db.usuarioAtual=null;
       salvar(true);
+      garantirSetorAssistencia();
       renderTudo();
       aplicarPrefs();
       toast('Restaurado!');
@@ -4186,6 +4321,7 @@ $('csvInput').addEventListener('change',async e=>{
   if(idx.nome<0||idx.setor<0){toast('Colunas Nome e Setor obrigatórias.','erro');return}
   let importadas=0;
   const setMap=Object.fromEntries(db.setores.map(s=>[s.nome.toLowerCase(),s.id]));
+  const assistId=getSetorAssistenciaId();
   for(let i=1;i<linhas.length;i++){
     const c=linhas[i].split(';').map(x=>x.trim());
     const nome=c[idx.nome];
@@ -4202,9 +4338,10 @@ $('csvInput').addEventListener('change',async e=>{
     if(tipo&&!db.tiposFerramentas.some(t=>t.toLowerCase()===tipo.toLowerCase())){
       db.tiposFerramentas.push(tipo);
     }
+    const stFinal = (assistId && sid===assistId) ? 'manutencao' : (c[idx.status]||'disponivel');
     Repo.ferramentas.criar({
       nome,tipo,codigo:c[idx.codigo]||'',setorId:sid,
-      status:c[idx.status]||'disponivel',
+      status:stFinal,
       responsavel:c[idx.resp]||'',
       quantidade:parseInt(c[idx.qtd],10)||1,
       obs:c[idx.obs]||''
@@ -4319,11 +4456,14 @@ $('btnRelatorioAvancado').addEventListener('click',()=>{
   doc.text('Relatório de KPIs',14,18);
   const f=db.ferramentas;
   const v=f.reduce((s,x)=>s+(x.valorCompra||0),0);
+  const assistId=getSetorAssistenciaId();
+  const naAssist=assistId?f.filter(x=>x.setorId===assistId).length:0;
   doc.autoTable({startY:30,head:[['KPI','Valor']],body:[
     ['Total',f.length],['Patrimônio',`R$ ${v.toFixed(2)}`],
     ['Disponíveis',f.filter(x=>x.status==='disponivel').length],
     ['Emprestadas',f.filter(x=>x.emprestimoAtivo).length],
     ['Manutenção',f.filter(x=>x.status==='manutencao').length],
+    ['Na Assistência Técnica',naAssist],
     ['Perdidas',f.filter(x=>x.status==='perdida').length],
     ['Tipos diferentes',new Set(f.map(x=>x.tipo).filter(Boolean)).size],
     ['Movimentações',db.historico.length]
@@ -4468,7 +4608,7 @@ $('logoIcone').addEventListener('click',()=>{
 });
 
 /* ===== PWA ===== */
-const SW_CODE=`const CACHE='ct-v10.4';
+const SW_CODE=`const CACHE='ct-v10.5';
 const PRECACHE=['./','./index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
@@ -4699,6 +4839,7 @@ $('btnRestaurarAuto').addEventListener('click',async()=>{
     if(!ok)return;
     db=Object.assign({},db,o.conteudo);
     salvar(true);
+    garantirSetorAssistencia();
     renderTudo();
     aplicarPrefs();
     toast('Restaurado!');
@@ -4747,10 +4888,13 @@ $('btnAlertasTopo').addEventListener('click',()=>{
   const cb=db.consumiveis.filter(c=>c.quantidade<=c.minimo);
   const cv=db.ferramentas.filter(f=>f.calibracao&&f.calibracao.intervaloDias&&f.calibracao.ultimaCalibracao).filter(f=>new Date(new Date(f.calibracao.ultimaCalibracao).getTime()+f.calibracao.intervaloDias*86400000)<new Date());
   const an=detectarAnomalias();
+  const assistId=getSetorAssistenciaId();
+  const naAssist=assistId?db.ferramentas.filter(x=>x.setorId===assistId).length:0;
   const m=[];
   if(a.length)m.push(`⏰ ${a.length} atraso(s)`);
   if(cv.length)m.push(`🎯 ${cv.length} calibração(ões) vencida(s)`);
   if(cb.length)m.push(`🔩 ${cb.length} consumível(is) em falta`);
+  if(naAssist)m.push(`🔧 ${naAssist} na Assistência Técnica`);
   if(an.length)m.push(`🤖 ${an.length} anomalia(s) detectada(s)`);
   alert(m.length?m.join('\n'):'✅ Tudo em ordem!');
 });
@@ -4797,6 +4941,7 @@ function aplicarPrefs(){
 }
 
 const passosOnb=[
+  {i:'🔧',t:'Setor Assistência Técnica',x:'Crie um setor "Assistência Técnica" automaticamente. Envie ferramentas para lá em uma ação — elas viram "Em manutenção" e aparecem com linha amarela no setor de origem.'},
   {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip para renomear ou excluir. As ferramentas que usam o tipo antigo são atualizadas na hora.'},
   {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234).'},
   {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, bloqueio temporário (30s → 5min).'},
@@ -4880,7 +5025,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.4: Tipos editáveis com sincronização • fixes de Escape/foco/UX','color:#16a34a');
+console.log('%cv10.5: Assistência Técnica • Linha amarela no setor de origem','color:#d97706;font-weight:bold');
 </script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10.5</title>
+<title>Controle de Ferramentas — Pro v10.6</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -98,7 +98,7 @@ tbody tr.selecionada{background:rgba(59,130,246,.08)}
 tbody tr.atrasada{background:rgba(220,38,38,.08);animation:pulsa-bg 2s infinite}
 @keyframes pulsa-bg{0%,100%{background:rgba(220,38,38,.05)}50%{background:rgba(220,38,38,.15)}}
 
-/* ===== Linha amarela: ferramenta na Assistência Técnica (aparece "fantasma" no setor de origem) ===== */
+/* ===== Linha amarela: ferramenta na Assistência Técnica ===== */
 tbody tr.em-assistencia{
   background:linear-gradient(90deg,rgba(245,158,11,.16),rgba(217,119,6,.04));
   animation:none;
@@ -149,7 +149,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .card-setor .botoes .btn{padding:6px 10px;font-size:11.5px;flex:1}
 .card-setor.setor-assistencia{border-left:4px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(217,119,6,.02))}
 
-/* ===== Chips de tipo (com edit) — v10.4: sem padding morto ===== */
+/* ===== Chips de tipo ===== */
 .lista-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
 .chip-wrapper{display:inline-flex;align-items:center;background:var(--fundo);border:1px solid var(--borda);border-radius:99px;overflow:hidden;transition:var(--transicao)}
 .chip-wrapper:hover{border-color:var(--azul2);box-shadow:var(--sombra)}
@@ -168,6 +168,59 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .item-ferr-setor .qtd button{width:25px;height:25px;border-radius:6px;border:1px solid var(--borda);background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--texto)}
 .item-ferr-setor .qtd button:hover{background:var(--azul);color:#fff}
 .item-ferr-setor .qtd span{min-width:20px;text-align:center;font-weight:700}
+
+/* ===== Grupos de ferramentas por tipo (dentro do setor) — v10.6 ===== */
+.grupo-ferr-setor{
+  border:2px solid var(--borda);
+  border-radius:12px;
+  margin-bottom:12px;
+  background:var(--card);
+  overflow:hidden;
+  box-shadow:var(--sombra);
+}
+.grupo-header{
+  background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(124,58,237,.08));
+  padding:10px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--borda);
+  gap:8px;
+  flex-wrap:wrap;
+}
+.grupo-nome{
+  font-weight:800;
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  color:var(--azul);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.grupo-info{
+  font-size:11px;
+  color:var(--cinza);
+  font-weight:600;
+  background:var(--card);
+  padding:3px 9px;
+  border-radius:99px;
+  border:1px solid var(--borda);
+}
+.grupo-itens{
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.grupo-itens .item-ferr-setor{
+  margin-bottom:0;
+  border-left:3px solid var(--azul2);
+}
+.tema-escuro .grupo-header{
+  background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(124,58,237,.18));
+}
+
 .graficos{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:16px}
 .grafico-card{background:var(--fundo);border:1px solid var(--borda);border-radius:var(--radius);padding:16px;position:relative}
 .grafico-card h3{font-size:12px;margin-bottom:11px;color:var(--cinza);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
@@ -403,7 +456,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.5 • PT-BR</p>
+        <p id="subInfo">v10.6 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -634,26 +687,15 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
     <form id="formFerramenta">
       <div class="modal-corpo">
         <input type="hidden" id="fId">
-
         <div class="campo">
           <label>Fotos (máx 3)</label>
           <div class="foto-acoes">
-            <button type="button" class="upload-area" id="btnFotoNativa">
-              <div style="font-size:22px">📷</div>
-              <div style="font-weight:600;font-size:11.5px">Câmera</div>
-            </button>
-            <button type="button" class="upload-area" id="btnFotoAoVivo">
-              <div style="font-size:22px">🎥</div>
-              <div style="font-weight:600;font-size:11.5px">Ao vivo</div>
-            </button>
-            <button type="button" class="upload-area" id="btnFotoGaleria">
-              <div style="font-size:22px">🖼️</div>
-              <div style="font-weight:600;font-size:11.5px">Galeria</div>
-            </button>
+            <button type="button" class="upload-area" id="btnFotoNativa"><div style="font-size:22px">📷</div><div style="font-weight:600;font-size:11.5px">Câmera</div></button>
+            <button type="button" class="upload-area" id="btnFotoAoVivo"><div style="font-size:22px">🎥</div><div style="font-weight:600;font-size:11.5px">Ao vivo</div></button>
+            <button type="button" class="upload-area" id="btnFotoGaleria"><div style="font-size:22px">🖼️</div><div style="font-weight:600;font-size:11.5px">Galeria</div></button>
           </div>
           <input type="file" id="fFotoInput" accept="image/*" multiple style="display:none">
           <input type="file" id="fCameraInput" accept="image/*" capture="environment" style="display:none">
-
           <div class="camera-live" id="cameraLive" style="display:none">
             <div class="camera-info">🔴 AO VIVO</div>
             <video id="cameraVideo" autoplay playsinline muted></video>
@@ -662,12 +704,9 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
               <button type="button" class="btn btn-secundario" id="btnFecharCamera">✖ Fechar</button>
             </div>
           </div>
-
           <div class="galeria" id="galeriaFotos"></div>
         </div>
-
         <div class="campo"><label class="obrigatorio">Nome</label><input type="text" id="fNome" required autocomplete="off"></div>
-
         <div class="linha-3">
           <div class="campo">
             <label>Tipo</label>
@@ -679,7 +718,6 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
           <div class="campo"><label>Código</label><input type="text" id="fCodigo" autocomplete="off"></div>
           <div class="campo"><label>Quantidade</label><input type="number" id="fQtd" min="1" value="1"></div>
         </div>
-
         <div class="linha-2"><div class="campo"><label class="obrigatorio">Setor</label><select id="fSetor" required></select></div><div class="campo"><label>Status</label><select id="fStatus"><option value="disponivel">✅ Disponível</option><option value="em_uso">🔄 Em uso</option><option value="manutencao">🔧 Manutenção</option><option value="perdida">❌ Perdida</option></select></div></div>
         <div class="campo"><label>Responsável</label><input type="text" id="fResponsavel" autocomplete="off"></div>
         <div class="titulo-secao">💰 Valor / Centro de Custo</div>
@@ -716,7 +754,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <input type="number" id="novaFerrQtd" value="1" min="1" style="padding:9px 12px;border:1px solid var(--borda);border-radius:8px;font-size:13px;background:var(--fundo);color:var(--texto);font-family:inherit">
       </div>
       <button type="button" class="btn btn-primario" id="btnAddCustom" style="margin-top:8px;width:100%">＋ Adicionar ferramenta</button>
-      <div class="titulo-secao" style="margin-top:16px">Já cadastradas (<span id="contFerrSetor">0</span>)</div>
+      <div class="titulo-secao" style="margin-top:16px">Já cadastradas (<span id="contFerrSetor">0</span>) — agrupadas por tipo</div>
       <div id="listaFerrSetor"></div>
     </div>
   </div>
@@ -1174,27 +1212,25 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.5
+   CONTROLE DE FERRAMENTAS PRO — v10.6
+   Novidades v10.6:
+   • Ferramentas do Setor agora são agrupadas por TIPO em
+     "caixinhas" separadas, cada uma com cabeçalho azul,
+     contador de itens e total de unidades.
+   Novidades v10.5.1 (duplicatas):
+   • Bloqueio global de duplicata por NOME (case-insensitive)
+     - Formulário principal
+     - Cadastro rápido no setor (chips)
+     - Importação CSV
    Novidades v10.5:
    • Setor "Assistência Técnica" criado automaticamente
    • Ferramentas nesse setor ficam em "manutencao" e mostram
      linha AMARELA no setor de origem (ghost entry)
-   • Botão "🔧 Assist." na barra de ações em massa
-   • Badge "🔧 Na Assistência Técnica" na tabela
-   • Contador dedicado no resumo
-   • Aviso no modal de transferência ao escolher assistência
-   Correções herdadas da v10.4:
-   • Badge de tipo atualiza na lista do setor ao renomear/excluir
-   • Escape fecha apenas o modal do topo, não todos
-   • Foco fantasma ao fechar modal empilhado
-   • Renomear pro mesmo nome não dispara nada
-   • abrirEditarTipo checa permissão na abertura
-   • Área morta de 3px removida do chip-wrapper
    ========================================================= */
 'use strict';
 
 /* ===== [01] CONSTANTES & ESTADO ===== */
-const VERSAO='10.5';
+const VERSAO='10.6';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1582,7 +1618,6 @@ function garantirSetorAssistencia(){
   salvar(true);
   registrar('setor',SETOR_ASSISTENCIA_NOME,'Setor criado automaticamente');
 }
-/* Detecta se o movimento entra/sai da assistência e ajusta origem + status */
 function aplicarMovimentoAssistencia(ferramenta,novoSetorId){
   const assistId=getSetorAssistenciaId();
   if(!assistId)return;
@@ -1590,12 +1625,10 @@ function aplicarMovimentoAssistencia(ferramenta,novoSetorId){
   const vaiParaAssist = novoSetorId === assistId;
 
   if(vaiParaAssist && !estaEmAssist){
-    // ENTRANDO: guarda origem e marca como manutenção
     if(!ferramenta.setorOrigem) ferramenta.setorOrigem = ferramenta.setorId;
     ferramenta.setorId = assistId;
     if(ferramenta.status!=='perdida') ferramenta.status='manutencao';
     if(ferramenta.emprestimoAtivo){
-      // Se estava emprestada, cancela o empréstimo ativo
       ferramenta.emprestimos=ferramenta.emprestimos||[];
       const h=(ferramenta.emprestimos||[]).find(x=>x.retiradoEm===ferramenta.emprestimoAtivo.retiradoEm);
       if(h){h.devolvidoEm=new Date().toISOString();h.obsDevolucao='Enviada para assistência técnica';}
@@ -1603,7 +1636,6 @@ function aplicarMovimentoAssistencia(ferramenta,novoSetorId){
       ferramenta.responsavel='';
     }
   } else if(!vaiParaAssist && estaEmAssist){
-    // SAINDO: restaura origem e libera
     ferramenta.setorId = novoSetorId;
     if(ferramenta.setorOrigem) delete ferramenta.setorOrigem;
     if(ferramenta.status==='manutencao') ferramenta.status='disponivel';
@@ -1812,7 +1844,6 @@ document.addEventListener('click',e=>{
     e.target.classList.remove('aberto');
   }
 });
-/* Escape fecha apenas o modal do topo */
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
   const abertos=[...document.querySelectorAll('.overlay.aberto')].filter(o=>o.id!=='modalConfirmacao');
@@ -2067,7 +2098,6 @@ async function renderTabela(){
   const assistId=getSetorAssistenciaId();
   let lista=db.ferramentas.filter(f=>{
     const emAssist = assistId && f.setorId===assistId;
-    // Ghost = está na assistência mas veio do setor que está sendo filtrado
     const ghost   = emAssist && f.setorOrigem && f.setorOrigem===fs;
     if(fs && f.setorId!==fs && !ghost)return false;
     if(ft&&(f.tipo||'')!==ft)return false;
@@ -3016,6 +3046,16 @@ $('formFerramenta').addEventListener('submit',async e=>{
     const dup=db.ferramentas.some(f=>f.codigo===d.codigo&&f.id!==id);
     if(dup){toast('Código já existe!','erro');return}
   }
+
+  // 🚫 Bloqueio de duplicata por NOME (case-insensitive) — v10.5.1
+  const nomeLower = d.nome.toLowerCase();
+  const dupNome = db.ferramentas.find(f => f.nome.toLowerCase() === nomeLower && f.id !== id);
+  if(dupNome){
+    const setorDup = Repo.setores.nome(dupNome.setorId) || '—';
+    toast(`"${d.nome}" já está cadastrada no setor ${setorDup}!`,'erro');
+    return;
+  }
+
   const fotosFinais=[];
   for(const f of fotosTemp){
     if(f.idbKey){
@@ -3414,42 +3454,81 @@ $('chipsTipos').addEventListener('click',e=>{
   }
 });
 
+/* 🗂️ v10.6 — Lista de ferramentas do setor AGRUPADA por tipo.
+   Cada tipo vira uma "caixinha" com cabeçalho, contador e total de unidades. */
 function renderListaFerrSetor(){
   const el=$('listaFerrSetor');
   if(!el)return;
   const l=db.ferramentas.filter(f=>f.setorId===setorAtualId);
   $('contFerrSetor').textContent=l.length;
   if(!l.length){el.innerHTML='<div class="vazio" style="padding:20px">Vazio.</div>';return}
-  el.innerHTML=l.map(f=>{
-    const st=STATUS[f.status]||STATUS.disponivel;
-    return `<div class="item-ferr-setor">
-      <div style="flex:1;min-width:120px">
-        <div class="nome">${esc(f.nome)}${f.tipo?` <span class="badge badge-tipo">${esc(f.tipo)}</span>`:''}</div>
-        <div style="font-size:10.5px;color:var(--cinza);margin-top:2px">
-          ${f.codigo?'📎 '+esc(f.codigo)+' • ':''}
-          <span class="badge ${st.classe}" style="font-size:9.5px;padding:2px 7px">${st.icone} ${st.rotulo}</span>
-        </div>
+
+  // Agrupa por TIPO (fallback: NOME)
+  const grupos={};
+  l.forEach(f=>{
+    const chave=(f.tipo && f.tipo.trim()) ? f.tipo.trim() : (f.nome||'Sem nome');
+    if(!grupos[chave]) grupos[chave]=[];
+    grupos[chave].push(f);
+  });
+
+  // Ordena alfabeticamente (pt-BR)
+  const chaves=Object.keys(grupos).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+
+  el.innerHTML=chaves.map(chave=>{
+    const itens=grupos[chave].sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+    const totalQtd=itens.reduce((s,f)=>s+(f.quantidade||1),0);
+    const plural=itens.length>1?'ns':'m';
+    return `<div class="grupo-ferr-setor">
+      <div class="grupo-header">
+        <div class="grupo-nome">🔧 ${esc(chave)}</div>
+        <div class="grupo-info">${itens.length} ite${plural} • ${totalQtd} un.</div>
       </div>
-      <div class="qtd">
-        <button data-qtd="menos" data-id="${f.id}">−</button>
-        <span>${f.quantidade||1}</span>
-        <button data-qtd="mais" data-id="${f.id}">＋</button>
+      <div class="grupo-itens">
+        ${itens.map(f=>{
+          const st=STATUS[f.status]||STATUS.disponivel;
+          const mostrarTipoExtra=f.tipo && f.tipo!==chave;
+          return `<div class="item-ferr-setor">
+            <div style="flex:1;min-width:120px">
+              <div class="nome">${esc(f.nome)}${mostrarTipoExtra?` <span class="badge badge-tipo">${esc(f.tipo)}</span>`:''}</div>
+              <div style="font-size:10.5px;color:var(--cinza);margin-top:2px">
+                ${f.codigo?'📎 '+esc(f.codigo)+' • ':''}
+                <span class="badge ${st.classe}" style="font-size:9.5px;padding:2px 7px">${st.icone} ${st.rotulo}</span>
+              </div>
+            </div>
+            <div class="qtd">
+              <button data-qtd="menos" data-id="${f.id}">−</button>
+              <span>${f.quantidade||1}</span>
+              <button data-qtd="mais" data-id="${f.id}">＋</button>
+            </div>
+            <button class="btn-icon" data-edit-f="${f.id}">✏️</button>
+            <button class="btn-icon" data-del-f="${f.id}">🗑️</button>
+          </div>`;
+        }).join('')}
       </div>
-      <button class="btn-icon" data-edit-f="${f.id}">✏️</button>
-      <button class="btn-icon" data-del-f="${f.id}">🗑️</button>
     </div>`;
   }).join('');
 }
+
+/* 🔧 v10.5.1 — Bloqueio global de duplicata por nome (case-insensitive).
+   Mesmo setor → soma qtd. Outro setor → bloqueia com aviso. */
 function adicionarFerramentaRapida(nome,qtd){
   if(!setorAtualId)return;
   if(!exigirLogin('editar'))return;
   const assistId=getSetorAssistenciaId();
-  const ex=db.ferramentas.find(f=>f.setorId===setorAtualId&&f.nome.toLowerCase()===nome.toLowerCase());
-  if(ex){
-    ex.quantidade=(ex.quantidade||1)+qtd;
-    ex.atualizadoEm=new Date().toISOString();
-    registrar('editada',ex.nome,`Qtd → ${ex.quantidade}`);
+  const nomeLower=nome.toLowerCase();
+
+  const exMesmoSetor=db.ferramentas.find(f=>f.setorId===setorAtualId && f.nome.toLowerCase()===nomeLower);
+  const exOutroSetor=db.ferramentas.find(f=>f.setorId!==setorAtualId && f.nome.toLowerCase()===nomeLower);
+
+  if(exMesmoSetor){
+    exMesmoSetor.quantidade=(exMesmoSetor.quantidade||1)+qtd;
+    exMesmoSetor.atualizadoEm=new Date().toISOString();
+    registrar('editada',exMesmoSetor.nome,`Qtd → ${exMesmoSetor.quantidade}`);
     toast(`+${qtd} ${nome}`);
+  }else if(exOutroSetor){
+    const setorDup=Repo.setores.nome(exOutroSetor.setorId)||'—';
+    toast(`"${nome}" já está cadastrada no setor ${setorDup}!`,'erro');
+    return;
   }else{
     const dados={nome,tipo:nome,codigo:'',setorId:setorAtualId,status:'disponivel',responsavel:'',quantidade:qtd,obs:'',fotos:[],valorCompra:0,dataCompra:'',vidaUtilMeses:0,centroCusto:'',garantiaAte:''};
     if(assistId && setorAtualId===assistId) dados.status='manutencao';
@@ -3457,6 +3536,7 @@ function adicionarFerramentaRapida(nome,qtd){
     registrar('criada',nome,`Adicionada${assistId&&setorAtualId===assistId?' (assistência)':''}`);
     toast(`"${nome}" adicionada!`);
   }
+
   salvar();
   renderListaFerrSetor();
   renderResumo();
@@ -4320,6 +4400,7 @@ $('csvInput').addEventListener('change',async e=>{
   };
   if(idx.nome<0||idx.setor<0){toast('Colunas Nome e Setor obrigatórias.','erro');return}
   let importadas=0;
+  let ignoradas=0;
   const setMap=Object.fromEntries(db.setores.map(s=>[s.nome.toLowerCase(),s.id]));
   const assistId=getSetorAssistenciaId();
   for(let i=1;i<linhas.length;i++){
@@ -4338,6 +4419,13 @@ $('csvInput').addEventListener('change',async e=>{
     if(tipo&&!db.tiposFerramentas.some(t=>t.toLowerCase()===tipo.toLowerCase())){
       db.tiposFerramentas.push(tipo);
     }
+
+    // 🚫 Ignora duplicatas por nome — v10.5.1
+    if(db.ferramentas.some(f=>f.nome.toLowerCase()===nome.toLowerCase())){
+      ignoradas++;
+      continue;
+    }
+
     const stFinal = (assistId && sid===assistId) ? 'manutencao' : (c[idx.status]||'disponivel');
     Repo.ferramentas.criar({
       nome,tipo,codigo:c[idx.codigo]||'',setorId:sid,
@@ -4348,11 +4436,11 @@ $('csvInput').addEventListener('change',async e=>{
     });
     importadas++;
   }
-  registrar('criada','CSV',`${importadas} ferramentas importadas`);
+  registrar('criada','CSV',`${importadas} ferramentas importadas${ignoradas?` • ${ignoradas} ignorada(s) por duplicidade`:''}`);
   salvar();
   renderTudo();
   fecharModal('modalCSV');
-  toast(`${importadas} ferramentas importadas!`);
+  toast(`${importadas} importada(s)${ignoradas?`, ${ignoradas} ignorada(s) por duplicidade`:''}!`);
   e.target.value='';
 });
 
@@ -4608,7 +4696,7 @@ $('logoIcone').addEventListener('click',()=>{
 });
 
 /* ===== PWA ===== */
-const SW_CODE=`const CACHE='ct-v10.5';
+const SW_CODE=`const CACHE='ct-v10.6';
 const PRECACHE=['./','./index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
@@ -4941,7 +5029,8 @@ function aplicarPrefs(){
 }
 
 const passosOnb=[
-  {i:'🔧',t:'Setor Assistência Técnica',x:'Crie um setor "Assistência Técnica" automaticamente. Envie ferramentas para lá em uma ação — elas viram "Em manutenção" e aparecem com linha amarela no setor de origem.'},
+  {i:'🗂️',t:'Ferramentas agrupadas por tipo',x:'Ao abrir "🧰 Ferramentas do Setor", as ferramentas aparecem em caixinhas separadas por tipo — Roquetes juntos, Lixadeiras juntas, etc.'},
+  {i:'🔧',t:'Setor Assistência Técnica',x:'Crie um setor "Assistência Técnica" automaticamente. Envie ferramentas para lá — elas viram "Em manutenção" e aparecem com linha amarela no setor de origem.'},
   {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip para renomear ou excluir. As ferramentas que usam o tipo antigo são atualizadas na hora.'},
   {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234).'},
   {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, bloqueio temporário (30s → 5min).'},
@@ -5025,7 +5114,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.5: Assistência Técnica • Linha amarela no setor de origem','color:#d97706;font-weight:bold');
+console.log('%cv10.6: Ferramentas do Setor agrupadas por tipo • v10.5.1: bloqueio de duplicatas','color:#d97706;font-weight:bold');
 </script>
 </body>
 </html>

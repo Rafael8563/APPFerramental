@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10.7</title>
+<title>Controle de Ferramentas — Pro v10.7.2</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -390,7 +390,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.7 • PT-BR</p>
+        <p id="subInfo">v10.7.2 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -713,7 +713,6 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </div>
 </div>
 
-<!-- MUDANÇA: botão PDF do setor no topo do modal -->
 <div class="overlay" id="modalFerrSetor" role="dialog" aria-modal="true">
   <div class="modal grande">
     <div class="modal-topo">
@@ -1009,6 +1008,25 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </div>
 </div>
 
+<!-- Alertas (substitui alert()) -->
+<div class="overlay" id="modalAlertas" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-topo"><h2>🔔 Alertas</h2><button class="fechar" data-fechar="modalAlertas">&times;</button></div>
+    <div class="modal-corpo" id="alertasConteudo"></div>
+  </div>
+</div>
+
+<!-- [#4] Novo modal de quantidade (substitui prompt()) -->
+<div class="overlay" id="modalQtd" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:340px">
+    <div class="modal-topo"><h2 id="qtdTitulo">Quantidade</h2><button class="fechar" data-fechar="modalQtd">&times;</button></div>
+    <form id="formQtd"><div class="modal-corpo">
+      <div class="campo"><label id="qtdLabel">Quantidade</label><input type="number" id="qtdInput" min="0" value="1" required></div>
+    </div>
+    <div class="modal-rodape"><button type="button" class="btn btn-secundario" data-fechar="modalQtd">Cancelar</button><button type="submit" class="btn btn-primario">OK</button></div></form>
+  </div>
+</div>
+
 <div class="overlay" id="modalConfig" role="dialog" aria-modal="true">
   <div class="modal grande">
     <div class="modal-topo"><h2>⚙️ Configurações</h2><button class="fechar" data-fechar="modalConfig">&times;</button></div>
@@ -1190,15 +1208,21 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.7
-   Novidades v10.7:
-   • PDF por aba (13 abas) e PDF por setor no modal Setor
-   • Correção: migrar() agora retorna versão 12 (antes 11)
-   • Correção: webhook de atraso persiste flag antes de enviar
+   CONTROLE DE FERRAMENTAS PRO — v10.7.2
+   Novidades v10.7.2 (auditoria):
+   • [#1] AudioContext singleton + cleanup — fim do vazamento
+   • [#2] limparCacheMidiaUrl() em restore/import
+   • [#3] salvarMidia() avisa em QuotaExceededError
+   • [#4] modalQtd + pedirQtd() substitui prompt() (PWA standalone)
+   • [#5] checkTodos resetado após exclusão em massa
+   • [#6] #leitorQR limpo ao parar scanner
+   • [#7] auto-exclusão zera usuarioAtual (fim do fantasma)
+   • [#8] filtroInvSetor avisa/reverte durante inventário
+   • [#9] fullscreenchange dá dica ao sair do Modo TV via ESC
    ========================================================= */
 'use strict';
 
-const VERSAO='10.7';
+const VERSAO='10.7.2';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1386,6 +1410,7 @@ function idbKeys(){
     req.onerror=e=>reject(e.target.error);
   });
 }
+/* [#3] salvarMidia avisa em QuotaExceededError */
 async function salvarMidia(dataUrl){
   if(!idb)return null;
   try{
@@ -1393,16 +1418,37 @@ async function salvarMidia(dataUrl){
     const key='m_'+uid();
     await idbPut(key,blob);
     return key;
-  }catch(e){return null}
+  }catch(e){
+    const nome=e&&e.name||'';
+    if(nome==='QuotaExceededError'||/quota/i.test(e&&e.message||'')){
+      toast('Armazenamento cheio — mídia não foi salva. Rode ⚙️ → Otimizar.','erro');
+    }
+    return null;
+  }
 }
+/* [#1] Cache de object URLs */
+const _mediaUrlCache=new Map();
 async function carregarMidiaUrl(key){
   if(!idb||!key)return '';
+  if(_mediaUrlCache.has(key))return _mediaUrlCache.get(key);
   try{
     const blob=await idbGet(key);
     if(!blob)return '';
-    return URL.createObjectURL(blob);
+    const url=URL.createObjectURL(blob);
+    _mediaUrlCache.set(key,url);
+    return url;
   }catch(e){return ''}
 }
+function invalidarMidiaUrl(key){
+  if(!key||!_mediaUrlCache.has(key))return;
+  try{URL.revokeObjectURL(_mediaUrlCache.get(key))}catch(e){}
+  _mediaUrlCache.delete(key);
+}
+function limparCacheMidiaUrl(){
+  _mediaUrlCache.forEach(url=>{try{URL.revokeObjectURL(url)}catch(e){}});
+  _mediaUrlCache.clear();
+}
+window.addEventListener('beforeunload',limparCacheMidiaUrl,{once:true});
 
 /* ===== [06] EVENT BUS ===== */
 const _listeners={};
@@ -1485,7 +1531,7 @@ function migrar(o){
   }
   const cfgPadrao={idioma:'pt',autoBackup:true,ultimoAutoBackup:null,webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,som:true,notif:false,autoLock:true,autoLockMin:10,compacto:false,contraste:false,modoAberto:false,rateLimit:true};
   o.config=Object.assign(cfgPadrao,o.config||{});
-  o.versao=12; /* ✅ FIX: era 11, causava reexecução de migrações */
+  o.versao=12;
   return o;
 }
 async function migrarMidia(){
@@ -1718,7 +1764,7 @@ async function enviarWebhook(titulo,mensagem,tipo='info'){
   }
 }
 
-/* ===== [11] TOAST / CONFIRM ===== */
+/* ===== [11] TOAST / FEEDBACK / CONFIRM ===== */
 function toast(msg,tipo='sucesso',undoFn=null){
   const el=$('toast');
   const ic={sucesso:'✅',erro:'❌',aviso:'⚠️'};
@@ -1733,17 +1779,22 @@ function toast(msg,tipo='sucesso',undoFn=null){
   }
   if(db.config.som&&(tipo==='sucesso'||tipo==='erro'))feedback(tipo);
 }
+/* [#1] AudioContext singleton + osc cleanup — fim do vazamento */
+let _audioCtx=null;
 function feedback(tipo){
   try{
     if(navigator.vibrate)navigator.vibrate(tipo==='erro'?[60,40,60]:40);
     const AC=window.AudioContext||window.webkitAudioContext;
     if(!AC)return;
-    const ctx=new AC();
+    if(!_audioCtx||_audioCtx.state==='closed')_audioCtx=new AC();
+    if(_audioCtx.state==='suspended')_audioCtx.resume().catch(()=>{});
+    const ctx=_audioCtx;
     const o=ctx.createOscillator(),g=ctx.createGain();
     o.connect(g);g.connect(ctx.destination);
     o.frequency.value=tipo==='erro'?220:880;
     g.gain.setValueAtTime(.05,ctx.currentTime);
     g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.15);
+    o.onended=()=>{try{o.disconnect();g.disconnect()}catch(e){}};
     o.start();o.stop(ctx.currentTime+.15);
   }catch(e){}
 }
@@ -1757,6 +1808,31 @@ function confirmar(titulo,texto,icone='⚠️'){
     const cleanup=()=>{sim.onclick=null;nao.onclick=null};
     sim.onclick=()=>{cleanup();$('modalConfirmacao').classList.remove('aberto');r(true)};
     nao.onclick=()=>{cleanup();$('modalConfirmacao').classList.remove('aberto');r(false)};
+  });
+}
+/* [#4] Substitui prompt() nativo — funciona em PWA standalone iOS/Android */
+function pedirQtd(titulo,label,valorInicial){
+  return new Promise(resolve=>{
+    $('qtdTitulo').textContent=titulo;
+    $('qtdLabel').textContent=label;
+    $('qtdInput').value=valorInicial;
+    abrirModal('modalQtd');
+    const form=$('formQtd');
+    const cancelarBtns=[...$('modalQtd').querySelectorAll('[data-fechar]')];
+    const finalizar=(val)=>{
+      form.onsubmit=null;
+      cancelarBtns.forEach(b=>b.removeEventListener('click',onCancel));
+      resolve(val);
+    };
+    const onCancel=()=>finalizar(null);
+    form.onsubmit=ev=>{
+      ev.preventDefault();
+      const v=parseInt($('qtdInput').value,10)||0;
+      fecharModal('modalQtd');
+      finalizar(v);
+    };
+    cancelarBtns.forEach(b=>b.addEventListener('click',onCancel));
+    setTimeout(()=>$('qtdInput').focus(),150);
   });
 }
 function registrar(tipo,nome,desc){
@@ -2045,7 +2121,11 @@ async function atualizarSelects(){
   const rf=$('resFerr');
   if(rf)rf.innerHTML='<option value="">Selecione...</option>'+db.ferramentas.filter(f=>f.status==='disponivel').map(f=>`<option value="${f.id}">${esc(f.nome)}</option>`).join('');
   const sf=$('slotFerr');
-  if(sf)sf.innerHTML='<option value="">— Vazio —</option>'+db.ferramentas.map(f=>`<option value="${f.id}">${esc(f.nome)}</option>`).join('');
+  if(sf){
+    const v=sf.value;
+    sf.innerHTML='<option value="">— Vazio —</option>'+db.ferramentas.map(f=>`<option value="${f.id}">${esc(f.nome)}</option>`).join('');
+    sf.value=v;
+  }
 }
 async function fotoPrincipalHtml(f){
   if(!f.fotos||!f.fotos.length)return '<div class="thumb-placeholder">🔧</div>';
@@ -2661,7 +2741,7 @@ function desenharGraficos(){
   }
 }
 
-/* ===== [15] PDF EXPORT POR ABA E POR SETOR (NOVO v10.7) ===== */
+/* ===== [15] PDF EXPORT ===== */
 function _pdfHeader(doc,titulo,subtitulo){
   doc.setFontSize(18);doc.setTextColor(30,64,175);
   doc.text(titulo,14,18);
@@ -2932,7 +3012,6 @@ function gerarPDFSetor(sid){
   doc.save(`setor-${s.nome.replace(/[^a-z0-9]+/gi,'_')}-${hoje()}.pdf`);
   toast('PDF gerado!');
 }
-/* Dispatcher central para botões com data-pdf */
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-pdf]');
   if(!b)return;
@@ -3034,7 +3113,7 @@ function processarArquivosFotos(files){
   });
 }
 
-/* ===== [17] TIPOS — CRIAR / EDITAR / EXCLUIR ===== */
+/* ===== [17] TIPOS ===== */
 function sincronizarListaSetorSeAberto(){
   if($('modalFerrSetor').classList.contains('aberto')) renderListaFerrSetor();
 }
@@ -3218,13 +3297,15 @@ $('barraMassa').addEventListener('click',async e=>{
     if(!ok)return;
     const excluidas=db.ferramentas.filter(f=>selecionadas.has(f.id));
     for(const f of excluidas){
-      if(f.fotos)for(const item of f.fotos)if(item.idbKey)await idbDel(item.idbKey);
-      if(f.emprestimos)for(const e of f.emprestimos)if(e.assinaturaKey)await idbDel(e.assinaturaKey);
-      if(f.emprestimoAtivo&&f.emprestimoAtivo.assinaturaKey)await idbDel(f.emprestimoAtivo.assinaturaKey);
+      if(f.fotos)for(const item of f.fotos)if(item.idbKey){await idbDel(item.idbKey);invalidarMidiaUrl(item.idbKey);}
+      if(f.emprestimos)for(const e of f.emprestimos)if(e.assinaturaKey){await idbDel(e.assinaturaKey);invalidarMidiaUrl(e.assinaturaKey);}
+      if(f.emprestimoAtivo&&f.emprestimoAtivo.assinaturaKey){await idbDel(f.emprestimoAtivo.assinaturaKey);invalidarMidiaUrl(f.emprestimoAtivo.assinaturaKey);}
     }
     db.ferramentas=db.ferramentas.filter(f=>!selecionadas.has(f.id));
     registrar('excluida',`${selecionadas.size} itens`,'Exclusão em massa');
     selecionadas.clear();
+    /* [#5] reset visual do header checkbox */
+    $('checkTodos').checked=false;
     toast('Excluído.','aviso',()=>{db.ferramentas.push(...excluidas);renderTudo()});
   }
   salvar();
@@ -3408,7 +3489,9 @@ $('corpoTabela').addEventListener('click',async e=>{
     const ok=await confirmar('Excluir?',`Excluir "${f.nome}"?`,'🗑️');
     if(!ok)return;
     const idx=db.ferramentas.indexOf(f);
-    if(f.fotos)for(const item of f.fotos)if(item.idbKey)await idbDel(item.idbKey);
+    if(f.fotos)for(const item of f.fotos)if(item.idbKey){await idbDel(item.idbKey);invalidarMidiaUrl(item.idbKey);}
+    if(f.emprestimos)for(const e of f.emprestimos)if(e.assinaturaKey){await idbDel(e.assinaturaKey);invalidarMidiaUrl(e.assinaturaKey);}
+    if(f.emprestimoAtivo&&f.emprestimoAtivo.assinaturaKey){await idbDel(f.emprestimoAtivo.assinaturaKey);invalidarMidiaUrl(f.emprestimoAtivo.assinaturaKey);}
     Repo.ferramentas.excluir(id);
     registrar('excluida',f.nome,'Excluída');
     salvar();
@@ -4140,10 +4223,16 @@ function continuarScan(id,inv){
     mostrarDetalhes(f);
   }
 }
+/* [#6] Limpa o DOM do scanner ao parar */
 function pararScanner(){
+  const limparDom=()=>{const el=$('leitorQR');if(el)el.innerHTML=''};
   if(scannerQR){
-    try{scannerQR.stop().then(()=>{scannerQR=null}).catch(()=>{scannerQR=null})}
-    catch(e){scannerQR=null}
+    try{
+      scannerQR.stop().then(()=>{scannerQR=null;limparDom()}).catch(()=>{scannerQR=null;limparDom()});
+    }
+    catch(e){scannerQR=null;limparDom()}
+  }else{
+    limparDom();
   }
 }
 
@@ -4293,6 +4382,7 @@ $('formConsumivel').addEventListener('submit',e=>{
   renderConsumiveis();
   atualizarAlertas();
 });
+/* [#4] Substituído prompt() por pedirQtd() — funciona em PWA standalone */
 $('listaConsumiveis').addEventListener('click',async e=>{
   const b=e.target.closest('[data-consum]');
   if(!b)return;
@@ -4301,15 +4391,17 @@ $('listaConsumiveis').addEventListener('click',async e=>{
   const a=b.dataset.consum;
   if(a==='add'||a==='usar'){
     if(!exigirLogin('editar'))return;
-    const q=prompt(a==='add'?'Quantidade a adicionar:':'Quantidade a usar:',1);
-    if(q){
-      const n=parseInt(q,10)||0;
-      if(a==='add')c.quantidade+=n;
-      else c.quantidade=Math.max(0,c.quantidade-n);
-      salvar();
-      renderConsumiveis();
-      atualizarAlertas();
-    }
+    const n=await pedirQtd(
+      a==='add'?'Adicionar':'Usar',
+      a==='add'?'Quantidade a adicionar:':'Quantidade a usar:',
+      1
+    );
+    if(n===null||n<=0)return;
+    if(a==='add')c.quantidade+=n;
+    else c.quantidade=Math.max(0,c.quantidade-n);
+    salvar();
+    renderConsumiveis();
+    atualizarAlertas();
   }
   if(a==='editar'){
     if(!exigirLogin('editar'))return;
@@ -4600,6 +4692,8 @@ $('inputImportar').addEventListener('change',e=>{
       const ok=await confirmar('Restaurar?','Todos os dados serão substituídos.','📥');
       if(!ok){e.target.value='';return}
       const migrado=migrar(o);
+      /* [#2] limpa cache de URLs antes de trocar db */
+      limparCacheMidiaUrl();
       db=Object.assign({},db,migrado);
       db.usuarioAtual=null;
       salvar(true);
@@ -4906,6 +5000,12 @@ window.sairModoTv=()=>{
   document.getElementById('modoTv').classList.remove('ativo');
   if(document.exitFullscreen)document.exitFullscreen().catch(()=>{});
 };
+/* [#9] Dica ao sair do fullscreen via ESC */
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement && document.getElementById('modoTv').classList.contains('ativo')){
+    toast('Dica: clique em "✖ Sair do Modo TV" para voltar ao app.','aviso');
+  }
+});
 function renderTv(){
   const agora=new Date();
   const hora=agora.toLocaleTimeString('pt-BR');
@@ -4947,7 +5047,7 @@ $('logoIcone').addEventListener('click',()=>{
 });
 
 /* ===== PWA ===== */
-const SW_CODE=`const CACHE='ct-v10.7';
+const SW_CODE=`const CACHE='ct-v10.7.2';
 const PRECACHE=['./','./index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
@@ -5073,13 +5173,20 @@ $('gradeUsuarios').addEventListener('click',async e=>{
     renderUsuarios();
     toast(`"${u.nome}" desbloqueado.`);
   }
+  /* [#7] Auto-exclusão zera usuarioAtual */
   if(a==='excluir'){
     if(!exigirLogin('usuarios'))return;
     const ok=await confirmar('Excluir?',`Excluir "${u.nome}"?`,'🗑️');
     if(!ok)return;
+    const eraEu=db.usuarioAtual && db.usuarioAtual.id===u.id;
     db.usuarios=db.usuarios.filter(x=>x.id!==u.id);
+    if(eraEu){
+      db.usuarioAtual=null;
+      atualizarUsuarioUI();
+    }
     salvar();
     renderUsuarios();
+    if(eraEu)toast('Você excluiu a si mesmo — sessão encerrada.','aviso');
   }
 });
 
@@ -5176,6 +5283,8 @@ $('btnRestaurarAuto').addEventListener('click',async()=>{
     const o=JSON.parse(b);
     const ok=await confirmar('Restaurar backup automático?',`Backup de ${new Date(o.data).toLocaleString('pt-BR')}. Dados atuais serão substituídos.`,'🔄');
     if(!ok)return;
+    /* [#2] limpa cache de URLs antes de trocar db */
+    limparCacheMidiaUrl();
     db=Object.assign({},db,o.conteudo);
     salvar(true);
     garantirSetorAssistencia();
@@ -5194,19 +5303,50 @@ $('btnLimparBackups').addEventListener('click',async()=>{
 });
 $('btnInfoIdb').addEventListener('click',atualizarIdbInfo);
 $('btnOtimizar').addEventListener('click',async()=>{
+  const ok=await confirmar(
+    'Otimizar armazenamento?',
+    'Remove histórico antigo (>500), empréstimos antigos (>10 por ferramenta) e todos os blobs órfãos do IndexedDB. Irreversível.',
+    '🧹'
+  );
+  if(!ok)return;
   const antes=JSON.stringify(db).length;
+  const keysOrfas=new Set();
+
   if(db.historico.length>500)db.historico=db.historico.slice(0,500);
+
   db.ferramentas.forEach(f=>{
     if(f.emprestimos&&f.emprestimos.length>10){
-      f.emprestimos.slice(10).forEach(e=>{delete e.assinaturaKey});
+      f.emprestimos.slice(10).forEach(e=>{
+        if(e.assinaturaKey)keysOrfas.add(e.assinaturaKey);
+        delete e.assinaturaKey;
+      });
       f.emprestimos=f.emprestimos.slice(0,10);
     }
   });
+
+  try{
+    const todasKeys=await idbKeys();
+    const referenciadas=new Set();
+    db.ferramentas.forEach(f=>{
+      (f.fotos||[]).forEach(fo=>{if(fo&&fo.idbKey)referenciadas.add(fo.idbKey)});
+      (f.emprestimos||[]).forEach(e=>{if(e.assinaturaKey)referenciadas.add(e.assinaturaKey)});
+      if(f.emprestimoAtivo&&f.emprestimoAtivo.assinaturaKey)referenciadas.add(f.emprestimoAtivo.assinaturaKey);
+    });
+    if(db.empresa.logoKey)referenciadas.add(db.empresa.logoKey);
+    todasKeys.forEach(k=>{if(!referenciadas.has(k))keysOrfas.add(k)});
+  }catch(e){console.warn('Otimizar - erro ao listar IDB:',e)}
+
+  let removidas=0;
+  for(const k of keysOrfas){
+    try{await idbDel(k);invalidarMidiaUrl(k);removidas++}catch(e){}
+  }
+
   const depois=JSON.stringify(db).length;
   const ganho=((antes-depois)/1024).toFixed(1);
   salvar(true);
   recalcularTamanho();
-  toast(`Otimizado! Liberado ${ganho} KB`);
+  atualizarIdbInfo();
+  toast(`Otimizado! ${ganho} KB no JSON, ${removidas} blob(s) removido(s) do IndexedDB.`);
 });
 $('btnResetTudo').addEventListener('click',async()=>{
   const ok=await confirmar('⚠️ ZERAR TODOS OS DADOS?','Irreversível! Faça backup antes.','💣');
@@ -5214,6 +5354,7 @@ $('btnResetTudo').addEventListener('click',async()=>{
   const ok2=await confirmar('Tem CERTEZA?','Última chance!','⚠️');
   if(!ok2)return;
   try{
+    limparCacheMidiaUrl();
     if(idb)idb.close();
     indexedDB.deleteDatabase(IDB_NAME);
   }catch(e){}
@@ -5229,13 +5370,38 @@ $('btnAlertasTopo').addEventListener('click',()=>{
   const an=detectarAnomalias();
   const assistId=getSetorAssistenciaId();
   const naAssist=assistId?db.ferramentas.filter(x=>x.setorId===assistId).length:0;
-  const m=[];
-  if(a.length)m.push(`⏰ ${a.length} atraso(s)`);
-  if(cv.length)m.push(`🎯 ${cv.length} calibração(ões) vencida(s)`);
-  if(cb.length)m.push(`🔩 ${cb.length} consumível(is) em falta`);
-  if(naAssist)m.push(`🔧 ${naAssist} na Assistência Técnica`);
-  if(an.length)m.push(`🤖 ${an.length} anomalia(s) detectada(s)`);
-  alert(m.length?m.join('\n'):'✅ Tudo em ordem!');
+
+  const linhas=[];
+  a.forEach(f=>linhas.push({
+    icone:'⏰',
+    titulo:`Atrasada: ${f.nome}`,
+    desc:`${f.emprestimoAtivo.responsavel} — vencida em ${fmtData(f.emprestimoAtivo.prazoEm)}`
+  }));
+  cv.forEach(f=>linhas.push({
+    icone:'🎯',
+    titulo:`Calibração vencida: ${f.nome}`,
+    desc:Repo.setores.nome(f.setorId)||'—'
+  }));
+  cb.forEach(c=>linhas.push({
+    icone:'🔩',
+    titulo:`Consumível baixo: ${c.nome}`,
+    desc:`${c.quantidade} ${c.unidade||'un'} (mín. ${c.minimo})`
+  }));
+  if(naAssist)linhas.push({
+    icone:'🔧',
+    titulo:`${naAssist} ferramenta(s) na Assistência Técnica`,
+    desc:'Aguardando retorno'
+  });
+  an.forEach(x=>linhas.push({icone:x.icone,titulo:x.titulo,desc:x.desc}));
+
+  const el=$('alertasConteudo');
+  if(!linhas.length){
+    el.innerHTML='<div class="info-box sucesso"><span class="ic">✨</span><div>Tudo em ordem! Nenhum alerta ativo.</div></div>';
+  }else{
+    el.innerHTML=`<div class="info-box aviso"><span class="ic">📋</span><div><strong>${linhas.length} alerta(s)</strong> requer(em) atenção.</div></div>`+
+      linhas.map(l=>`<div class="anomalia-card"><div class="ic">${l.icone}</div><div class="txt"><div class="titulo">${esc(l.titulo)}</div><div class="desc">${esc(l.desc)}</div></div></div>`).join('');
+  }
+  abrirModal('modalAlertas');
 });
 
 document.addEventListener('keydown',e=>{
@@ -5257,7 +5423,15 @@ $('busca').addEventListener('input',()=>{
 $('filtroSetor').addEventListener('change',renderTabela);
 $('filtroTipo').addEventListener('change',renderTabela);
 $('filtroStatus').addEventListener('change',renderTabela);
-$('filtroInvSetor').addEventListener('change',renderInventario);
+/* [#8] filtroInvSetor avisa/reverte durante inventário ativo */
+$('filtroInvSetor').addEventListener('change',()=>{
+  if(inventarioAtual && $('filtroInvSetor').value!==inventarioAtual.setorFiltro){
+    toast('Para mudar o setor do inventário, finalize-o e inicie outro.','aviso');
+    $('filtroInvSetor').value=inventarioAtual.setorFiltro;
+    return;
+  }
+  renderInventario();
+});
 
 $('btnTema').addEventListener('click',()=>{
   const e=!document.body.classList.contains('tema-escuro');
@@ -5280,7 +5454,7 @@ function aplicarPrefs(){
 }
 
 const passosOnb=[
-  {i:'📄',t:'PDF por aba e por setor',x:'Cada aba agora tem botão "📄 PDF" que exporta o conteúdo filtrado. Dentro do setor, um botão exporta o relatório agrupado por tipo.'},
+  {i:'📄',t:'PDF por aba e por setor',x:'Cada aba tem botão "📄 PDF" que exporta o conteúdo filtrado. Dentro do setor, um botão exporta o relatório agrupado por tipo.'},
   {i:'🗂️',t:'Ferramentas agrupadas por tipo',x:'Ao abrir "🧰 Ferramentas do Setor", as ferramentas aparecem em caixinhas separadas por tipo — Roquetes juntos, Lixadeiras juntas, etc.'},
   {i:'🔧',t:'Setor Assistência Técnica',x:'Envie ferramentas para lá — elas viram "Em manutenção" e aparecem com linha amarela no setor de origem.'},
   {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip para renomear ou excluir.'},
@@ -5351,7 +5525,6 @@ $('onbPular').addEventListener('click',()=>{
     const atrasados=db.ferramentas.filter(f=>f.emprestimoAtivo&&f.emprestimoAtivo.prazoEm&&new Date(f.emprestimoAtivo.prazoEm)<new Date()&&!f.emprestimoAtivo.webhookAvisado);
     if(atrasados.length){
       const nomes=atrasados.map(f=>`${f.nome} (${f.emprestimoAtivo.responsavel})`).join(', ');
-      /* ✅ FIX: salva ANTES de enviar webhook (evita reenvio em loop se aba fechar) */
       atrasados.forEach(f=>{if(f.emprestimoAtivo)f.emprestimoAtivo.webhookAvisado=true});
       salvar(true);
       enviarWebhook('⏰ Empréstimos Atrasados',`${atrasados.length}: ${nomes}`,'erro');
@@ -5367,7 +5540,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.7: PDF por aba + por setor • migrar() corrigido • webhook persistido','color:#16a34a;font-weight:bold');
+console.log('%cv10.7.2: AudioContext único • cache de URLs limpo • quota avisada • modal de qtd • checkbox reset • scanner limpo • sessão fantasma • filtro inv • fullscreen ESC','color:#16a34a;font-weight:bold');
 </script>
 </body>
 </html>

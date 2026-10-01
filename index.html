@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Ferramentas Pro">
 <meta name="description" content="Sistema profissional de controle de ferramentas, empréstimos e inventário.">
 <link rel="manifest" href='data:application/manifest+json,{"name":"Controle de Ferramentas Pro","short_name":"Ferramentas","start_url":".","display":"standalone","background_color":"%231e40af","theme_color":"%231e40af","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjMyIiBmaWxsPSIjMWU0MGFmIi8+PHRleHQgeD0iOTYiIHk9IjEyNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+UpzwvdGV4dD48L3N2Zz4=","sizes":"192x192","type":"image/svg+xml"}]}'>
-<title>Controle de Ferramentas — Pro v10.6</title>
+<title>Controle de Ferramentas — Pro v10.7</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -97,28 +97,10 @@ tbody tr:hover{background:rgba(59,130,246,.03)}
 tbody tr.selecionada{background:rgba(59,130,246,.08)}
 tbody tr.atrasada{background:rgba(220,38,38,.08);animation:pulsa-bg 2s infinite}
 @keyframes pulsa-bg{0%,100%{background:rgba(220,38,38,.05)}50%{background:rgba(220,38,38,.15)}}
-
-/* ===== Linha amarela: ferramenta na Assistência Técnica ===== */
-tbody tr.em-assistencia{
-  background:linear-gradient(90deg,rgba(245,158,11,.16),rgba(217,119,6,.04));
-  animation:none;
-  border-left:4px solid #f59e0b;
-}
+tbody tr.em-assistencia{background:linear-gradient(90deg,rgba(245,158,11,.16),rgba(217,119,6,.04));animation:none;border-left:4px solid #f59e0b}
 tbody tr.em-assistencia:hover{background:rgba(245,158,11,.22)}
 tbody tr.em-assistencia td:first-child{border-left:4px solid #f59e0b;padding-left:8px}
-
-.badge-assistencia{
-  display:inline-block;
-  background:linear-gradient(135deg,#f59e0b,#d97706);
-  color:#fff;
-  font-size:11px;
-  font-weight:700;
-  padding:4px 10px;
-  border-radius:99px;
-  white-space:nowrap;
-  box-shadow:0 1px 3px rgba(217,119,6,.35);
-}
-
+.badge-assistencia{display:inline-block;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;box-shadow:0 1px 3px rgba(217,119,6,.35)}
 .obs{font-size:11px;color:var(--cinza);margin-top:3px;line-height:1.4;max-width:250px}
 .badge{display:inline-block;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700;white-space:nowrap}
 .badge-disponivel{background:var(--verde-claro);color:var(--verde)}
@@ -148,8 +130,6 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .card-setor .botoes{display:flex;gap:5px;margin-top:auto;flex-wrap:wrap}
 .card-setor .botoes .btn{padding:6px 10px;font-size:11.5px;flex:1}
 .card-setor.setor-assistencia{border-left:4px solid #f59e0b;background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(217,119,6,.02))}
-
-/* ===== Chips de tipo ===== */
 .lista-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;align-items:center}
 .chip-wrapper{display:inline-flex;align-items:center;background:var(--fundo);border:1px solid var(--borda);border-radius:99px;overflow:hidden;transition:var(--transicao)}
 .chip-wrapper:hover{border-color:var(--azul2);box-shadow:var(--sombra)}
@@ -159,7 +139,6 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .chip-wrapper .chip-edit:hover{background:var(--azul);color:#fff}
 .btn-novo-tipo{background:transparent;border:1px dashed var(--borda);color:var(--cinza);padding:7px 12px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--transicao)}
 .btn-novo-tipo:hover{border-color:var(--azul2);color:var(--azul)}
-
 .titulo-secao{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--cinza);margin:14px 0 9px;display:flex;align-items:center;gap:6px}
 .titulo-secao:first-child{margin-top:0}
 .item-ferr-setor{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--borda);border-radius:9px;margin-bottom:6px;background:var(--fundo);flex-wrap:wrap}
@@ -168,59 +147,13 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .item-ferr-setor .qtd button{width:25px;height:25px;border-radius:6px;border:1px solid var(--borda);background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--texto)}
 .item-ferr-setor .qtd button:hover{background:var(--azul);color:#fff}
 .item-ferr-setor .qtd span{min-width:20px;text-align:center;font-weight:700}
-
-/* ===== Grupos de ferramentas por tipo (dentro do setor) — v10.6 ===== */
-.grupo-ferr-setor{
-  border:2px solid var(--borda);
-  border-radius:12px;
-  margin-bottom:12px;
-  background:var(--card);
-  overflow:hidden;
-  box-shadow:var(--sombra);
-}
-.grupo-header{
-  background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(124,58,237,.08));
-  padding:10px 14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--borda);
-  gap:8px;
-  flex-wrap:wrap;
-}
-.grupo-nome{
-  font-weight:800;
-  font-size:12.5px;
-  text-transform:uppercase;
-  letter-spacing:.6px;
-  color:var(--azul);
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.grupo-info{
-  font-size:11px;
-  color:var(--cinza);
-  font-weight:600;
-  background:var(--card);
-  padding:3px 9px;
-  border-radius:99px;
-  border:1px solid var(--borda);
-}
-.grupo-itens{
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.grupo-itens .item-ferr-setor{
-  margin-bottom:0;
-  border-left:3px solid var(--azul2);
-}
-.tema-escuro .grupo-header{
-  background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(124,58,237,.18));
-}
-
+.grupo-ferr-setor{border:2px solid var(--borda);border-radius:12px;margin-bottom:12px;background:var(--card);overflow:hidden;box-shadow:var(--sombra)}
+.grupo-header{background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(124,58,237,.08));padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--borda);gap:8px;flex-wrap:wrap}
+.grupo-nome{font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--azul);display:flex;align-items:center;gap:6px}
+.grupo-info{font-size:11px;color:var(--cinza);font-weight:600;background:var(--card);padding:3px 9px;border-radius:99px;border:1px solid var(--borda)}
+.grupo-itens{padding:10px;display:flex;flex-direction:column;gap:6px}
+.grupo-itens .item-ferr-setor{margin-bottom:0;border-left:3px solid var(--azul2)}
+.tema-escuro .grupo-header{background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(124,58,237,.18))}
 .graficos{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:16px}
 .grafico-card{background:var(--fundo);border:1px solid var(--borda);border-radius:var(--radius);padding:16px;position:relative}
 .grafico-card h3{font-size:12px;margin-bottom:11px;color:var(--cinza);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
@@ -404,6 +337,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 .login-aviso.ativo{display:flex}
 .login-aviso .ic{font-size:18px}
 .pin-info{font-size:11px;color:var(--cinza);margin-top:4px}
+.barra-pdf-topo{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
@@ -456,7 +390,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <div class="icone" id="logoIcone">🔧</div>
       <div>
         <h1 data-i18n="titulo">Controle de Ferramentas Pro</h1>
-        <p id="subInfo">v10.6 • PT-BR</p>
+        <p id="subInfo">v10.7 • PT-BR</p>
       </div>
     </div>
     <div class="topo-acoes">
@@ -509,6 +443,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <option value="perdida">❌ Perdida</option>
       </select>
       <button class="btn btn-primario" id="btnNovaFerramenta">＋ Nova</button>
+      <button class="btn btn-pdf btn-mini" data-pdf="ferramentas" title="Exportar PDF desta aba">📄 PDF</button>
       <button class="btn btn-secundario" id="btnEtiquetas" title="Etiquetas">🏷️</button>
       <button class="btn btn-secundario" id="btnCSV" title="CSV">📊</button>
     </div>
@@ -540,6 +475,10 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </section>
 
   <section class="painel escondido" id="view-emprestimos">
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">📤 Empréstimos Ativos</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="emprestimos">📄 PDF</button>
+    </div>
     <div class="info-box aviso" id="infoAtrasados" style="display:none"><span class="ic">⏰</span><div><strong id="txtAtrasados">0 atrasados</strong></div></div>
     <div class="tabela-wrap">
       <table><thead><tr><th>Ferramenta</th><th>Responsável</th><th>Retirado</th><th>Prazo</th><th>Status</th><th class="sem-ordem">Ações</th></tr></thead><tbody id="corpoEmprestimos"></tbody></table>
@@ -549,12 +488,17 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   <section class="painel escondido" id="view-reservas">
     <div class="barra">
       <div style="flex:1"><strong style="font-size:15px">📅 Reservas</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="reservas">📄 PDF</button>
       <button class="btn btn-primario" id="btnNovaReserva">＋ Nova Reserva</button>
     </div>
     <div id="listaReservas"></div>
   </section>
 
   <section class="painel escondido" id="view-agenda">
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">🗓️ Agenda — Próximos 30 dias</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="agenda">📄 PDF</button>
+    </div>
     <div class="info-box"><span class="ic">🗓️</span><div>Próximos 30 dias: manutenções preventivas, calibrações, garantias vencendo e reservas.</div></div>
     <div class="agenda-filtros" id="agendaFiltros">
       <button class="agenda-filtro ativo" data-agf="todos">Todos</button>
@@ -567,7 +511,11 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </section>
 
   <section class="painel escondido" id="view-setores">
-    <div class="barra"><div style="flex:1"><strong style="font-size:15px">🏭 Setores</strong></div><button class="btn btn-primario" id="btnNovoSetor">＋ Novo</button></div>
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">🏭 Setores</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="setores">📄 PDF</button>
+      <button class="btn btn-primario" id="btnNovoSetor">＋ Novo</button>
+    </div>
     <div class="grade-setores" id="gradeSetores"></div>
   </section>
 
@@ -575,22 +523,35 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
     <div class="info-box"><span class="ic">🗺️</span><div>Localize onde cada ferramenta está guardada.</div></div>
     <div class="barra">
       <select id="mapaFiltroSetor"><option value="">Todos os setores</option></select>
+      <button class="btn btn-pdf btn-mini" data-pdf="mapa">📄 PDF</button>
       <button class="btn btn-primario" id="btnNovoSlot">＋ Novo Local</button>
     </div>
     <div class="mapa-grid" id="mapaGrid"></div>
   </section>
 
   <section class="painel escondido" id="view-kits">
-    <div class="barra"><div style="flex:1"><strong style="font-size:15px">🧰 Kits</strong></div><button class="btn btn-primario" id="btnNovoKit">＋ Novo</button></div>
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">🧰 Kits</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="kits">📄 PDF</button>
+      <button class="btn btn-primario" id="btnNovoKit">＋ Novo</button>
+    </div>
     <div class="grade-setores" id="gradeKits"></div>
   </section>
 
   <section class="painel escondido" id="view-consumiveis">
-    <div class="barra"><div style="flex:1"><strong style="font-size:15px">🔩 Consumíveis</strong></div><button class="btn btn-primario" id="btnNovoConsumivel">＋ Novo</button></div>
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">🔩 Consumíveis</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="consumiveis">📄 PDF</button>
+      <button class="btn btn-primario" id="btnNovoConsumivel">＋ Novo</button>
+    </div>
     <div id="listaConsumiveis"></div>
   </section>
 
   <section class="painel escondido" id="view-calibracao">
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">🎯 Calibração</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="calibracao">📄 PDF</button>
+    </div>
     <div class="info-box"><span class="ic">🎯</span><div>Instrumentos de medição com controle de calibração.</div></div>
     <div class="tabela-wrap">
       <table><thead><tr><th>Instrumento</th><th>Setor</th><th>Última</th><th>Próxima</th><th>Status</th><th class="sem-ordem">Ações</th></tr></thead><tbody id="corpoCalibracao"></tbody></table>
@@ -606,6 +567,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
       <input type="text" id="invBusca" placeholder="Código/nome..." style="flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--borda);border-radius:8px;font-size:13px;font-family:inherit;background:var(--fundo);color:var(--texto);outline:none">
       <button class="btn btn-secundario" id="btnAddManualInv">＋</button>
       <button class="btn btn-verde" id="btnFinalizarInv">✅ Finalizar</button>
+      <button class="btn btn-pdf btn-mini" data-pdf="inventario">📄 PDF</button>
     </div>
     <div id="resumoInv"></div>
     <div class="tabela-wrap" style="margin-top:13px">
@@ -625,6 +587,7 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
         <option value="setor">Setor</option><option value="tipo">Tipo</option>
         <option value="webhook">Webhook</option><option value="login">Login</option>
       </select>
+      <button class="btn btn-pdf btn-mini" data-pdf="historico">📄 PDF</button>
       <button class="btn btn-secundario" id="btnLimparHistorico">🗑️</button>
     </div>
     <div id="listaHistorico" style="max-height:600px;overflow-y:auto;padding:6px"></div>
@@ -654,6 +617,10 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </section>
 
   <section class="painel escondido" id="view-analytics">
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">🎯 Analytics e Insights</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="analytics">📄 PDF</button>
+    </div>
     <div class="info-box"><span class="ic">🎯</span><div>Análise avançada: anomalias inteligentes, previsão de manutenção, TCO, ABC, heatmap, ranking.</div></div>
     <div class="titulo-secao">🤖 Anomalias Detectadas Automaticamente</div>
     <div id="anomaliasArea"></div>
@@ -674,7 +641,11 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </section>
 
   <section class="painel escondido" id="view-usuarios">
-    <div class="barra"><div style="flex:1"><strong style="font-size:15px">👥 Usuários</strong></div><button class="btn btn-primario" id="btnNovoUsuario">＋ Novo</button></div>
+    <div class="barra">
+      <div style="flex:1"><strong style="font-size:15px">👥 Usuários</strong></div>
+      <button class="btn btn-pdf btn-mini" data-pdf="usuarios">📄 PDF</button>
+      <button class="btn btn-primario" id="btnNovoUsuario">＋ Novo</button>
+    </div>
     <div class="grade-setores" id="gradeUsuarios"></div>
   </section>
 </main>
@@ -742,9 +713,16 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
   </div>
 </div>
 
+<!-- MUDANÇA: botão PDF do setor no topo do modal -->
 <div class="overlay" id="modalFerrSetor" role="dialog" aria-modal="true">
   <div class="modal grande">
-    <div class="modal-topo"><h2 id="tituloFerrSetor">Ferramentas do Setor</h2><button class="fechar" data-fechar="modalFerrSetor">&times;</button></div>
+    <div class="modal-topo">
+      <h2 id="tituloFerrSetor">Ferramentas do Setor</h2>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button type="button" class="btn btn-pdf btn-mini" id="btnPDFSetorAtual">📄 PDF do Setor</button>
+        <button class="fechar" data-fechar="modalFerrSetor">&times;</button>
+      </div>
+    </div>
     <div class="modal-corpo">
       <input type="hidden" id="fsSetorId">
       <div class="titulo-secao">⚡ Adicionar rápido <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--cinza);font-size:11px">(clique no ✏️ para renomear)</span></div>
@@ -1212,25 +1190,15 @@ input[type=checkbox]{width:16px;height:16px;cursor:pointer;accent-color:var(--az
 
 <script>
 /* =========================================================
-   CONTROLE DE FERRAMENTAS PRO — v10.6
-   Novidades v10.6:
-   • Ferramentas do Setor agora são agrupadas por TIPO em
-     "caixinhas" separadas, cada uma com cabeçalho azul,
-     contador de itens e total de unidades.
-   Novidades v10.5.1 (duplicatas):
-   • Bloqueio global de duplicata por NOME (case-insensitive)
-     - Formulário principal
-     - Cadastro rápido no setor (chips)
-     - Importação CSV
-   Novidades v10.5:
-   • Setor "Assistência Técnica" criado automaticamente
-   • Ferramentas nesse setor ficam em "manutencao" e mostram
-     linha AMARELA no setor de origem (ghost entry)
+   CONTROLE DE FERRAMENTAS PRO — v10.7
+   Novidades v10.7:
+   • PDF por aba (13 abas) e PDF por setor no modal Setor
+   • Correção: migrar() agora retorna versão 12 (antes 11)
+   • Correção: webhook de atraso persiste flag antes de enviar
    ========================================================= */
 'use strict';
 
-/* ===== [01] CONSTANTES & ESTADO ===== */
-const VERSAO='10.6';
+const VERSAO='10.7';
 const CHAVE='controleFerramentas.v10';
 const CHAVE_AUTO='controleFerramentas.v10.autobackup';
 const CHAVE_BACKUPS='controleFerramentas.v10.backups';
@@ -1270,7 +1238,7 @@ const PERMISSOES={
 };
 
 let db={
-  versao:11,
+  versao:12,
   usuarios:[],
   usuarioAtual:null,
   setores:[],
@@ -1517,7 +1485,7 @@ function migrar(o){
   }
   const cfgPadrao={idioma:'pt',autoBackup:true,ultimoAutoBackup:null,webhook:'',webhookTipo:'auto',webhookEmp:false,webhookDev:false,webhookAtraso:true,som:true,notif:false,autoLock:true,autoLockMin:10,compacto:false,contraste:false,modoAberto:false,rateLimit:true};
   o.config=Object.assign(cfgPadrao,o.config||{});
-  o.versao=11;
+  o.versao=12; /* ✅ FIX: era 11, causava reexecução de migrações */
   return o;
 }
 async function migrarMidia(){
@@ -1594,7 +1562,7 @@ async function inicializar(){
       {id:uid(),nome:'Operador',papel:'operador',pinHash:'',tentativasFalhas:0,bloqueadoAte:null}
     ];
     db.setores=SETORES_PADRAO.map(nome=>({id:uid(),nome}));
-    db.versao=11;
+    db.versao=12;
     salvar(true);
   }else{
     await migrarPins();
@@ -2693,7 +2661,298 @@ function desenharGraficos(){
   }
 }
 
-/* ===== [15] CÂMERA ===== */
+/* ===== [15] PDF EXPORT POR ABA E POR SETOR (NOVO v10.7) ===== */
+function _pdfHeader(doc,titulo,subtitulo){
+  doc.setFontSize(18);doc.setTextColor(30,64,175);
+  doc.text(titulo,14,18);
+  doc.setFontSize(10);doc.setTextColor(100);
+  doc.text(`Gerado em ${new Date().toLocaleString('pt-BR')}${subtitulo?' • '+subtitulo:''}`,14,25);
+  doc.text(`Por: ${db.usuarioAtual?db.usuarioAtual.nome:'Sistema'}`,14,30);
+  return 36;
+}
+function _pdfTable(titulo,subtitulo,head,body,arq,orient,headColor){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:orient||'portrait'});
+  const y=_pdfHeader(doc,titulo,subtitulo);
+  if(body&&body.length){
+    doc.autoTable({
+      startY:y,head:[head],body,
+      styles:{fontSize:8,cellPadding:2.5},
+      headStyles:{fillColor:headColor||[30,64,175],textColor:255,fontSize:9},
+      alternateRowStyles:{fillColor:[245,247,250]}
+    });
+  }else{
+    doc.setFontSize(11);doc.setTextColor(120);
+    doc.text('Nenhum dado disponível.',14,y+8);
+  }
+  doc.save(arq);toast('PDF gerado!');
+}
+function gerarPDFFerramentas(){
+  const sm=Object.fromEntries(db.setores.map(s=>[s.id,s.nome]));
+  const busca=($('busca').value||'').trim().toLowerCase();
+  const fs=$('filtroSetor').value;
+  const ft=$('filtroTipo').value;
+  const fst=$('filtroStatus').value;
+  const lista=db.ferramentas.filter(f=>{
+    if(fs && f.setorId!==fs && f.setorOrigem!==fs) return false;
+    if(ft && (f.tipo||'')!==ft) return false;
+    if(fst && f.status!==fst) return false;
+    if(busca){
+      const tx=`${f.nome} ${f.codigo||''} ${f.tipo||''} ${f.responsavel||''} ${f.obs||''}`.toLowerCase();
+      if(!tx.includes(busca)) return false;
+    }
+    return true;
+  });
+  const filtros=[];
+  if(fs) filtros.push('Setor: '+sm[fs]);
+  if(ft) filtros.push('Tipo: '+ft);
+  if(fst) filtros.push('Status: '+((STATUS[fst]||{}).rotulo||fst));
+  if(busca) filtros.push(`Busca: "${busca}"`);
+  _pdfTable(
+    'Relatório de Ferramentas',
+    `${lista.length} item(s)${filtros.length?' • '+filtros.join(' • '):''}`,
+    ['Ferramenta','Tipo','Código','Setor','Qtd','Responsável','Status','Valor'],
+    lista.map(f=>[f.nome,f.tipo||'—',f.codigo||'—',sm[f.setorId]||'—',f.quantidade||1,f.responsavel||'—',(STATUS[f.status]||{}).rotulo||'—',f.valorCompra?('R$ '+f.valorCompra.toFixed(2)):'—']),
+    `ferramentas-${hoje()}.pdf`,'landscape'
+  );
+}
+function gerarPDFEmprestimos(){
+  const sm=Object.fromEntries(db.setores.map(s=>[s.id,s.nome]));
+  const ativos=db.ferramentas.filter(f=>f.emprestimoAtivo);
+  const rows=ativos.map(f=>{
+    const e=f.emprestimoAtivo;
+    const atras=e.prazoEm&&new Date(e.prazoEm)<new Date();
+    return [f.nome,sm[f.setorId]||'—',e.responsavel,e.quantidade||1,new Date(e.retiradoEm).toLocaleString('pt-BR'),e.prazoEm?new Date(e.prazoEm).toLocaleString('pt-BR'):'Sem prazo',atras?'ATRASADO':'ATIVO'];
+  });
+  _pdfTable('Relatório de Empréstimos',`${ativos.length} empréstimo(s) ativo(s)`,
+    ['Ferramenta','Setor','Responsável','Qtd','Retirado','Prazo','Status'],rows,
+    `emprestimos-${hoje()}.pdf`,'landscape',[124,58,237]);
+}
+function gerarPDFReservas(){
+  const rows=db.reservas.filter(r=>new Date(r.ate)>new Date()).sort((a,b)=>new Date(a.de)-new Date(b.de)).map(r=>{
+    const f=Repo.ferramentas.obter(r.ferramentaId);
+    return [f?f.nome:'—',r.responsavel,new Date(r.de).toLocaleString('pt-BR'),new Date(r.ate).toLocaleString('pt-BR'),r.motivo||'—'];
+  });
+  _pdfTable('Relatório de Reservas',`${rows.length} reserva(s) futura(s)`,
+    ['Ferramenta','Responsável','De','Até','Motivo'],rows,
+    `reservas-${hoje()}.pdf`,'landscape',[124,58,237]);
+}
+function gerarPDFAgenda(){
+  const hj=new Date();hj.setHours(0,0,0,0);
+  const limite=new Date(hj.getTime()+30*86400000);
+  const eventos=[];
+  db.ferramentas.forEach(f=>{
+    if(f.manutencao&&f.manutencao.intervaloDias&&f.manutencao.ultimaManutencao){
+      const p=new Date(new Date(f.manutencao.ultimaManutencao).getTime()+f.manutencao.intervaloDias*86400000);
+      if(p>=hj&&p<=limite)eventos.push({data:p,tipo:'Manutenção',desc:`${f.nome} (${Repo.setores.nome(f.setorId)})`});
+    }
+    if(f.calibracao&&f.calibracao.intervaloDias&&f.calibracao.ultimaCalibracao){
+      const p=new Date(new Date(f.calibracao.ultimaCalibracao).getTime()+f.calibracao.intervaloDias*86400000);
+      if(p>=hj&&p<=limite)eventos.push({data:p,tipo:'Calibração',desc:`${f.nome} (${Repo.setores.nome(f.setorId)})`});
+    }
+    if(f.garantiaAte){
+      const g=new Date(f.garantiaAte);
+      if(g>=hj&&g<=limite)eventos.push({data:g,tipo:'Garantia',desc:`${f.nome} (${Repo.setores.nome(f.setorId)})`});
+    }
+  });
+  db.reservas.filter(r=>new Date(r.ate)>=hj).forEach(r=>{
+    const d=new Date(r.de);
+    if(d<=limite){
+      const f=db.ferramentas.find(x=>x.id===r.ferramentaId);
+      eventos.push({data:d,tipo:'Reserva',desc:`${f?f.nome:'—'} — ${r.responsavel}`});
+    }
+  });
+  const mapTipos={manutencao:'Manutenção',calibracao:'Calibração',garantia:'Garantia',reserva:'Reserva'};
+  const filtrados=agendaFiltroAtivo==='todos'?eventos:eventos.filter(e=>e.tipo===mapTipos[agendaFiltroAtivo]);
+  filtrados.sort((a,b)=>a.data-b.data);
+  _pdfTable('Agenda — Próximos 30 dias',`${filtrados.length} evento(s)${agendaFiltroAtivo!=='todos'?' • Filtro: '+mapTipos[agendaFiltroAtivo]:''}`,
+    ['Data','Tipo','Descrição'],
+    filtrados.map(e=>[e.data.toLocaleDateString('pt-BR'),e.tipo,e.desc]),
+    `agenda-${hoje()}.pdf`,'portrait',[217,119,6]);
+}
+function gerarPDFSetores(){
+  const assistId=getSetorAssistenciaId();
+  const rows=db.setores.map(s=>{
+    const fs=db.ferramentas.filter(f=>f.setorId===s.id);
+    const valor=fs.reduce((a,f)=>a+(f.valorCompra||0),0);
+    return [s.nome,fs.length,fs.filter(f=>f.status==='disponivel').length,fs.filter(f=>f.status==='manutencao').length,fs.filter(f=>f.status==='emprestada').length,'R$ '+valor.toFixed(2),s.id===assistId?'Sim':'Não'];
+  });
+  _pdfTable('Relatório de Setores',`${db.setores.length} setor(es)`,
+    ['Setor','Total','Disponíveis','Manutenção','Emprestadas','Valor','Assistência'],
+    rows,`setores-${hoje()}.pdf`,'landscape');
+}
+function gerarPDFMapa(){
+  const rows=db.locais.map(l=>{
+    const f=l.ferramentaId?Repo.ferramentas.obter(l.ferramentaId):null;
+    return [l.codigo,Repo.setores.nome(l.setorId)||'—',f?f.nome:'(vazio)',f?f.codigo||'—':'—'];
+  });
+  _pdfTable('Mapa de Locais',`${rows.length} local(is)`,
+    ['Código','Setor','Ferramenta','Cód. Ferr.'],rows,
+    `mapa-${hoje()}.pdf`,'portrait');
+}
+function gerarPDFKits(){
+  const rows=[];
+  db.kits.forEach(k=>{
+    const fs=db.ferramentas.filter(f=>k.ferramentasIds.includes(f.id));
+    rows.push([{content:`KIT: ${k.nome} (${fs.length} item(s))`,colSpan:4,styles:{fillColor:[124,58,237],textColor:255,fontStyle:'bold'}}]);
+    fs.forEach(f=>rows.push([f.nome,f.tipo||'—',f.codigo||'—',(STATUS[f.status]||{}).rotulo||'—']));
+  });
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const y=_pdfHeader(doc,'Relatório de Kits',`${db.kits.length} kit(s)`);
+  if(rows.length){
+    doc.autoTable({startY:y,head:[['Ferramenta','Tipo','Código','Status']],body:rows,styles:{fontSize:8,cellPadding:2.5},headStyles:{fillColor:[124,58,237],textColor:255,fontSize:9}});
+  }else{doc.setFontSize(11);doc.setTextColor(120);doc.text('Nenhum kit cadastrado.',14,y+8)}
+  doc.save(`kits-${hoje()}.pdf`);toast('PDF gerado!');
+}
+function gerarPDFConsumiveis(){
+  const sm=Object.fromEntries(db.setores.map(s=>[s.id,s.nome]));
+  const rows=db.consumiveis.map(c=>[c.nome,c.quantidade,c.minimo,c.unidade||'un',sm[c.setorId]||'—',c.quantidade<=c.minimo?'BAIXO':'OK']);
+  _pdfTable('Relatório de Consumíveis',`${rows.length} consumível(is)`,
+    ['Nome','Qtd','Mínimo','Unidade','Setor','Status'],rows,
+    `consumiveis-${hoje()}.pdf`,'portrait',[217,119,6]);
+}
+function gerarPDFCalibracao(){
+  const sm=Object.fromEntries(db.setores.map(s=>[s.id,s.nome]));
+  const lista=db.ferramentas.filter(f=>f.calibracao&&f.calibracao.intervaloDias);
+  const rows=lista.map(f=>{
+    const c=f.calibracao;
+    const prox=c.ultimaCalibracao?new Date(new Date(c.ultimaCalibracao).getTime()+c.intervaloDias*86400000):null;
+    const dias=prox?diffDias(new Date(),prox):null;
+    let st='—';
+    if(prox) st=dias<0?`VENCIDA (${Math.abs(dias)}d)`:dias<30?`Em ${dias}d`:'Em dia';
+    return [f.nome,sm[f.setorId]||'—',c.ultimaCalibracao?fmtDataCurta(c.ultimaCalibracao):'—',prox?prox.toLocaleDateString('pt-BR'):'—',st,c.certificado||'—'];
+  });
+  _pdfTable('Relatório de Calibração',`${rows.length} instrumento(s)`,
+    ['Instrumento','Setor','Última','Próxima','Status','Certificado'],rows,
+    `calibracao-${hoje()}.pdf`,'landscape',[217,119,6]);
+}
+function gerarPDFInventario(){
+  if(!inventarioAtual){
+    toast('Nenhum inventário ativo. Inicie um primeiro.','aviso');return;
+  }
+  const sm=Object.fromEntries(db.setores.map(s=>[s.id,s.nome]));
+  const filtro=inventarioAtual.setorFiltro;
+  const todos=db.ferramentas.filter(f=>!filtro||f.setorId===filtro);
+  const enc=inventarioAtual.encontrados;
+  const rows=todos.map(f=>[f.nome,sm[f.setorId]||'—',f.quantidade||1,enc.includes(f.id)?(f.quantidade||1):0,enc.includes(f.id)?'OK':'FALTA']);
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape'});
+  const y=_pdfHeader(doc,'Relatório de Inventário',`${enc.length}/${todos.length} encontrados`);
+  doc.autoTable({startY:y,head:[['Ferramenta','Setor','Esperado','Encontrado','Status']],body:rows,styles:{fontSize:8,cellPadding:2.5},headStyles:{fillColor:[124,58,237],textColor:255,fontSize:9}});
+  doc.save(`inventario-${hoje()}.pdf`);toast('PDF gerado!');
+}
+function gerarPDFHistorico(){
+  const filtro=$('filtroHistTipo')?$('filtroHistTipo').value:'';
+  let lista=db.historico;
+  if(filtro) lista=lista.filter(h=>h.tipo===filtro);
+  lista=lista.slice(0,500);
+  const rows=lista.map(h=>[new Date(h.data).toLocaleString('pt-BR'),h.tipo,h.ferramentaNome,h.descricao,h.usuario||'Sistema']);
+  _pdfTable('Histórico de Movimentações',`${lista.length} registro(s)${filtro?' (filtro: '+filtro+')':''}`,
+    ['Data','Tipo','Ferramenta','Descrição','Usuário'],rows,
+    `historico-${hoje()}.pdf`,'landscape',[100,116,139]);
+}
+function gerarPDFAnalytics(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  let y=_pdfHeader(doc,'Analytics e Insights','Relatório avançado');
+  const an=detectarAnomalias();
+  doc.setFontSize(13);doc.setTextColor(30,64,175);
+  doc.text('Anomalias detectadas',14,y);y+=6;
+  doc.setFontSize(9);doc.setTextColor(60);
+  if(an.length){
+    an.forEach(a=>{
+      const linhas=doc.splitTextToSize(`• ${a.titulo} — ${a.desc}`,180);
+      doc.text(linhas,14,y);y+=linhas.length*4.5;
+    });
+  }else{doc.text('Nenhuma anomalia.',14,y);y+=6}
+  y+=4;
+  doc.setFontSize(13);doc.setTextColor(30,64,175);
+  doc.text('Previsão de manutenção (60d)',14,y);y+=6;
+  doc.setFontSize(9);doc.setTextColor(60);
+  const pr=preverManutencao();
+  if(pr.length){
+    pr.forEach(p=>{
+      doc.text(`• ${p.data.toLocaleDateString('pt-BR')} — ${p.ferr.nome} (${p.razao})`,14,y);y+=5;
+    });
+  }else{doc.text('Nada previsto.',14,y);y+=6}
+  y+=4;
+  doc.setFontSize(13);doc.setTextColor(30,64,175);
+  doc.text('TCO — Custo Total (top 30)',14,y);y+=6;
+  const empHist={};
+  db.historico.filter(h=>h.tipo==='emprestimo'||h.tipo==='devolucao').forEach(h=>{empHist[h.ferramentaNome]=(empHist[h.ferramentaNome]||0)+1});
+  const tco=db.ferramentas.map(f=>{
+    const manut=(f.manutencao&&f.manutencao.historico||[]).reduce((s,m)=>s+(m.custo||0),0);
+    const horas=(empHist[f.nome]||0)*4;
+    const total=(f.valorCompra||0)+manut;
+    return {nome:f.nome,compra:f.valorCompra||0,manut,horas,total,custoHora:horas?total/horas:0};
+  }).sort((a,b)=>b.total-a.total).slice(0,30);
+  if(tco.length){
+    doc.autoTable({startY:y,head:[['Ferramenta','Compra','Manut.','Horas','Custo/h']],body:tco.map(t=>[t.nome,'R$ '+t.compra.toFixed(2),'R$ '+t.manut.toFixed(2),t.horas+'h','R$ '+t.custoHora.toFixed(2)]),styles:{fontSize:8,cellPadding:2.5},headStyles:{fillColor:[124,58,237],textColor:255,fontSize:9}});
+  }
+  doc.save(`analytics-${hoje()}.pdf`);toast('PDF gerado!');
+}
+function gerarPDFUsuarios(){
+  const rows=db.usuarios.map(u=>{
+    const bloq=usuarioBloqueado(u);
+    let st='Ativo';
+    if(bloq>0) st='Bloqueado ('+formatarSegundos(bloq)+')';
+    return [u.nome,(PAPEIS[u.papel]||u.papel),st,(u.tentativasFalhas||0)+' tentativa(s)'];
+  });
+  _pdfTable('Relatório de Usuários',`${rows.length} usuário(s)`,
+    ['Nome','Papel','Status','Tentativas'],rows,
+    `usuarios-${hoje()}.pdf`,'portrait');
+}
+function gerarPDFSetor(sid){
+  const s=db.setores.find(x=>x.id===sid);
+  if(!s){toast('Setor não encontrado.','erro');return}
+  const lista=db.ferramentas.filter(f=>f.setorId===sid);
+  const grupos={};
+  lista.forEach(f=>{
+    const k=(f.tipo&&f.tipo.trim())?f.tipo.trim():'(Sem tipo)';
+    if(!grupos[k])grupos[k]=[];
+    grupos[k].push(f);
+  });
+  const rows=[];
+  Object.entries(grupos).sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).forEach(([tipo,fs])=>{
+    const totalQ=fs.reduce((a,f)=>a+(f.quantidade||1),0);
+    rows.push([{content:`${tipo} — ${fs.length} item(ns) / ${totalQ} un.`,colSpan:6,styles:{fillColor:[59,130,246],textColor:255,fontStyle:'bold'}}]);
+    fs.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR')).forEach(f=>{
+      rows.push([f.nome,f.codigo||'—',f.quantidade||1,(STATUS[f.status]||{}).rotulo||'—',f.responsavel||'—',f.obs||'—']);
+    });
+  });
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape'});
+  const y=_pdfHeader(doc,`Setor: ${s.nome}`,`${lista.length} ferramenta(s)`);
+  if(rows.length){
+    doc.autoTable({startY:y,head:[['Ferramenta','Código','Qtd','Status','Responsável','Observações']],body:rows,styles:{fontSize:8,cellPadding:2.5},headStyles:{fillColor:[30,64,175],textColor:255,fontSize:9},alternateRowStyles:{fillColor:[245,247,250]}});
+  }else{
+    doc.setFontSize(11);doc.setTextColor(120);doc.text('Nenhuma ferramenta neste setor.',14,y+8);
+  }
+  doc.save(`setor-${s.nome.replace(/[^a-z0-9]+/gi,'_')}-${hoje()}.pdf`);
+  toast('PDF gerado!');
+}
+/* Dispatcher central para botões com data-pdf */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-pdf]');
+  if(!b)return;
+  const t=b.dataset.pdf;
+  const fns={
+    ferramentas:gerarPDFFerramentas,emprestimos:gerarPDFEmprestimos,
+    reservas:gerarPDFReservas,agenda:gerarPDFAgenda,
+    setores:gerarPDFSetores,mapa:gerarPDFMapa,kits:gerarPDFKits,
+    consumiveis:gerarPDFConsumiveis,calibracao:gerarPDFCalibracao,
+    inventario:gerarPDFInventario,historico:gerarPDFHistorico,
+    analytics:gerarPDFAnalytics,usuarios:gerarPDFUsuarios
+  };
+  if(fns[t])fns[t]();
+});
+$('btnPDFSetorAtual').addEventListener('click',()=>{
+  if(!setorAtualId){toast('Setor não identificado.','erro');return}
+  gerarPDFSetor(setorAtualId);
+});
+
+/* ===== [16] CÂMERA ===== */
 async function abrirCameraAoVivo(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
     toast('Câmera não suportada neste navegador.','aviso');
@@ -2775,7 +3034,7 @@ function processarArquivosFotos(files){
   });
 }
 
-/* ===== [16] TIPOS — CRIAR / EDITAR / EXCLUIR ===== */
+/* ===== [17] TIPOS — CRIAR / EDITAR / EXCLUIR ===== */
 function sincronizarListaSetorSeAberto(){
   if($('modalFerrSetor').classList.contains('aberto')) renderListaFerrSetor();
 }
@@ -2880,7 +3139,7 @@ $('btnExcluirTipo').addEventListener('click',async()=>{
 });
 $('btnNovoTipoInline').addEventListener('click',abrirNovoTipo);
 
-/* ===== [17] AÇÕES ===== */
+/* ===== [18] AÇÕES ===== */
 document.querySelector('thead tr').addEventListener('click',e=>{
   const th=e.target.closest('th[data-ordem]');
   if(!th)return;
@@ -3047,7 +3306,6 @@ $('formFerramenta').addEventListener('submit',async e=>{
     if(dup){toast('Código já existe!','erro');return}
   }
 
-  // 🚫 Bloqueio de duplicata por NOME (case-insensitive) — v10.5.1
   const nomeLower = d.nome.toLowerCase();
   const dupNome = db.ferramentas.find(f => f.nome.toLowerCase() === nomeLower && f.id !== id);
   if(dupNome){
@@ -3454,8 +3712,6 @@ $('chipsTipos').addEventListener('click',e=>{
   }
 });
 
-/* 🗂️ v10.6 — Lista de ferramentas do setor AGRUPADA por tipo.
-   Cada tipo vira uma "caixinha" com cabeçalho, contador e total de unidades. */
 function renderListaFerrSetor(){
   const el=$('listaFerrSetor');
   if(!el)return;
@@ -3463,7 +3719,6 @@ function renderListaFerrSetor(){
   $('contFerrSetor').textContent=l.length;
   if(!l.length){el.innerHTML='<div class="vazio" style="padding:20px">Vazio.</div>';return}
 
-  // Agrupa por TIPO (fallback: NOME)
   const grupos={};
   l.forEach(f=>{
     const chave=(f.tipo && f.tipo.trim()) ? f.tipo.trim() : (f.nome||'Sem nome');
@@ -3471,7 +3726,6 @@ function renderListaFerrSetor(){
     grupos[chave].push(f);
   });
 
-  // Ordena alfabeticamente (pt-BR)
   const chaves=Object.keys(grupos).sort((a,b)=>a.localeCompare(b,'pt-BR'));
 
   el.innerHTML=chaves.map(chave=>{
@@ -3509,8 +3763,6 @@ function renderListaFerrSetor(){
   }).join('');
 }
 
-/* 🔧 v10.5.1 — Bloqueio global de duplicata por nome (case-insensitive).
-   Mesmo setor → soma qtd. Outro setor → bloqueia com aviso. */
 function adicionarFerramentaRapida(nome,qtd){
   if(!setorAtualId)return;
   if(!exigirLogin('editar'))return;
@@ -4420,7 +4672,6 @@ $('csvInput').addEventListener('change',async e=>{
       db.tiposFerramentas.push(tipo);
     }
 
-    // 🚫 Ignora duplicatas por nome — v10.5.1
     if(db.ferramentas.some(f=>f.nome.toLowerCase()===nome.toLowerCase())){
       ignoradas++;
       continue;
@@ -4696,7 +4947,7 @@ $('logoIcone').addEventListener('click',()=>{
 });
 
 /* ===== PWA ===== */
-const SW_CODE=`const CACHE='ct-v10.6';
+const SW_CODE=`const CACHE='ct-v10.7';
 const PRECACHE=['./','./index.html','https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/jspdf-autotable@3.10.1/dist/jspdf.plugin.autotable.min.js','https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js','https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE).catch(()=>{})));self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim()});
@@ -5029,9 +5280,10 @@ function aplicarPrefs(){
 }
 
 const passosOnb=[
+  {i:'📄',t:'PDF por aba e por setor',x:'Cada aba agora tem botão "📄 PDF" que exporta o conteúdo filtrado. Dentro do setor, um botão exporta o relatório agrupado por tipo.'},
   {i:'🗂️',t:'Ferramentas agrupadas por tipo',x:'Ao abrir "🧰 Ferramentas do Setor", as ferramentas aparecem em caixinhas separadas por tipo — Roquetes juntos, Lixadeiras juntas, etc.'},
-  {i:'🔧',t:'Setor Assistência Técnica',x:'Crie um setor "Assistência Técnica" automaticamente. Envie ferramentas para lá — elas viram "Em manutenção" e aparecem com linha amarela no setor de origem.'},
-  {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip para renomear ou excluir. As ferramentas que usam o tipo antigo são atualizadas na hora.'},
+  {i:'🔧',t:'Setor Assistência Técnica',x:'Envie ferramentas para lá — elas viram "Em manutenção" e aparecem com linha amarela no setor de origem.'},
+  {i:'✏️',t:'Editar nomes de tipos',x:'Em Ferramentas do Setor, clique no ✏️ ao lado de qualquer chip para renomear ou excluir.'},
   {i:'🔐',t:'Segurança reforçada',x:'Sem login, ninguém edita/exclui. Toque em 👤 para entrar (Admin/1234).'},
   {i:'🛡️',t:'Rate limit no PIN',x:'Após 5 tentativas erradas, bloqueio temporário (30s → 5min).'},
   {i:'📲',t:'PWA offline',x:'Baixe sw.js e manifest.json em ⚙️ e salve ao lado do index.html.'},
@@ -5059,7 +5311,7 @@ $('onbPular').addEventListener('click',()=>{
   localStorage.setItem('onbVisto10','1');
 });
 
-/* ===== [18] INIT ===== */
+/* ===== [19] INIT ===== */
 (async function init(){
   try{idb=await abrirIdb()}catch(e){console.warn('IndexedDB indisponível');idb=null}
   try{secretKey=await gerarSecretKey()}catch(e){console.warn('HMAC indisponível')}
@@ -5099,9 +5351,10 @@ $('onbPular').addEventListener('click',()=>{
     const atrasados=db.ferramentas.filter(f=>f.emprestimoAtivo&&f.emprestimoAtivo.prazoEm&&new Date(f.emprestimoAtivo.prazoEm)<new Date()&&!f.emprestimoAtivo.webhookAvisado);
     if(atrasados.length){
       const nomes=atrasados.map(f=>`${f.nome} (${f.emprestimoAtivo.responsavel})`).join(', ');
-      enviarWebhook('⏰ Empréstimos Atrasados',`${atrasados.length}: ${nomes}`,'erro');
+      /* ✅ FIX: salva ANTES de enviar webhook (evita reenvio em loop se aba fechar) */
       atrasados.forEach(f=>{if(f.emprestimoAtivo)f.emprestimoAtivo.webhookAvisado=true});
-      salvar();
+      salvar(true);
+      enviarWebhook('⏰ Empréstimos Atrasados',`${atrasados.length}: ${nomes}`,'erro');
     }
   },300000);
   setInterval(()=>{
@@ -5114,7 +5367,7 @@ $('onbPular').addEventListener('click',()=>{
 })();
 
 console.log('%c🔧 Controle de Ferramentas Pro v'+VERSAO,'background:linear-gradient(135deg,#1e40af,#7c3aed);color:#fff;padding:6px 12px;border-radius:6px;font-weight:bold');
-console.log('%cv10.6: Ferramentas do Setor agrupadas por tipo • v10.5.1: bloqueio de duplicatas','color:#d97706;font-weight:bold');
+console.log('%cv10.7: PDF por aba + por setor • migrar() corrigido • webhook persistido','color:#16a34a;font-weight:bold');
 </script>
 </body>
 </html>
